@@ -40,7 +40,7 @@ const HCTForgetPassword = (props) => {
             }).then((resp) => {
 
                 if (resp.data.status === 'OTP sent successfully') {
-                    window.location.href = "/hct/set-new-password"
+                    window.location.href = "/set-new-password"
                 }
 
                 else {

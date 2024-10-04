@@ -143,7 +143,7 @@ const LoginHCT = (props) => {
                 </Text>} */}
                             </div>
 
-                            <Link to="/hct/forgot-password"
+                            <Link to="/forgot-password"
                                 className="forgot-password-link" >
 
                                 Forgot your password?
