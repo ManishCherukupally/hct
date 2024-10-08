@@ -28,6 +28,7 @@ import HCTSetNewpasswordPage from "./HCT/HCTpages/HCTSetNewpasswordPage";
 import UserManagementPage from "./HCT/HCTpages/UserManagementPage";
 import TemplatePage from "./HCT/HCTpages/TemplatePage";
 import BroadcastPage from "./HCT/HCTpages/BroadcastPage";
+import LandingPage from "./HCT/HCT components/MainPage/LandingPage";
 
 function App() {
 
@@ -65,8 +66,9 @@ function App() {
           {/* <Route path="/quiz/:courseid/:lessonid" Component={QuizPage} /> */}
 
           {/* HCT Routes*/}
-          <Route path="/" element={window.localStorage.getItem("hctuserstatus") ? (<Navigate to={"/dashboard"} />) : (<Navigate to={"/login"} />)} />
+          <Route path="/" element={window.localStorage.getItem("hctuserstatus") ? (<Navigate to={"/dashboard"} />) : (<Navigate to={"/hctregistration"} />)} />
 
+          <Route path ="/hctregistration" Component ={LandingPage} />
           <Route path="/login" Component={LoginHCTPage} />
           <Route path="/forgot-password" Component={ForgetPasswordHCTPage} />
           <Route path="/set-new-password" Component={HCTSetNewpasswordPage} />
