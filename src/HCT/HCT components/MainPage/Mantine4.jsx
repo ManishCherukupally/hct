@@ -2,27 +2,51 @@ import { AspectRatio, Badge, Button, CardSection, Group, BackgroundImage, Modal,
 import { Card, Grid, Footer, Container, Anchor, Paper, SimpleGrid, Image, Text, List } from '@mantine/core'
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
-import React from 'react'
+import React, { useState } from 'react'
+import client from '../../../API/api';
 
 
 const Mantine4 = () => {
   const [opened, { open, close }] = useDisclosure(false);
+  const [value, setValue] = useState(null)
+
   const form = useForm({
     initialValues: {
       name: '',
       category: '',
-      phone: '',
+      mobile_num: '',
       email: '',
       location: '',
       age: '',
-      gender: '',
-      termsOfService: false,
+      gender: value,
+
     },
 
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
     },
+
+    transformValues: (values) => ({
+      name: `${values.name}`,
+      category: `${values.category}`,
+      mobile_num: `${values.mobile_num}`,
+      email: `${values.email}`,
+      location: `${values.location}`,
+      age: `${values.age}`,
+      gender: value,
+
+    })
   });
+
+  const handleRegisterUser = () => {
+    // client.post("register_user/", form.getTransformedValues())
+    //   .catch(err => console.error(err))
+    setTimeout(() => {
+      close()
+      form.reset()
+      setValue(null)
+    }, 1000);
+  }
 
   return (
     <>
@@ -30,9 +54,10 @@ const Mantine4 = () => {
         {/* Modal content */
 
           <Box mx="auto">
-            <form onSubmit={form.onSubmit((values) => console.log(values))}>
+            <form>
               <TextInput
                 withAsterisk
+                name='name'
                 label="Name"
                 placeholder="Enter your Name"
                 {...form.getInputProps('name')}
@@ -41,6 +66,7 @@ const Mantine4 = () => {
               />
               <TextInput
                 withAsterisk
+                name='category'
                 label="Category"
                 placeholder="enter category"
                 {...form.getInputProps('category')}
@@ -48,35 +74,40 @@ const Mantine4 = () => {
               />
               <TextInput
                 withAsterisk
+                name='mobile_num'
                 mask="+91 (000) 000-00-00"
                 label="phone number"
                 placeholder="Your phone number"
-                {...form.getInputProps('phone')} mb='xs' radius='md'
+                {...form.getInputProps('mobile_num')} mb='xs' radius='md'
               />
               <TextInput
                 withAsterisk
+                name='email'
                 label="Email"
                 placeholder="your@email.com"
                 {...form.getInputProps('email')} mb='xs' radius='md'
               />
               <TextInput
                 withAsterisk
+                name='location'
                 label="Location"
                 placeholder="your location"
                 {...form.getInputProps('location')} mb='xs' radius='md'
               />
               <NumberInput
+                name='age'
                 placeholder="Your age"
                 label="Your age"
                 withAsterisk
                 {...form.getInputProps('age')} mb='xs' radius='md'
               />
               <Radio.Group
-                name="favoriteFramework"
                 label="Gender"
                 withAsterisk
-                {...form.getInputProps('gender')} mb='xs' radius='md'
+                mb='xs' radius='md'
                 style={{ color: 'blue' }}
+                value={value}
+                onChange={setValue}
               >
                 <Group mt="xs">
                   <Radio value="male" label="Male" />
@@ -86,7 +117,7 @@ const Mantine4 = () => {
               </Radio.Group>
 
               <Group position="right" mt="md">
-                <Button type="submit">Submit</Button>
+                <Button onClick={handleRegisterUser}>Submit</Button>
               </Group>
             </form>
           </Box>
