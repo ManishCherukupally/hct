@@ -39,8 +39,8 @@ const Mantine4 = () => {
   });
 
   const handleRegisterUser = () => {
-    // client.post("register_user/", form.getTransformedValues())
-    //   .catch(err => console.error(err))
+    client.post("register_user/", form.getTransformedValues())
+      .catch(err => console.error(err))
     setTimeout(() => {
       close()
       form.reset()
