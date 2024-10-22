@@ -2,68 +2,37 @@ import { AspectRatio, Badge, Button, CardSection, Group, BackgroundImage, Modal,
 import { Card, Grid, Footer, Container, Anchor, SimpleGrid, Image, Text, List } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
-<<<<<<< HEAD
 import { useMediaQuery } from '@mantine/hooks';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import facebookImage from '../../../assets/facebook-logo-facebook-icon-transparent-free-png.webp';
 import facebookImage1 from '../../../assets/colored-instagram-logo-new.png';
-=======
-import React, { useState } from 'react'
-import client from '../../../API/api';
->>>>>>> 36d6670822766f3b32de5876ed841ff0a4993397
 
 // import { FaSquareFacebook } from "react-icons/fa6";
 // import { FaInstagram } from "react-icons/fa";
 
 const Mantine4 = () => {
   const [opened, { open, close }] = useDisclosure(false);
-<<<<<<< HEAD
   const isMobile = useMediaQuery('(max-width: 800px)'); 
-=======
-  const [value, setValue] = useState(null)
->>>>>>> 36d6670822766f3b32de5876ed841ff0a4993397
 
   const form = useForm({
     initialValues: {
       name: '',
       category: '',
-      mobile_num: '',
+      phone: '',
       email: '',
       location: '',
       age: '',
-      gender: value,
-
+      gender: '',
+      termsOfService: false,
     },
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
     },
-
-    transformValues: (values) => ({
-      name: `${values.name}`,
-      category: `${values.category}`,
-      mobile_num: `${values.mobile_num}`,
-      email: `${values.email}`,
-      location: `${values.location}`,
-      age: `${values.age}`,
-      gender: value,
-
-    })
   });
-
-  const handleRegisterUser = () => {
-    client.post("register_user/", form.getTransformedValues())
-      .catch(err => console.error(err))
-    setTimeout(() => {
-      close()
-      form.reset()
-      setValue(null)
-    }, 1000);
-  }
 
   return (
     <>
-<<<<<<< HEAD
       <Modal opened={opened} onClose={close} title="Authentication" centered>
       <form onSubmit={form.onSubmit((values) => console.log(values))}>
             <TextInput
@@ -116,76 +85,6 @@ const Mantine4 = () => {
                 <Radio value="male" label="Male" />
                 <Radio value="female" label="Female" />
                 <Radio value="other" label="Other" />
-=======
-      <Modal centered opened={opened} onClose={close} title="Registration" >
-        {/* Modal content */
-
-          <Box mx="auto">
-            <form>
-              <TextInput
-                withAsterisk
-                name='name'
-                label="Name"
-                placeholder="Enter your Name"
-                {...form.getInputProps('name')}
-                mb='xs' radius='md'
-
-              />
-              <TextInput
-                withAsterisk
-                name='category'
-                label="Category"
-                placeholder="enter category"
-                {...form.getInputProps('category')}
-                mb='xs' radius='md'
-              />
-              <TextInput
-                withAsterisk
-                name='mobile_num'
-                mask="+91 (000) 000-00-00"
-                label="phone number"
-                placeholder="Your phone number"
-                {...form.getInputProps('mobile_num')} mb='xs' radius='md'
-              />
-              <TextInput
-                withAsterisk
-                name='email'
-                label="Email"
-                placeholder="your@email.com"
-                {...form.getInputProps('email')} mb='xs' radius='md'
-              />
-              <TextInput
-                withAsterisk
-                name='location'
-                label="Location"
-                placeholder="your location"
-                {...form.getInputProps('location')} mb='xs' radius='md'
-              />
-              <NumberInput
-                name='age'
-                placeholder="Your age"
-                label="Your age"
-                withAsterisk
-                {...form.getInputProps('age')} mb='xs' radius='md'
-              />
-              <Radio.Group
-                label="Gender"
-                withAsterisk
-                mb='xs' radius='md'
-                style={{ color: 'blue' }}
-                value={value}
-                onChange={setValue}
-              >
-                <Group mt="xs">
-                  <Radio value="male" label="Male" />
-                  <Radio value="female" label="Female" />
-                  <Radio value="other" label="Other" />
-                </Group>
-              </Radio.Group>
-
-              <Group position="right" mt="md">
-                <Button onClick={handleRegisterUser}>Submit</Button>
->>>>>>> 36d6670822766f3b32de5876ed841ff0a4993397
               </Group>
             </Radio.Group>
 
