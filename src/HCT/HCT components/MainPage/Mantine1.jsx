@@ -93,14 +93,14 @@ const Mantine1 = () => {
       <BackgroundImage
         src="https://static.vecteezy.com/system/resources/previews/022/653/988/non_2x/treadmill-in-modern-gym-toned-image-3d-rendering-generative-ai-free-photo.jpg"
         mt="xl"
-        h={isMobile ? "60vh" : "90vh"}
+        h={isMobile ? "58vh" : "90vh"}
        
       >
         <Container>
           <AppShell
             footer={
-              <Footer height={isMobile ? 85 : 70} bg="#1F3469" withBorder={false} style={{ width: '98.2%', padding: isMobile ? '0 0.1rem' : '0 2rem' }}>
-                <Container mt={'1rem'}>
+              <Footer height={isMobile ? 65 : 70} bg="#1F3469" withBorder={false} style={{ width: isMobile? '99%' : '100%', padding: isMobile ? '0 0.1rem' : '0 2rem' }}>
+                <Container mt={'0.2rem'}>
                   <Flex justify="space-between" >
                     <Text
                     

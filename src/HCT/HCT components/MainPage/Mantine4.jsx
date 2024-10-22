@@ -5,7 +5,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { useMediaQuery } from '@mantine/hooks';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import facebookImage from '../../../assets/facebook-logo-facebook-icon-transparent-free-png.webp';
+import facebookImage from '../../../assets/facebook-logo-facebook-icon-transparent-free-png.png';
 import facebookImage1 from '../../../assets/colored-instagram-logo-new.png';
 
 // import { FaSquareFacebook } from "react-icons/fa6";
@@ -95,7 +95,7 @@ const Mantine4 = () => {
       </Modal>
       
 
-      <BackgroundImage src="https://wallpapercave.com/wp/wp8298483.jpg" style={{ height: isMobile ? '152vh' : '85vh' }}>
+      <BackgroundImage src="https://wallpapercave.com/wp/wp8298483.jpg" style={{ height: isMobile ? '150vh' : '95vh' }}>
         <Grid h={isMobile ? 'auto' : '125vh'} align='center' opacity={0.9} >
           <Grid.Col span={12}>
             <Group position='center'>
@@ -170,7 +170,7 @@ const Mantine4 = () => {
               </SimpleGrid>
             </Group>
 
-            <Footer mt={isMobile ? '-0.5rem' : '10.5rem'} height="9rem" pt="1.5rem" style={{ backgroundColor: '#FBD40B' }}>
+            <Footer mt={isMobile ? '-0.5rem' : '12.9rem'} height={isMobile ? "9rem" : '9rem'} pt="1.5rem" style={{ backgroundColor: '#FBD40B' }}>
               <Container style={{ display: 'flex', alignItems: 'center', padding: 0 }}>
                
                 <Link to="https://www.facebook.com/people/Sai-Teja/100063960496461/?mibextid=LQQJ4d" target='_blank'>
