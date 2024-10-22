@@ -54,23 +54,25 @@ import { HiHome } from "react-icons/hi";
 const HeadHCT = () => {
     const navigate = useNavigate()
     const handleLogout = () => {
-        try {
-            client.get("logout/", {
-                withCredentials: true
-            }).then((resp) => {
-                if (resp.data.status === "Logged_out") {
-                    // removeToken(['sessionid']);
-                    window.localStorage.clear()
-                    // Optionally, redirect user to login page
-                    window.location.href = "/login";
-                }
-            })
-            // window.location.href = "/login";
-        }
-        catch (err) {
-            console.error(err)
-        }
+        // try {
+        //     client.get("logout/", {
+        //         withCredentials: true
+        //     }).then((resp) => {
+        //         if (resp.data.status === "Logged_out") {
+        //             // removeToken(['sessionid']);
+        //             window.localStorage.clear()
+        //             // Optionally, redirect user to login page
+        //             window.location.href = "/login";
+        //         }
+        //     })
+        //     // window.location.href = "/login";
+        // }
+        // catch (err) {
+        //     console.error(err)
+        // }
 
+        window.localStorage.clear()
+        navigate("/login")
     }
 
     return (

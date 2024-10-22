@@ -10,16 +10,13 @@ const DashboardHCTPage = () => {
     const [auth, setAuth] = useState(false)
     const navigate = useNavigate()
     useEffect(() => {
-        client.get("all_users_status/", {
-            withCredentials: true
-        }).then((resp) => {
-            if (resp.data.status === 'unauthorized_user') {
-                navigate("/")
-            }
-            else {
-                setAuth(true)
-            }
-        })
+        if (window.localStorage.getItem("access")) {
+            setAuth(true)
+        }
+        else {
+            setAuth(false)
+            navigate("/")
+        }
     })
 
     return (
