@@ -16,6 +16,7 @@ import client from '../../../API/api';
 import { Cookies, useCookies } from 'react-cookie'
 import { isEmail, useForm } from '@mantine/form';
 import { useMediaQuery } from '@mantine/hooks';
+import axios from 'axios';
 // axios.defaults.withCredentials = true;
 // axios.defaults.xsrfCookieName = 'csrftoken'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
@@ -24,7 +25,7 @@ const LoginHCT = (props) => {
 
     const form = useForm({
         initialValues: {
-            email: '',
+            username: '',
             password: ''
         },
 
@@ -32,7 +33,7 @@ const LoginHCT = (props) => {
         validate: {
             // email: (value) => (/^\S+@\S+$/.test(value) ? null : 'The email address you entered is invalid'),
             // email: isEmail('The email address you entered is invalid'),
-            email: (value) => (value === "" ? "The email address you entered is invalid" : null),
+            username: (value) => (value === "" ? "The email address you entered is invalid" : null),
             password: (value) => (value < 6 ? 'The password you entered is incorrect' : null),
         },
     })
@@ -54,49 +55,44 @@ const LoginHCT = (props) => {
 
     const handleLogin = async (values) => {
         setLoader(true);
+
         try {
-            await client.post('login/', {
-                email: values.email,
-                password: values.password,
-            })
-                .then((resp) => {
-                    // console.log(JSON.stringify(resp.data.status))
-                    if (resp.data.status === "user_validated") {
-                        window.localStorage.setItem("hctuserstatus", resp.data.status)
+            await axios.post('http://192.168.29.220:8000/api/token/', {
+                username: values.username,
+                password: values.password
+            }).then((response) => {
+                if (response.data.access) {
+                    // Save the tokens to localStorage
+                    window.localStorage.setItem("access", response.data.access);
+                    window.localStorage.setItem("refresh", response.data.refresh);
 
+                    // Redirect to dashboard
+                    navigate("/dashboard");
+                }
+            }).catch((error) => {
+                // Check if it's a 401 error (unauthorized)
+                if (error.response && error.response.status === 401) {
+                    setLoader(false);
 
-                        navigate("/dashboard")
-                    }
-                    else {
-                        setLoader(false)
-                        setErrorStatus(true)
-                        const errorMessage = resp.data.status === "unauthorized_user" || "Invalid credentials"
-                            ? "Invalid credentials. Please check and try again."
-                            : resp.data.error; // Use a more specific error message if available
-                        form.setErrors({
-                            email: errorMessage,
-                            password: errorMessage,
-                        });
-                    }
-                    // else {
-                    //     if (email === "" || "Invalid Credentials") {
-                    //         setEmailError("The email address you entered is invalid")
-                    //     }
-                    //     if (password === "" || "Invalid Credentials") {
-                    //         setPasswordError("The password you entered is incorrect")
-                    //     }
-                    //     navigate("/")
-                    // }
-
-                })
-                .catch(err => console.error(err))
-
-
+                    // Set specific error messages for the form fields
+                    form.setErrors({
+                        username: "Invalid username. Please check and try again.",
+                        password: "Invalid password. Please check and try again.",
+                    });
+                } else {
+                    // Handle other potential errors (e.g., network errors)
+                    setLoader(false);
+                    console.error('Error:', error);
+                }
+            });
         } catch (error) {
+            // Handle other unexpected errors
+            setLoader(false);
             console.error('Error:', error);
         }
-
     };
+
+
     return (
         <div>
             <Card style={props.style} radius={"xl"}>
@@ -116,7 +112,7 @@ const LoginHCT = (props) => {
                                 withAsterisk
                                 label="Email ID"
                                 placeholder="your@email.com"
-                                {...form.getInputProps('email')}
+                                {...form.getInputProps('username')}
                             />
                             {/* {
                 emailError && <Text fz={12} c={"red"}>{emailError}</Text>

@@ -66,7 +66,7 @@ function App() {
           {/* <Route path="/quiz/:courseid/:lessonid" Component={QuizPage} /> */}
 
           {/* HCT Routes*/}
-          <Route path="/" element={window.localStorage.getItem("hctuserstatus") ? (<Navigate to={"/dashboard"} />) : (<Navigate to={"/hctregistration"} />)} />
+          <Route path="/" element={window.localStorage.getItem("access") ? (<Navigate to={"/dashboard"} />) : (<Navigate to={"/login"} />)} />
 
           <Route path ="/hctregistration" Component ={LandingPage} />
           <Route path="/login" Component={LoginHCTPage} />
