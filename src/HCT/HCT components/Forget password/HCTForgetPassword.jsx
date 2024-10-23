@@ -76,7 +76,7 @@ const HCTForgetPassword = (props) => {
                     <form onSubmit={form.onSubmit(handleForgetPaswd)} >
 
                         <Flex align={"center"}>
-                            <Link to={"/hct/login"}>
+                            <Link to={"/login"}>
                                 <ActionIcon size={"sm"}>< BiArrowBack /></ActionIcon>
                             </Link>
                             <Space w={15} />

@@ -57,7 +57,7 @@ const LoginHCT = (props) => {
         setLoader(true);
 
         try {
-            await axios.post('http://13.235.2.182:8000/api/token/', {
+            await client.post('api/token/', {
                 username: values.username,
                 password: values.password
             }).then((response) => {
