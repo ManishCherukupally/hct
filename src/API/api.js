@@ -4,7 +4,7 @@ axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'x-csrftoken'
 const client = axios.create(
     {
-        baseURL: 'http://13.235.2.182:8000/sourcepro/'
+        baseURL: 'https://hct.automactechnologies.in/'
     }
 )
 

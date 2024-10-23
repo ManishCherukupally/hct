@@ -90,7 +90,7 @@ const HCTSetnewpasswrdCard = (props) => {
                     removeToken(['encsrftok']);
 
                     // Optionally, redirect user to login page
-                    window.location.href = "/hct/login";
+                    window.location.href = "/login";
                 }
             })
                 .catch(err => console.error(err))
