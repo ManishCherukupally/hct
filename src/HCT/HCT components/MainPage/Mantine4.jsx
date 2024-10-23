@@ -95,7 +95,7 @@ const Mantine4 = () => {
       </Modal>
 
 
-      <BackgroundImage src="https://wallpapercave.com/wp/wp8298483.jpg" style={{ height: isMobile ? '150vh' : '95vh' }}>
+      <BackgroundImage src="https://wallpapercave.com/wp/wp8298483.jpg" style={{ height: isMobile ? '177vh' : '95vh' }}>
         <Grid h={isMobile ? 'auto' : '125vh'} align='center' opacity={0.9} >
           <Grid.Col span={12}>
             <Group position='center'>
@@ -170,7 +170,7 @@ const Mantine4 = () => {
               </SimpleGrid>
             </Group>
 
-            <Footer mt={isMobile ? '-0.5rem' : '12.9rem'} height={isMobile ? "9rem" : '9rem'} pt="1.5rem" style={{ backgroundColor: '#FBD40B' }}>
+            <Footer mt={isMobile ? '-0.4rem' : '12.9rem'} height={isMobile ? "9rem" : '9rem'} pt= {isMobile? "0.5rem": '1.5rem' }  style={{ backgroundColor: '#FBD40B' }}>
               <Container style={{ display: 'flex', alignItems: 'center', padding: 0 }}>
 
                 <Link to="https://www.facebook.com/people/Sai-Teja/100063960496461/?mibextid=LQQJ4d" target='_blank'>

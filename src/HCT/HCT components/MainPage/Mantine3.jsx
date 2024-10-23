@@ -18,7 +18,7 @@ const Mantine3 = () => {
   return (
     <BackgroundImage 
       src="https://getwallpapers.com/wallpaper/full/9/7/9/200446.jpg"
-      style={{ height: isMobile ? '65vh' : '85vh' }} 
+      style={{ height: isMobile ? '80vh' : '85vh' }} 
     >
       <div style={{ height: isMobile ? "65vh" : "70vh" }}>
         <Text 
@@ -33,6 +33,7 @@ const Mantine3 = () => {
         </Text>
         
         <Carousel 
+        className='carousel'
           mx="auto" 
           withControls 
           controlsOffset='sm' 

@@ -8,14 +8,14 @@ const Mantine2 = () => {
   return (
     <BackgroundImage
       src="https://dailytimes.com.pk/assets/uploads/2019/04/04/fitness.jpg"
-      style={{ height: isMobile ? '80vh' : '90vh' }}
+      style={{ height: isMobile ? '100vh' : '90vh' }}
     >
       <div
         style={{
           border: 'none',
           backgroundColor: '#1F3469',
           width: '99.9vw',
-          height: '80vh',
+          height: isMobile? '100vh': '90vh',
           opacity: '0.91',
         }}
       >

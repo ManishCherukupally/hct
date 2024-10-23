@@ -93,7 +93,7 @@ const Mantine1 = () => {
       <BackgroundImage
         src="https://static.vecteezy.com/system/resources/previews/022/653/988/non_2x/treadmill-in-modern-gym-toned-image-3d-rendering-generative-ai-free-photo.jpg"
         mt="xl"
-        h={isMobile ? "58vh" : "90vh"}
+        h={isMobile ? "70vh" : "90vh"}
 
       >
         <Container>
@@ -170,7 +170,7 @@ const Mantine1 = () => {
               </Footer>
             }
           >
-            <Flex mt={isMobile ? '6rem' : '5rem'} justify="center" align={'center'}>
+            <Flex mt={isMobile ? '3.5rem' : '5rem'} justify="center" align={'center'}>
               <Card
                 h={isMobile ? '20rem' : '30rem'}
                 w={isMobile ? '90vw' : '52rem'}
