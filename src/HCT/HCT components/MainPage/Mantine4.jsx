@@ -7,16 +7,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import facebookImage from '../../../assets/facebook-logo-facebook-icon-transparent-free-png.png';
 import facebookImage1 from '../../../assets/colored-instagram-logo-new.png';
-<<<<<<< HEAD
 import './response.css';
-=======
 import client from '../../../API/api';
 import './page.css'
 
 
 // import { FaSquareFacebook } from "react-icons/fa6";
 // import { FaInstagram } from "react-icons/fa";
->>>>>>> c82c1254b0561a2d7ee2d6412b4831fd0494d86c
 
 const Mantine4 = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -50,7 +47,6 @@ const Mantine4 = () => {
     })
   });
 
-<<<<<<< HEAD
   const handleSubmit = (values) => {
     console.log(values);
     setSubmitted(true); // Set submitted to true on form submission
@@ -61,7 +57,6 @@ const Mantine4 = () => {
     <>
       <Modal opened={opened} onClose={close} title="Registration" centered>
         <form onSubmit={form.onSubmit(handleSubmit)}>
-=======
   const handleRegistration = () => {
     setLoader(true);
     client.post("register_user/", form.getTransformedValues())
@@ -75,7 +70,6 @@ const Mantine4 = () => {
     <>
       <Modal opened={opened} onClose={close} title="Registration" centered size={isMobile ? "xs" : "md"}>
         <form >
->>>>>>> c82c1254b0561a2d7ee2d6412b4831fd0494d86c
           <TextInput
             withAsterisk
             label="Name"
@@ -92,10 +86,7 @@ const Mantine4 = () => {
           /> */}
           <TextInput
             withAsterisk
-<<<<<<< HEAD
-=======
             mask="+91 (000) 000-00-00"
->>>>>>> c82c1254b0561a2d7ee2d6412b4831fd0494d86c
             label="Phone number"
             placeholder="Your phone number"
             {...form.getInputProps('mobile_num')} radius='md'
@@ -141,9 +132,7 @@ const Mantine4 = () => {
       </Modal>
 
       <BackgroundImage src="https://wallpapercave.com/wp/wp8298483.jpg" style={{ height: isMobile ? '177vh' : '95vh' }}>
-<<<<<<< HEAD
         {/* Rest of your code */}
-=======
         <Grid h={isMobile ? 'auto' : '125vh'} align='center' opacity={0.9} >
           <Grid.Col span={12}>
             <Group position='center'>
@@ -278,7 +267,6 @@ const Mantine4 = () => {
 
         </Grid>
 
->>>>>>> c82c1254b0561a2d7ee2d6412b4831fd0494d86c
       </BackgroundImage>
     </>
   );
