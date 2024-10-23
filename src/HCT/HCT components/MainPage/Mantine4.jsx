@@ -3,10 +3,13 @@ import { Card, Grid, Footer, Container, Anchor, SimpleGrid, Image, Text, List } 
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { useMediaQuery } from '@mantine/hooks';
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import facebookImage from '../../../assets/facebook-logo-facebook-icon-transparent-free-png.png';
 import facebookImage1 from '../../../assets/colored-instagram-logo-new.png';
+import client from '../../../API/api';
+import './page.css'
+
 
 // import { FaSquareFacebook } from "react-icons/fa6";
 // import { FaInstagram } from "react-icons/fa";
@@ -14,12 +17,13 @@ import facebookImage1 from '../../../assets/colored-instagram-logo-new.png';
 const Mantine4 = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const isMobile = useMediaQuery('(max-width: 800px)');
+  const [loader, setLoader] = useState(false)
 
   const form = useForm({
     initialValues: {
       name: '',
       category: '',
-      phone: '',
+      mobile_num: '',
       email: '',
       location: '',
       age: '',
@@ -29,56 +33,75 @@ const Mantine4 = () => {
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
     },
+
+    transformValues: (values) => ({
+      name: `${values.name}`,
+      category: 'prime',
+      mobile_num: `${values.mobile_num}`,
+      email: `${values.email}`,
+      location: `${values.location}`,
+      age: values.age,
+      gender: `${values.gender}`
+    })
   });
+
+  const handleRegistration = () => {
+    setLoader(true);
+    client.post("register_user/", form.getTransformedValues())
+    // .then((resp) => {
+    //    console.log(resp.data);
+
+    // })
+  }
 
   return (
     <>
-      <Modal opened={opened} onClose={close} title="Registration" centered>
-        <form onSubmit={form.onSubmit((values) => console.log(values))}>
+      <Modal opened={opened} onClose={close} title="Registration" centered size={isMobile ? "xs" : "md"}>
+        <form >
           <TextInput
             withAsterisk
             label="Name"
             placeholder="Enter your Name"
             {...form.getInputProps('name')}
-            mb='xs' radius='md'
+            radius='md'
           />
-          <TextInput
+          {/* <TextInput
             withAsterisk
             label="Category"
             placeholder="enter category"
             {...form.getInputProps('category')}
-            mb='xs' radius='md'
-          />
+             radius='md'
+          /> */}
           <TextInput
             withAsterisk
             mask="+91 (000) 000-00-00"
-            label="phone number"
+            label="Phone number"
             placeholder="Your phone number"
-            {...form.getInputProps('phone')} mb='xs' radius='md'
+            {...form.getInputProps('mobile_num')} radius='md'
           />
           <TextInput
             withAsterisk
             label="Email"
             placeholder="your@email.com"
-            {...form.getInputProps('email')} mb='xs' radius='md'
+            {...form.getInputProps('email')} radius='md'
           />
           <TextInput
             withAsterisk
             label="Location"
             placeholder="your location"
-            {...form.getInputProps('location')} mb='xs' radius='md'
+            {...form.getInputProps('location')} radius='md'
           />
           <NumberInput
             placeholder="Your age"
             label="Your age"
             withAsterisk
-            {...form.getInputProps('age')} mb='xs' radius='md'
+            {...form.getInputProps('age')} radius='md'
           />
           <Radio.Group
             name="favoriteFramework"
             label="Gender"
             withAsterisk
-            {...form.getInputProps('gender')} mb='xs' radius='md'
+            {...form.getInputProps('gender')} radius='md'
             style={{ color: 'blue' }}
           >
             <Group mt="xs">
@@ -89,7 +112,7 @@ const Mantine4 = () => {
           </Radio.Group>
 
           <Group position="right" mt="md">
-            <Button type="submit">Submit</Button>
+            <Button onClick={handleRegistration}>Submit</Button>
           </Group>
         </form>
       </Modal>
@@ -170,7 +193,7 @@ const Mantine4 = () => {
               </SimpleGrid>
             </Group>
 
-            <Footer mt={isMobile ? '-0.4rem' : '12.9rem'} height={isMobile ? "9rem" : '9rem'} pt= {isMobile? "0.5rem": '1.5rem' }  style={{ backgroundColor: '#FBD40B' }}>
+            <Footer mt={isMobile ? '-0.4rem' : '12.9rem'} height={isMobile ? "9rem" : '9rem'} pt={isMobile ? "0.5rem" : '1.5rem'} style={{ backgroundColor: '#FBD40B' }}>
               <Container style={{ display: 'flex', alignItems: 'center', padding: 0 }}>
 
                 <Link to="https://www.facebook.com/people/Sai-Teja/100063960496461/?mibextid=LQQJ4d" target='_blank'>
