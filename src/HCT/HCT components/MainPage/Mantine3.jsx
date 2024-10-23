@@ -8,6 +8,7 @@ import Image3 from '../../../assets/Sai-Teja_3-scaled-pzl0j3hbgayh3kn5ixykpndht8
 import Image4 from '../../../assets/Sai-Teja_4-scaled-pzl0jgn23zghm441e3ncok1y4mnhbfib1ey2gbfl9w.jpg';
 import Image5 from '../../../assets/Sai-Teja_5-scaled-pzl0jtssrnyi4nkx99c4ngqeg0umb6yjr82v66w2us.jpg';
 import Autoplay from 'embla-carousel-autoplay';
+import './response.css';
 
 const Mantine3 = () => {
   const autoplay = useRef(Autoplay({ delay: 2000 }));
@@ -16,7 +17,7 @@ const Mantine3 = () => {
   const isMobile = useMediaQuery('(max-width: 800px)');
 
   return (
-    <BackgroundImage 
+    <BackgroundImage className='carouselback'
       src="https://getwallpapers.com/wallpaper/full/9/7/9/200446.jpg"
       style={{ height: isMobile ? '80vh' : '85vh' }} 
     >
@@ -36,11 +37,11 @@ const Mantine3 = () => {
         className='carousel'
           mx="auto" 
           withControls 
-          controlsOffset='sm' 
-          w={isMobile ? '85vw' : '65vw'} 
-          h={isMobile ? 240 : 250} 
+          controlsOffset='lg' 
+          w={isMobile ? '88vw' : '65vw'} 
+          h={isMobile ? 226 : 250} 
           slideSize={isMobile ? '75%' : '5rem'} 
-          slidesToScroll={isMobile } 
+          slidesToScroll={1} 
           draggable 
           slideGap={isMobile ? '1rem' : '2rem'} 
           withIndicators 
@@ -50,8 +51,9 @@ const Mantine3 = () => {
         >
           <Carousel.Slide>
             <Card 
+            className='carouselcard'
               bg='#1F3469' 
-              h={isMobile ? "230px" : "240px"} 
+              
               w={isMobile ? '100%' : '305.33px'} 
               radius='15px'
             >
@@ -61,8 +63,9 @@ const Mantine3 = () => {
 
           <Carousel.Slide>
             <Card 
+            className='carouselcard'
               bg='#1F3469' 
-              h={isMobile ? "230px" : "240px"} 
+             
               w={isMobile ? '100%' : '305.33px'} 
               radius='15px'
             >
@@ -72,8 +75,9 @@ const Mantine3 = () => {
 
           <Carousel.Slide>
             <Card 
+            className='carouselcard'
               bg='#1F3469' 
-              h={isMobile ? "230px" : "240px"} 
+             
               w={isMobile ? '100%' : '305.33px'} 
               radius='15px'
             >
@@ -84,7 +88,7 @@ const Mantine3 = () => {
           <Carousel.Slide>
             <Card 
               bg='#1F3469' 
-              h={isMobile ? "230px" : "240px"} 
+             className='carouselcard'
               w={isMobile ? '100%' : '305.33px'} 
               radius='15px'
             >
@@ -94,8 +98,9 @@ const Mantine3 = () => {
 
           <Carousel.Slide>
             <Card 
+            className='carouselcard'
               bg='#1F3469' 
-              h={isMobile ? "230px" : "240px"} 
+             
               w={isMobile ? '100%' : '305.33px'} 
               radius='15px'
             >

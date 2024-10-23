@@ -96,7 +96,6 @@ const Mantine1 = () => {
         h={isMobile ? "70vh" : "90vh"}
 
       >
-        <Container>
           <AppShell
             footer={
               <Footer height={isMobile ? 65 : 70} bg="#1F3469" withBorder={false} style={{ width: isMobile ? '99%' : '100%', padding: isMobile ? '0 0.1rem' : '0 2rem' }}>
@@ -208,7 +207,7 @@ const Mantine1 = () => {
               </Card>
             </Flex>
           </AppShell>
-        </Container>
+        
       </BackgroundImage>
     </>
   );
