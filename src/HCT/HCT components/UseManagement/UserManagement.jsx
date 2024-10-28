@@ -64,6 +64,9 @@ const UserManagement = () => {
         client.get("pagination/", {
             params: {
                 page: currentPage
+            },
+            headers: {
+                Authorization: window.localStorage.getItem("access")
             }
         })
             .then((resp) => {

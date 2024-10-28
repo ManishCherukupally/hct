@@ -12,7 +12,11 @@ const DashboardHCT = () => {
     const [hctData, setHctData] = useState({})
 
     useEffect(() => {
-        client.get("all_users_status/")
+        client.get("all_users_status/", {
+            headers: {
+                Authorization: window.localStorage.getItem("access")
+            }
+        })
             .then((resp) => {
                 setHctData(resp.data.status)
             })

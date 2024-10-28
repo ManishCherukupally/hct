@@ -1,14 +1,29 @@
 import React, { useState } from 'react';
-import { AppShell, BackgroundImage, Button, Card, Container, Flex, Footer, Text, Group, Radio, TextInput, Modal, Box, NumberInput } from '@mantine/core';
+import { AppShell, BackgroundImage, Button, Card, Container, Flex, Footer, Text, Group, Radio, TextInput, Modal, Box, NumberInput, Transition, Overlay } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import client from '../../../API/api';
 import './page.css'
+import '../../../../node_modules/react-toastify/dist/ReactToastify.css'
+import { toast, ToastContainer } from 'react-toastify';
+import { MdDone } from 'react-icons/md';
+import { ImCross } from "react-icons/im";
+import { IoMdClose } from "react-icons/io";
+import { PiWarningFill } from "react-icons/pi";
+
+
 
 const Mantine1 = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const isMobile = useMediaQuery('(max-width: 800px)');
   const [loader, setLoader] = useState(false)
+
+  const [successful, setSuccessful] = useState(false)
+  const [unsuccessful, setunSuccessful] = useState(false)
+  const [emailexist, setEmailExist] = useState(false)
+  const [page, setPage] = useState(false)
+
+
 
   const form = useForm({
     initialValues: {
@@ -29,7 +44,7 @@ const Mantine1 = () => {
     transformValues: (values) => ({
       name: `${values.name}`,
       category: 'prime',
-      mobile_num: `${values.mobile_num}`,
+      mobile_num: parseInt(values.mobile_num),
       email: `${values.email}`,
       location: `${values.location}`,
       age: values.age,
@@ -42,13 +57,162 @@ const Mantine1 = () => {
   const handleRegistration = () => {
     setLoader(true);
     client.post("register_user/", form.getTransformedValues())
-    // .then((resp) => {
-    //    console.log(resp.data);
+      .then((resp) => {
+        if (resp.data.status === "user_registered_successfully") {
+          // notify()
 
-    // })
+          setTimeout(() => {
+            setSuccessful(true)
+            setLoader(false)
+            close()
+            form.reset()
+          }, 1000)
+        }
+
+        else if (resp.data.status === "failed_to_register") {
+          // unsuccessNotify()
+
+          setTimeout(() => {
+            setunSuccessful(true)
+            setLoader(false)
+            close()
+            form.reset()
+
+          }, 1000)
+        }
+
+        else if (resp.data.email) {
+          // emailexist()
+
+          setTimeout(() => {
+            setEmailExist(true)
+            setLoader(false)
+            close()
+            form.reset()
+          }, 1000)
+        }
+
+      })
+
+    setTimeout(() => {
+      setSuccessful(false);
+      setunSuccessful(false)
+      setEmailExist(false)
+      // setCheckmarkVisible(false); // Hide checkmark after 2 seconds
+    }, 5000);
   }
+
+
+
+
+  // const notify = () => {
+  //   setPage(true)
+  //   toast(
+  //     <div style={{ display: "flex", justifyContent: "space-evenly", alignItems: "center" }}>
+  //       <MdDone className='icon-animation' color='rgb(0, 171, 0)' />
+  //       <p>Submitted Successfully!</p>
+
+  //     </div>
+
+  //   );
+
+  // }
+
+  // const unsuccessNotify = () => {
+  //   setPage(true)
+
+  //   toast(
+  //     <div style={{ display: "flex", justifyContent: "space-evenly", alignItems: "center" }}>
+  //       <IoMdClose className='icon-animation' color='red' />
+  //       <p>Unsuccessful Submission!</p>
+
+  //     </div>
+
+  //   );
+  // }
+
+  // const emailExist = () => {
+  //   setPage(true)
+
+
+  //   toast(
+  //     <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", gap: 12 }}>
+  //       <PiWarningFill className='icon-animation' color='orange' />
+  //       <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+  //         <Text>Email already exists!</Text>
+  //         <Text>Please enter another email.</Text>
+  //       </div>
+  //     </div>
+
+  //   );
+  // }
+
+  // setTimeout(() => {
+  //   setPage(false)
+  //   setSuccessful(false);
+  //   setunSuccessful(false)
+  //   setEmailExist(false)
+  // }, 3000)
+
+
   return (
     <>
+      {/* <Button onClick={() => {
+        setSuccessful(true)
+      }}>Modal</Button>
+      <Button onClick={() => {
+        setEmailExist(true)
+      }}>UnSuccesful</Button> */}
+
+      {/* <button onClick={emailExist}>Notify!</button> */}
+      {/* <div>
+
+        {page && <Overlay>
+          <ToastContainer stacked
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar
+            // draggable
+            theme="light"
+
+          />
+        </Overlay>}
+      </div> */}
+      <Modal opened={successful} onClose={() => setSuccessful(false)} withCloseButton={false} centered
+        padding="md"
+      >
+        <div style={{ display: "flex", justifyContent: "space-evenly", alignItems: "center" }}>
+          <MdDone className='icon-animation' color='rgb(0, 171, 0)' />
+          <p>Submitted Successfully!</p>
+
+        </div>
+
+      </Modal>
+
+      <Modal opened={unsuccessful} onClose={() => setunSuccessful(false)} withCloseButton={false} centered
+        padding="md"
+      >
+        <div style={{ display: "flex", justifyContent: "space-evenly", alignItems: "center" }}>
+          <IoMdClose className='icon-animation' color='red' />
+          <p>Unsuccessful Submission!</p>
+
+        </div>
+      </Modal>
+
+
+      <Modal opened={emailexist} onClose={() => setEmailExist(false)} withCloseButton={false} centered
+        padding="md"
+      >
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column", gap: 12 }}>
+          <PiWarningFill className='icon-animation' color='orange' />
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <Text>Email already exists!</Text>
+            <Text>Please enter another email.</Text>
+          </div>
+        </div>
+      </Modal>
+
+
       <Modal opened={opened} onClose={close} title="Registration" centered size={isMobile ? "xs" : "md"}>
         <form >
           <TextInput
@@ -67,7 +231,6 @@ const Mantine1 = () => {
           /> */}
           <TextInput
             withAsterisk
-            mask="+91 (000) 000-00-00"
             label="Phone number"
             placeholder="Your phone number"
             {...form.getInputProps('mobile_num')} radius='md'
@@ -105,7 +268,7 @@ const Mantine1 = () => {
           </Radio.Group>
 
           <Group position="right" mt="md">
-            <Button onClick={handleRegistration}>Submit</Button>
+            <Button onClick={handleRegistration} loading={loader}>Submit</Button>
           </Group>
         </form>
       </Modal>
