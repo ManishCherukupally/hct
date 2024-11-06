@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppShell, BackgroundImage, Button, Card, Container, Flex, Footer, Text, Group, Radio, TextInput, Modal, Box, NumberInput, Transition, Overlay } from '@mantine/core';
+import { AppShell, BackgroundImage, Button, Card, Container, Flex, Footer, Text, Group, Radio, TextInput, Modal, Box, NumberInput, Transition, Overlay, SimpleGrid } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import client from '../../../API/api';
@@ -14,6 +14,10 @@ import { PiWarningFill } from "react-icons/pi";
 
 
 const Mantine1 = () => {
+  const mediumScreen = useMediaQuery("(min-width: 1100px)");
+  const largeScreen = useMediaQuery("(min-width: 1440px)");
+  const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
+
   const [opened, { open, close }] = useDisclosure(false);
   const isMobile = useMediaQuery('(max-width: 800px)');
   const [loader, setLoader] = useState(false)
@@ -22,31 +26,35 @@ const Mantine1 = () => {
   const [unsuccessful, setunSuccessful] = useState(false)
   const [emailexist, setEmailExist] = useState(false)
   const [page, setPage] = useState(false)
+  const [value, setValue] = useState('active');
 
 
 
   const form = useForm({
     initialValues: {
-      name: '',
-      category: '',
-      phone: '',
-      email: '',
-      location: '',
+      name: "",
+      business_email: "",
+      contact_no: "",
+      location: "",
+      user_status: value,
+      username: "",
+      category: "",
       age: '',
-      gender: '',
-      termsOfService: false,
+      gender: ''
     },
 
     validate: {
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+      business_email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
     },
 
     transformValues: (values) => ({
       name: `${values.name}`,
-      category: 'prime',
-      mobile_num: parseInt(values.mobile_num),
-      email: `${values.email}`,
+      business_email: `${values.business_email}`,
+      contact_no: `${values.contact_no}`,
+      user_status: `${value}`,
       location: `${values.location}`,
+      username: `${values.business_email}`,
+      category: 'gold',
       age: values.age,
       gender: `${values.gender}`
     })
@@ -215,58 +223,91 @@ const Mantine1 = () => {
 
       <Modal opened={opened} onClose={close} title="Registration" centered size={isMobile ? "xs" : "md"}>
         <form >
-          <TextInput
-            withAsterisk
-            label="Name"
-            placeholder="Enter your Name"
-            {...form.getInputProps('name')}
-            radius='md'
-          />
-          {/* <TextInput
-            withAsterisk
-            label="Category"
-            placeholder="enter category"
-            {...form.getInputProps('category')}
-             radius='md'
-          /> */}
-          <TextInput
-            withAsterisk
-            label="Phone number"
-            placeholder="Your phone number"
-            {...form.getInputProps('mobile_num')} radius='md'
-          />
-          <TextInput
-            withAsterisk
-            label="Email"
-            placeholder="your@email.com"
-            {...form.getInputProps('email')} radius='md'
-          />
-          <TextInput
-            withAsterisk
-            label="Location"
-            placeholder="your location"
-            {...form.getInputProps('location')} radius='md'
-          />
-          <NumberInput
-            placeholder="Your age"
-            label="Your age"
-            withAsterisk
-            {...form.getInputProps('age')} radius='md'
-          />
-          <Radio.Group
-            name="favoriteFramework"
-            label="Gender"
-            withAsterisk
-            {...form.getInputProps('gender')} radius='md'
-            style={{ color: 'blue' }}
-          >
-            <Group mt="xs">
-              <Radio value="male" label="Male" />
-              <Radio value="female" label="Female" />
-              <Radio value="other" label="Other" />
-            </Group>
-          </Radio.Group>
+          <SimpleGrid cols={1}>
+            <TextInput
 
+              label="Name"
+              name='name'
+              placeholder="Enter name"
+
+              {...form.getInputProps('name')}
+
+            />
+            <TextInput
+
+              label="Email"
+              name='business_email'
+              placeholder="user@email.com"
+
+              {...form.getInputProps('business_email')}
+
+            />
+            <NumberInput
+              placeholder="Your age"
+              label="Your age"
+
+              {...form.getInputProps('age')} radius='md'
+            />
+
+
+
+            {/* <TextInput
+
+    label="Password"
+    name='password'
+    placeholder=" password"
+   
+    {...form.getInputProps('password')}
+
+/> */}
+            <TextInput
+
+              label="Contact No."
+              name='contact_no'
+              placeholder="Enter Contact No."
+
+              {...form.getInputProps('contact_no')}
+
+            />
+            <TextInput
+
+              label="Location"
+              name='location'
+              placeholder="Enter Location"
+
+              {...form.getInputProps('location')}
+
+            />
+
+            <Radio.Group
+              name="favoriteFramework"
+              label="Gender"
+
+              {...form.getInputProps('gender')} radius='md'
+              style={{ color: 'blue' }}
+            >
+              <Group mt="xs">
+                <Radio value="male" label="Male" />
+                <Radio value="female" label="Female" />
+                <Radio value="other" label="Other" />
+              </Group>
+            </Radio.Group>
+
+
+            <Radio.Group
+              value={value}
+              onChange={setValue}
+
+              label="Select status of the user"
+
+
+            >
+              <Group mt={"xs"}>
+                <Radio value="active" label="Active" />
+                <Radio value="inactive" label="Inactive" />
+              </Group>
+            </Radio.Group>
+          </SimpleGrid>
           <Group position="right" mt="md">
             <Button onClick={handleRegistration} loading={loader}>Submit</Button>
           </Group>

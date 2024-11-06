@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Card, Center, Container, Flex, Group, Loader, Modal, Overlay, Pagination, Radio, Select, SimpleGrid, Space, Table, Text, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Button, Card, Center, Container, Flex, Group, Loader, Modal, NumberInput, Overlay, Pagination, Radio, ScrollArea, Select, SimpleGrid, Space, Table, Text, TextInput, Tooltip } from '@mantine/core'
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
 import { BiSearch } from 'react-icons/bi';
@@ -14,7 +14,7 @@ const UserManagement = () => {
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
     const [value, setValue] = useState('active');
-
+    const [gender, setgender] = useState('male')
 
     const [userData, setUserData] = useState([])
 
@@ -38,6 +38,8 @@ const UserManagement = () => {
     // const [render, setRender] = useState(0)
     const [loaderVisible, setLoaderVisible] = useState(false);
 
+    const [categoryList, setcategoryList] = useState([])
+    const [selectedCategory, setselectedCategory] = useState('')
     // console.log(userName)
     const form = useForm({
 
@@ -46,7 +48,11 @@ const UserManagement = () => {
             business_email: "",
             contact_no: "",
             location: "",
-            user_status: value
+            user_status: value,
+            username: "",
+            category: "",
+            age: '',
+            gender: gender
         },
         transformValues: (values) => ({
             name: `${values.name}`,
@@ -54,6 +60,10 @@ const UserManagement = () => {
             contact_no: `${values.contact_no}`,
             user_status: `${value}`,
             location: `${values.location}`,
+            username: `${values.business_email}`,
+            category: `${selectedCategory}`,
+            age: values.age,
+            gender: `${gender}`
             // company: '',
             // years_of_experience: '',
             // job_position: ''
@@ -66,7 +76,7 @@ const UserManagement = () => {
                 page: currentPage
             },
             headers: {
-                Authorization: window.localStorage.getItem("access")
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
             }
         })
             .then((resp) => {
@@ -128,8 +138,11 @@ const UserManagement = () => {
                 )
 
             }</td>
-
+            {/* <td style={{ color: "orange" }}>{item.category}</td> */}
+            <td >{item.category}</td>
             <td>{item.name}</td>
+            <td>{item.age}</td>
+            <td>{item.gender}</td>
             <td>{item.contact_no}</td>
             <td>{item.business_email}</td>
             <td>{handleDate(item.date_joined)}</td>
@@ -157,15 +170,23 @@ const UserManagement = () => {
         form.setValues({
             name: data.name,
             business_email: data.business_email,
+            category: setselectedCategory(data.category),
             contact_no: data.contact_no,
             location: data.location,
-            user_status: value
+            user_status: data.user_status,
+            age: data.age,
+            gender: setgender(data.gender)
+
         });
     }
+
     const handleDelete = () => {
         setLoaderVisible(true)
 
-        client.delete('add_delete_users/', {
+        client.delete('delete_users/', {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            },
             params: {
                 business_email: userName
             }
@@ -180,8 +201,14 @@ const UserManagement = () => {
     const handleStatus = () => {
         setLoaderVisible(true)
 
-        client.put("update_user_status/",
-            { business_email: userName }
+        client.put("update_user_status/", { business_email: userName },
+            {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem("access")}`
+                },
+
+
+            }
         )
             .catch(err => console.error(err))
         setTimeout(() => {
@@ -193,7 +220,12 @@ const UserManagement = () => {
     const handleAddUser = () => {
         setLoaderVisible(true)
 
-        client.post("add_delete_users/", form.getTransformedValues())
+        client.post("register_user/", form.getTransformedValues(), {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            },
+
+        })
             .catch(err => console.error(err))
         setTimeout(() => {
             setUserModal(false)
@@ -203,13 +235,38 @@ const UserManagement = () => {
 
     const handleEditUser = () => {
         setLoaderVisible(true)
-        client.put("edit_user_details_hct/", form.getTransformedValues())
+        client.put("edit_user_details_hct/", form.getTransformedValues(), {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            },
+
+        }
+        )
             .catch(err => console.error(err))
         setTimeout(() => {
             setEditModal(false)
             setLoaderVisible(false)
         }, 1000);
     }
+
+    useEffect(() => {
+        client.get('hct_category_dd/', {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            }
+        })
+            .then((resp) => {
+                setcategoryList(resp.data['category_list'].map(item => ({
+                    value: item.category,
+                    label: item.category
+                })))
+            })
+    }, [])
+    console.log(selectedCategory);
+    console.log(gender);
+    console.log(value);
+
+
 
     return (
         <div>
@@ -237,6 +294,25 @@ const UserManagement = () => {
                                 {...form.getInputProps('business_email')}
 
                             />
+                            <NumberInput
+                                placeholder="Your age"
+                                label="Your age"
+                                size={mediumScreen ? "md" : "lg"}
+
+                                {...form.getInputProps('age')}
+                            />
+                            <Select
+                                data={categoryList}
+                                placeholder='Select category'
+                                label="Category"
+                                value={selectedCategory}
+                                size={mediumScreen ? "md" : "lg"}
+                                onChange={(value) => {
+                                    setselectedCategory(value)
+                                }}
+                            />
+
+
                             {/* <TextInput
 
                                     label="Password"
@@ -264,6 +340,21 @@ const UserManagement = () => {
                                 {...form.getInputProps('location')}
 
                             />
+
+                            <Radio.Group
+                                name="favoriteFramework"
+                                label="Gender"
+                                value={gender}
+                                onChange={setgender}
+                            >
+                                <Group mt="xs">
+                                    <Radio value="male" label="Male" />
+                                    <Radio value="female" label="Female" />
+                                    <Radio value="other" label="Other" />
+                                </Group>
+                            </Radio.Group>
+
+
                             <Radio.Group
                                 value={value}
                                 onChange={setValue}
@@ -293,6 +384,7 @@ const UserManagement = () => {
                 <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={EditModal} onClose={() => {
                     setEditModal(false)
                     setEditStatus(false)
+                    setselectedCategory('')
                 }} title="Edit user details">
                     <form>
                         <SimpleGrid cols={1}>
@@ -314,6 +406,26 @@ const UserManagement = () => {
                                 {...form.getInputProps('business_email')}
 
                             />
+
+                            <NumberInput
+                                placeholder="Your age"
+                                label="Your age"
+                                size={mediumScreen ? "md" : "lg"}
+
+                                {...form.getInputProps('age')} radius='md'
+                            />
+
+                            <Select
+                                data={categoryList}
+                                placeholder='Select category'
+                                label="Category"
+                                size={mediumScreen ? "md" : "lg"}
+                                value={selectedCategory}
+                                onChange={(value) => {
+                                    setselectedCategory(value)
+                                }}
+                            />
+
                             {/* <TextInput
 
                                     label="Password"
@@ -342,6 +454,21 @@ const UserManagement = () => {
                                 {...form.getInputProps('location')}
 
                             />
+
+                            <Radio.Group
+                                name="favoriteFramework"
+                                label="Gender"
+                                value={gender}
+                                onChange={setgender}
+                            >
+                                <Group mt="xs">
+                                    <Radio value="male" label="Male" />
+                                    <Radio value="female" label="Female" />
+                                    <Radio value="other" label="Other" />
+                                </Group>
+                            </Radio.Group>
+
+
                             <Radio.Group
                                 value={value}
                                 onChange={setValue}
@@ -350,13 +477,12 @@ const UserManagement = () => {
 
                                 withAsterisk
                             >
-                                <Group>
+                                <Group mt={"xs"}>
                                     <Radio value="active" label="Active" />
                                     <Radio value="inactive" label="Inactive" />
                                 </Group>
                             </Radio.Group>
 
-                            <Space h={15} />
                             <Flex justify={"end"} gap={"2%"}>
                                 <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
                                     variant='filled' onClick={handleEditUser}>Done</Button>
@@ -411,13 +537,7 @@ const UserManagement = () => {
                         <Button onClick={() => {
                             setUserModal(true)
                             setEditStatus(false)
-                            form.setValues({
-                                name: "",
-                                business_email: "",
-                                contact_no: "",
-                                location: "",
-                                user_status: value
-                            })
+                            form.reset()
                         }}
                             radius={10} style={{ backgroundColor: "#233c79" }}>Add User</Button>
                     </Group>
@@ -425,21 +545,49 @@ const UserManagement = () => {
 
                 <Space h={15} />
 
-                <Card withBorder radius={10}>
-                    <Table striped>
-                        <thead>
-                            <tr>
-                                <th> Status </th>
-                                <th> Name </th>
-                                <th> Contact no. </th>
-                                <th> Email </th>
-                                <th> Date of joining </th>
-                                <th> Location </th>
-                                <th> Action </th>
-                            </tr>
-                        </thead>
-                        <tbody>{rows}</tbody>
-                    </Table>
+                <Card withBorder radius={10} shadow='md'>
+                    {mediumScreen ? (
+
+                        <Table striped>
+                            <thead>
+                                <tr>
+                                    <th> Status </th>
+                                    <th> Category </th>
+                                    <th> Name </th>
+                                    <th> Age </th>
+                                    <th> Gender </th>
+                                    <th> Contact no. </th>
+                                    <th> Email </th>
+                                    <th> Date of joining </th>
+                                    <th> Location </th>
+                                    <th> Action </th>
+                                </tr>
+                            </thead>
+                            <tbody>{rows}</tbody>
+                        </Table>
+
+                    ) : (
+                        <ScrollArea offsetScrollbars h={400} >
+                            <Table striped>
+                                <thead>
+                                    <tr>
+                                        <th> Status </th>
+                                        <th> Category </th>
+                                        <th> Name </th>
+                                        <th> Age </th>
+                                        <th> Gender </th>
+                                        <th> Contact no. </th>
+                                        <th> Email </th>
+                                        <th> Date of joining </th>
+                                        <th> Location </th>
+                                        <th> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>{rows}</tbody>
+                            </Table>
+                        </ScrollArea>
+                    )}
+
                     <Space h={"xl"} />
                     <Flex justify={"end"}>
                         <Pagination value={currentPage} onChange={setCurrentPage} total={recordsPerPage} color="yellow" siblings={1} />

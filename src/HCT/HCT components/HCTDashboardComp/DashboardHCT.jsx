@@ -14,7 +14,7 @@ const DashboardHCT = () => {
     useEffect(() => {
         client.get("all_users_status/", {
             headers: {
-                Authorization: window.localStorage.getItem("access")
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
             }
         })
             .then((resp) => {

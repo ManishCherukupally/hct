@@ -25,7 +25,7 @@ const LoginFormHCT = () => {
             {mediumScreen ? (<Box >
                 <BackgroundImage className='bgimg' h={"auto"} w={"100%"}
 
-                    src='https://media.istockphoto.com/id/961183024/video/dumbbell-in-gym.jpg?s=640x640&k=20&c=0W3a3ZfQzpNr24w1vcEfUyEPI3fENT-GF5SVQtQcUNc='>
+                    src='https://t4.ftcdn.net/jpg/03/17/72/47/360_F_317724775_qHtWjnT8YbRdFNIuq5PWsSYypRhOmalS.jpg'>
                     <BackgroundImage className='blur' zIndex="998" w="100%" h={["80vh", "80vh", "100vh", "100vh"]} >
                         <Flex justify={"end"}>
                             <div className="logincard" style={{ marginTop: "8em", marginRight: "7em" }}>

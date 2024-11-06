@@ -1,7 +1,7 @@
 import { useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
 import client from '../../../API/api';
-import { ActionIcon, Button, Card, Container, Flex, Modal, MultiSelect, Pagination, Select, Space, Spoiler, Table, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Button, Card, Container, Flex, Modal, MultiSelect, Pagination, ScrollArea, Select, Space, Spoiler, Table, Text, Tooltip } from '@mantine/core';
 import { MdDeleteForever, MdEdit } from 'react-icons/md';
 import { useForm } from '@mantine/form';
 import { TimeInput } from '@mantine/dates';
@@ -49,6 +49,9 @@ const Broadcast = () => {
         client.get("broadcast_pagination/", {
             params: {
                 page: currentPage
+            },
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
             }
         })
             .then((resp) => {
@@ -74,7 +77,11 @@ const Broadcast = () => {
     }, [currentPage, loaderVisible])
 
     useEffect(() => {
-        client.get('hct_template_dd')
+        client.get('hct_template_dd', {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            }
+        })
             .then((resp) => {
                 settemplateData(resp.data['template_list']);
 
@@ -89,7 +96,11 @@ const Broadcast = () => {
 
 
     useEffect(() => {
-        client.get('hct_active_users_dd')
+        client.get('hct_active_users_dd', {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            }
+        })
             .then((resp) => {
                 setuserData(resp.data['active_users'].map((user) => ({
                     value: user.user_id,
@@ -230,8 +241,12 @@ const Broadcast = () => {
 
     const handleAddBroadcast = () => {
         setLoaderVisible(true)
-        console.log(form.getTransformedValues());
-        client.post("create_broadcast/", form.getTransformedValues())
+        // console.log(form.getTransformedValues());
+        client.post("create_broadcast/", form.getTransformedValues(), {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            }
+        })
             .catch(err => console.error(err))
 
         setTimeout(() => {
@@ -246,6 +261,9 @@ const Broadcast = () => {
         client.delete('delete_broadcast/', {
             params: {
                 broadcast_id: broadcastId
+            },
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
             }
         })
             .catch(err => console.error(err))
@@ -257,7 +275,11 @@ const Broadcast = () => {
 
     const handleEditBroadcast = () => {
         setLoaderVisible(true)
-        client.put('update_broadcast/', form.getTransformedValues())
+        client.put('update_broadcast/', form.getTransformedValues(), {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            }
+        })
             .catch(err => console.error(err))
         setTimeout(() => {
             setEditModal(false)
@@ -271,7 +293,12 @@ const Broadcast = () => {
         setLoaderVisible(true)
         client.put('broadcast/', {
             broadcast_id: broadcastId
-        })
+        },
+            {
+                headers: {
+                    Authorization: `Bearer ${window.localStorage.getItem("access")}`
+                }
+            })
             .catch(err => console.error(err))
         setTimeout(() => {
             setsendModal(false)
@@ -453,21 +480,23 @@ const Broadcast = () => {
                 </Flex>
 
                 <Space h={15} />
-                <Card withBorder radius={10}>
-                    <Table striped>
-                        <thead >
-                            <tr >
-                                <th> Template name </th>
-                                <th> Users </th>
-                                <th> Frequency </th>
-                                <th> Source </th>
-                                <th> Time </th>
-                                {/* <th> Location </th> */}
-                                <th> Action </th>
-                            </tr>
-                        </thead>
-                        <tbody>{rows}</tbody>
-                    </Table>
+                <Card withBorder radius={10} shadow='md'>
+                    <ScrollArea offsetScrollbars h={400} >
+                        <Table striped withColumnBorders={mediumScreen ? false : true}>
+                            <thead >
+                                <tr >
+                                    <th> Template name </th>
+                                    <th> Users </th>
+                                    <th> Frequency </th>
+                                    <th> Source </th>
+                                    <th> Time </th>
+                                    {/* <th> Location </th> */}
+                                    <th> Action </th>
+                                </tr>
+                            </thead>
+                            <tbody>{rows}</tbody>
+                        </Table>
+                    </ScrollArea>
                     <Space h={"xl"} />
                     <Flex justify={"end"}>
                         <Pagination value={currentPage} onChange={setCurrentPage} total={recordsPerPage} color="yellow" siblings={1} />

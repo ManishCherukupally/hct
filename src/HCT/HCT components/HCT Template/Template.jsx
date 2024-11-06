@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Card, Container, Flex, Group, Modal, Pagination, SimpleGrid, Space, Spoiler, Table, Text, TextInput, Textarea, Tooltip } from '@mantine/core'
+import { ActionIcon, Button, Card, Container, Flex, Group, Modal, Pagination, ScrollArea, SimpleGrid, Space, Spoiler, Table, Text, TextInput, Textarea, Tooltip } from '@mantine/core'
 import { useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
 import client from '../../../API/api';
@@ -31,6 +31,9 @@ const Template = () => {
         client.get("template_pagination/", {
             params: {
                 page: currentPage
+            },
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
             }
         })
             .then((resp) => {
@@ -114,7 +117,11 @@ const Template = () => {
     const handleAddTemplate = () => {
         setLoaderVisible(true)
 
-        client.post("create_template/", form.getTransformedValues())
+        client.post("create_template/", form.getTransformedValues(), {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            }
+        })
             .catch(err => console.error(err))
         setTimeout(() => {
             settemplateModal(false)
@@ -128,6 +135,9 @@ const Template = () => {
         client.delete('delete_template/', {
             params: {
                 template_id: templateId
+            },
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
             }
         })
             .catch(err => console.error(err))
@@ -140,7 +150,11 @@ const Template = () => {
     const handleEditTemplate = () => {
         // console.log(templateName);
         setLoaderVisible(true)
-        client.put("update_template/", form.getTransformedValues())
+        client.put("update_template/", form.getTransformedValues(), {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            }
+        })
             .catch(err => console.error(err))
         setTimeout(() => {
             setEditModal(false)
@@ -302,20 +316,22 @@ const Template = () => {
                 <Space h={15} />
 
                 <Card withBorder radius={10}>
-                    <Table striped >
-                        <thead>
-                            <tr>
-                                <th> Template Name </th>
-                                <th> Template Heading </th>
-                                <th>Template Body </th>
-                                {/* <th> Email </th>
+                    <ScrollArea offsetScrollbars h={400} >
+                        <Table striped >
+                            <thead>
+                                <tr>
+                                    <th> Template Name </th>
+                                    <th> Template Heading </th>
+                                    <th>Template Body </th>
+                                    {/* <th> Email </th>
                                 <th> Date of joining </th>
                                 <th> Location </th> */}
-                                <th> Action </th>
-                            </tr>
-                        </thead>
-                        <tbody>{rows}</tbody>
-                    </Table>
+                                    <th> Action </th>
+                                </tr>
+                            </thead>
+                            <tbody>{rows}</tbody>
+                        </Table>
+                    </ScrollArea>
                     <Space h={"xl"} />
                     <Flex justify={"end"}>
                         <Pagination value={currentPage} onChange={setCurrentPage} total={recordsPerPage} color="yellow" siblings={1} />
