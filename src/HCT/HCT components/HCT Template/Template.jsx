@@ -315,23 +315,43 @@ const Template = () => {
 
                 <Space h={15} />
 
-                <Card withBorder radius={10}>
-                    <ScrollArea offsetScrollbars h={400} >
-                        <Table striped >
-                            <thead>
-                                <tr>
-                                    <th> Template Name </th>
-                                    <th> Template Heading </th>
-                                    <th>Template Body </th>
-                                    {/* <th> Email </th>
+                <Card withBorder radius={10} shadow='md'>
+                    {
+                        mediumScreen ? (
+                            <Table striped >
+                                <thead>
+                                    <tr>
+                                        <th> Template Name </th>
+                                        <th> Template Heading </th>
+                                        <th>Template Body </th>
+                                        {/* <th> Email </th>
                                 <th> Date of joining </th>
                                 <th> Location </th> */}
-                                    <th> Action </th>
-                                </tr>
-                            </thead>
-                            <tbody>{rows}</tbody>
-                        </Table>
-                    </ScrollArea>
+                                        <th> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>{rows}</tbody>
+                            </Table>
+                        ) : (
+                            <ScrollArea offsetScrollbars h={400} >
+                                <Table striped >
+                                    <thead>
+                                        <tr>
+                                            <th> Template Name </th>
+                                            <th> Template Heading </th>
+                                            <th>Template Body </th>
+                                            {/* <th> Email </th>
+                                <th> Date of joining </th>
+                                <th> Location </th> */}
+                                            <th> Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>{rows}</tbody>
+                                </Table>
+                            </ScrollArea>
+                        )
+                    }
+
                     <Space h={"xl"} />
                     <Flex justify={"end"}>
                         <Pagination value={currentPage} onChange={setCurrentPage} total={recordsPerPage} color="yellow" siblings={1} />

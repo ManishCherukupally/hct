@@ -481,22 +481,42 @@ const Broadcast = () => {
 
                 <Space h={15} />
                 <Card withBorder radius={10} shadow='md'>
-                    <ScrollArea offsetScrollbars h={400} >
-                        <Table striped withColumnBorders={mediumScreen ? false : true}>
-                            <thead >
-                                <tr >
-                                    <th> Template name </th>
-                                    <th> Users </th>
-                                    <th> Frequency </th>
-                                    <th> Source </th>
-                                    <th> Time </th>
-                                    {/* <th> Location </th> */}
-                                    <th> Action </th>
-                                </tr>
-                            </thead>
-                            <tbody>{rows}</tbody>
-                        </Table>
-                    </ScrollArea>
+                    {
+                        mediumScreen ? (
+                            <Table striped withColumnBorders={mediumScreen ? false : true}>
+                                <thead >
+                                    <tr >
+                                        <th> Template name </th>
+                                        <th> Users </th>
+                                        <th> Frequency </th>
+                                        <th> Source </th>
+                                        <th> Time </th>
+                                        {/* <th> Location </th> */}
+                                        <th> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>{rows}</tbody>
+                            </Table>
+                        ) : (
+                            <ScrollArea offsetScrollbars h={400} >
+                                <Table striped withColumnBorders={mediumScreen ? false : true}>
+                                    <thead >
+                                        <tr >
+                                            <th> Template name </th>
+                                            <th> Users </th>
+                                            <th> Frequency </th>
+                                            <th> Source </th>
+                                            <th> Time </th>
+                                            {/* <th> Location </th> */}
+                                            <th> Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>{rows}</tbody>
+                                </Table>
+                            </ScrollArea>
+                        )
+                    }
+
                     <Space h={"xl"} />
                     <Flex justify={"end"}>
                         <Pagination value={currentPage} onChange={setCurrentPage} total={recordsPerPage} color="yellow" siblings={1} />
