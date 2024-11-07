@@ -173,7 +173,7 @@ const UserManagement = () => {
             category: setselectedCategory(data.category),
             contact_no: data.contact_no,
             location: data.location,
-            user_status: data.user_status,
+            user_status: setValue(data.user_status),
             age: data.age,
             gender: setgender(data.gender)
 
