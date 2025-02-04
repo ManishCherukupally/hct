@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/static/css/main.0123671e.css",
+    "main.js": "/static/js/main.e229ebf7.js",
+    "static/media/Party.mp4": "/static/media/Party.d83bce5b8c72b1042398.mp4",
+    "static/media/colored-instagram-logo-new.png": "/static/media/colored-instagram-logo-new.179968904767d9eff9a7.png",
+    "static/media/hctlogo.jpeg": "/static/media/hctlogo.9631ba91f64d713c4e17.jpeg",
+    "static/media/Sai-Teja_3-scaled-pzl0j3hbgayh3kn5ixykpndht8gcbo22blt9qfz3p0.jpg": "/static/media/Sai-Teja_3-scaled-pzl0j3hbgayh3kn5ixykpndht8gcbo22blt9qfz3p0.36f62abe53242761a801.jpg",
+    "static/media/Sai-Teja_2-scaled-pzl0ipdqlsf69f7mt9v668xkwgdu47i39o0zjak0ac.jpg": "/static/media/Sai-Teja_2-scaled-pzl0ipdqlsf69f7mt9v668xkwgdu47i39o0zjak0ac.526bacffec5f336a73b9.jpg",
+    "static/media/Sai-Teja_5-scaled-pzl0jtssrnyi4nkx99c4ngqeg0umb6yjr82v66w2us.jpg": "/static/media/Sai-Teja_5-scaled-pzl0jtssrnyi4nkx99c4ngqeg0umb6yjr82v66w2us.7f569959239fe98de073.jpg",
+    "static/media/facebook-logo-facebook-icon-transparent-free-png.png": "/static/media/facebook-logo-facebook-icon-transparent-free-png.7adffae62ed4031b6b5c.png",
+    "static/media/Sai-Teja_4-scaled-pzl0jgn23zghm441e3ncok1y4mnhbfib1ey2gbfl9w.jpg": "/static/media/Sai-Teja_4-scaled-pzl0jgn23zghm441e3ncok1y4mnhbfib1ey2gbfl9w.a9b46668e890543abfd4.jpg",
+    "static/media/Sai-Teja_1-scaled-pzl0id5u4xyg2hpdsml0ru0l6g22c55kvzjoap24j8 .jpg": "/static/media/Sai-Teja_1-scaled-pzl0id5u4xyg2hpdsml0ru0l6g22c55kvzjoap24j8 .2f4a3ee9f8bab3558d61.jpg",
+    "index.html": "/index.html",
+    "main.0123671e.css.map": "/static/css/main.0123671e.css.map",
+    "main.e229ebf7.js.map": "/static/js/main.e229ebf7.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0123671e.css",
+    "static/js/main.e229ebf7.js"
+  ]
+}
