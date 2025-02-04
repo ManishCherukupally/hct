@@ -7,7 +7,7 @@ const client = axios.create(
     //     baseURL: 'https://hct.automactechnologies.in/'
     // }
     {
-        baseURL: 'http://192.168.46.147:8000/'
+        baseURL: 'http://192.168.29.220:8000/'
     }
 )
 

@@ -13,6 +13,7 @@ const UserManagement = () => {
     const mediumScreen = useMediaQuery("(min-width: 1100px)");
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
+
     const [value, setValue] = useState('active');
     const [gender, setgender] = useState('male')
 
@@ -156,7 +157,10 @@ const UserManagement = () => {
                             setUserName(item.business_email)
                             editDetails(item)
                             setEditStatus(true)
-                        }} ><MdEdit color="#233c79" /></ActionIcon></Tooltip>
+                        }} >
+                            <MdEdit color="#233c79" />
+                            </ActionIcon>
+                    </Tooltip>
                     <Tooltip label={"Delete"}><ActionIcon variant='subtle' onClick={() => {
                         setOpenModal(true)
                         setUserName(item.business_email)
@@ -262,9 +266,9 @@ const UserManagement = () => {
                 })))
             })
     }, [])
-    console.log(selectedCategory);
-    console.log(gender);
-    console.log(value);
+    // console.log(selectedCategory);
+    // console.log(gender);
+    // console.log(value);
 
 
 

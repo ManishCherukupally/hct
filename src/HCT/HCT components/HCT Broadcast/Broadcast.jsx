@@ -26,22 +26,24 @@ const Broadcast = () => {
     const [sendModal, setsendModal] = useState(false)
 
     const [broadcastId, setbroadcastId] = useState(null)
+    const [editBroadcastId,seteditBroadcastId] = useState(null)
 
     const [templateData, settemplateData] = useState([])
     const [templatedropDownData, settemplatedropDownData] = useState([])
     const [selectedTemplate, setSelectedTemplate] = useState(null);
-    console.log(selectedTemplate)
+    // console.log(selectedTemplate)
 
 
     const [userData, setuserData] = useState([])
     const [selectedUsers, setSelectedUsers] = useState([]);
+    // console.log(selectedUsers)
 
     const [categoryList, setcategoryList] = useState([])
     const [selectedCategory, setSelectedCategory] = useState([])
     // console.log(selectedCategory);
-    
 
     const [selectedValue,setSelectedValue] = useState('')
+    // console.log(selectedValue)
 
     const [editData, setEditData] = useState(null);
     // const [userData, setuserData] = useState([])
@@ -51,15 +53,15 @@ const Broadcast = () => {
 
     const [selectedSource, setSelectedSource] = useState('');
 
-    const [newTemplateId, setnewTemplateId] = useState(null)
+    const [newTemplateId, setnewTemplateId] = useState(null) 
     const [newTemplate, setnewTemplate] = useState(null)
     const [newtemplateEdit, setnewtemplateEdit] = useState(false)
-
-    // const [brodType, setbrodType] =useState('add')
-
+    // console.log(newTemplate) 
+    // console.log(newtemplateEdit)   
+    
     const [isEditMode, setIsEditMode] = useState(false);
     const[editValue, setEditValue] = useState('')
-    console.log(editValue);
+    // console.log(editValue);
 
     useEffect(() => {
         client.get("broadcast_pagination/", {
@@ -73,6 +75,7 @@ const Broadcast = () => {
             .then((resp) => {
                 // console.log(resp.data['templates']);
                 setbroadcastData(resp.data['templates'])
+                console.log(resp.data['templates'])
 
                 // resp.data['templates'].map(item => item.users.map(item => ({
                 //     value: item.user_id,
@@ -99,7 +102,6 @@ const Broadcast = () => {
         })
             .then((resp) => {
                 settemplateData(resp.data['template_list']);
-
                 settemplatedropDownData(resp.data['template_list'].map(template => ({
                     value: template.template_id,
                     label: template.template_name,
@@ -138,7 +140,7 @@ const Broadcast = () => {
                     value: item.category_id,
                     label: item.category
                 })))
-                console.log(resp.data['category_list'])
+                // console.log(resp.data['category_list'])
             })
     }, [])
     // console.log(selectedCategory);
@@ -151,7 +153,7 @@ const Broadcast = () => {
         // setSelectedTemplate(selectedTemplateId)
     };
 
-    console.log(newTemplate);
+    // console.log(newTemplate);
 
     const handleSelectUsers = (values) => {
         // setSelectedUsers(values);
@@ -181,7 +183,6 @@ const Broadcast = () => {
         } else if (item.category && item.category.length > 0) {
             setEditValue('Category');
         }
-
         setIsEditMode(true);
         setEditData(item);
         setSelectedTemplate(parseInt(item.template_id)); // Make sure this sets the correct template ID
@@ -203,8 +204,8 @@ const Broadcast = () => {
         form.setFieldValue('time', "");
         setIsEditMode(false);
     }
+// console.log(templatedropDownData);
 
-    // console.log(templatedropDownData);
     const rows = broadcastData.map((item) => (
         <tr key={item.id} style={{ height: 50 }}>
             <td style={{ width: '346px' }}>{item.template}</td>
@@ -254,6 +255,7 @@ const Broadcast = () => {
                             setEditModal(true);
                             setnewtemplateEdit(true);
                             handleEditData(item);
+                            seteditBroadcastId(item.id)
                         }}>
                             <MdEdit color="#233c79" />
                         </ActionIcon>
@@ -284,13 +286,14 @@ const Broadcast = () => {
             new_template_id: null
         },
         transformValues: (values) => ({
+            broadcast_id:editBroadcastId,
             template_id: selectedTemplate,
-            users: selectedValue , //=== "User" ? selectedUsers : [],
+            users: selectedValue  === "User" ? selectedUsers : [],
             frequency: selectedFrequency,
             follow_up: selectedSource,
             categories:selectedValue === "Category" ? selectedCategory : [],
-            time: selectedFrequency === 'once' ? "00:00:00" : `${values.time}`,
-            new_template_id: isEditMode ? newTemplate : [],
+            time: selectedFrequency === 'once' ? "00:00:00" : values.time,
+            new_template_id: isEditMode ? newTemplate : selectedTemplate,
             // new_template_id:newTemplate
         })
     })
@@ -363,92 +366,91 @@ const Broadcast = () => {
             setLoaderVisible(false)
         }, 1000);
     }
-    return (
-        <div>
-            <Container mt={mediumScreen ? "5rem" : "2rem"} size={"xxl"}>
+return (
+    <div>
+        <Container mt={mediumScreen ? "5rem" : "2rem"} size={"xxl"}>
 
-                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={broadcastModal} onClose={() => setbroadcastModal(false)} title="Add Broadcast">
-                    <Select
-                        data={templatedropDownData}
-                        placeholder="Select a template"
-                        label="Templates"
-                        value={selectedTemplate}
-                        onChange={handleSelectTemplate}
-                    />
+            <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={broadcastModal} onClose={() => setbroadcastModal(false)} title="Add Broadcast">
+                <Select
+                    data={templatedropDownData}
+                    placeholder="Select a template"
+                    label="Templates"
+                    value={selectedTemplate}
+                    onChange={handleSelectTemplate}
+                />
 
-                    <Select 
-                        data={[
-                            { value: 'User', label: 'User' },
-                            { value: 'Category', label: 'Category' }
-                        ]}
-                        placeholder="Select By"
-                        label="Select By"
-                        value={selectedValue}
-                        onChange={setSelectedValue}
-                    />
+                <Select 
+                    data={[
+                        { value: 'User', label: 'User' },
+                        { value: 'Category', label: 'Category' }
+                    ]}
+                    placeholder="Select By"
+                    label="Select By"
+                    value={selectedValue}
+                    onChange={setSelectedValue}
+                />
 
-                    {
-                        selectedValue === "User" && (<MultiSelect
-                            data={userData}
-                            placeholder="Select User"
-                            label="User"
-                            value={selectedUsers}
-                            onChange={handleSelectUsers}
-                        />)
+                {
+                    selectedValue === "User" && (<MultiSelect
+                        data={userData}
+                        placeholder="Select User"
+                        label="User"
+                        value={selectedUsers}
+                        onChange={handleSelectUsers}
+                    />)
+                }
+
+                {
+                    selectedValue  === "Category" && (<MultiSelect
+                        data={categoryList}
+                        placeholder="Select Category"
+                        label="Category"
+                        value={selectedCategory}                   
+                        onChange={handleCategoryChange}
+                    />)
+                }
+
+
+                <Select
+                    data={[
+                        { value: 'once', label: 'Once' },
+                        { value: 'periodic', label: 'Periodic' }]
                     }
+                    placeholder="Select frequency"
+                    label="Frequency"
+                    value={selectedFrequency}
+                    onChange={setSelectedFrequency}
+                />
 
-                    {
-                        selectedValue  === "Category" && (<MultiSelect
-                            data={categoryList}
-                            placeholder="Select Category"
-                            label="Category"
-                            value={selectedCategory}                         // if it does shows keep cat data change to selectedUser
-                            onChange={handleCategoryChange}
-                        />)
+                {
+                    selectedFrequency === 'periodic' ? (
+                        <TimeInput
+                            withSeconds
+                            label='Time'
+                            placeholder='Enter time'
+                            {...form.getInputProps('time')}
+                        />) : (null)
+                }
+
+                <Select
+                    data={[
+                        { value: 'mail', label: 'Mail' },
+                        { value: 'whatsapp', label: 'Whatsapp' },
+                        { value: 'both', label: 'Both' }]
                     }
+                    placeholder="Select Source"
+                    label="Source"
+                    value={selectedSource}
+                    onChange={setSelectedSource}
+                />
 
-
-                    <Select
-                        data={[
-                            { value: 'once', label: 'Once' },
-                            { value: 'periodic', label: 'Periodic' }]
-                        }
-                        placeholder="Select frequency"
-                        label="Frequency"
-                        value={selectedFrequency}
-                        onChange={setSelectedFrequency}
-                    />
-
-                    {
-                        selectedFrequency === 'periodic' ? (
-                            <TimeInput
-                                withSeconds
-                                label='Time'
-                                placeholder='Enter time'
-                                {...form.getInputProps('time')}
-                            />) : (null)
-                    }
-
-                    <Select
-                        data={[
-                            { value: 'mail', label: 'Mail' },
-                            { value: 'whatsapp', label: 'Whatsapp' },
-                            { value: 'both', label: 'Both' }]
-                        }
-                        placeholder="Select Source"
-                        label="Source"
-                        value={selectedSource}
-                        onChange={setSelectedSource}
-                    />
-
-                    <Space h={15} />
-                    <Flex justify={"end"} gap={"2%"}>
+                <Space h={15} />
+                <Flex justify={"end"} gap={"2%"}>
                         <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
                             variant='filled' onClick={handleAddBroadcast} >Add</Button>
                         {/* <Button variant='outline' color='dark' onClick={() => settemplateModal(false)}>No</Button> */}
                     </Flex>
                 </Modal>
-
 
                     {/* Edit Broadcast */}
 
@@ -457,12 +459,12 @@ const Broadcast = () => {
                         data={templatedropDownData}
                         placeholder="Select a template"
                         label="Templates"
-                        value={newtemplateEdit && newTemplate === null ? selectedTemplate : newTemplate}
-                        onChange={(value) => {
-                            setnewtemplateEdit ? setnewTemplate(parseInt(value)) : setSelectedTemplate(parseInt(value));
-                        }}
-                        
-                    // onChange={handleSelectTemplate}
+                        value={isEditMode && newTemplate === null ? selectedTemplate : newTemplate}
+                        // onChange={(value) => {
+                        //     // setnewtemplateEdit ? setnewTemplate(parseInt(value)) : setSelectedTemplate(parseInt(value));
+                        //     // setnewtemplateEdit && setnewTemplate(parseInt(value))
+                        // }}
+                    onChange={handleSelectTemplate}
                     />
                         {
                             editValue === "User" ? (
@@ -574,7 +576,6 @@ const Broadcast = () => {
                     }} radius={10} style={{ backgroundColor: "#233c79" }}> Add Broadcast </Button>
 
                 </Flex>
-
                 <Space h={15} />
                 <Card withBorder radius={10} shadow='md'>
                     {

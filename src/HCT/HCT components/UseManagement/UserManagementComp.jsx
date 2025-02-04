@@ -3,6 +3,7 @@ import React from 'react'
 import HeadHCT from '../HCT head/HeadHCT'
 import { useMediaQuery } from '@mantine/hooks';
 import UserManagement from './UserManagement';
+import MobileHead from '../HCT head/MobileHead';
 
 const UserManagementComp = () => {
     const mediumScreen = useMediaQuery("(min-width: 1200px)");
@@ -19,7 +20,7 @@ const UserManagementComp = () => {
                     ) : (
                         <>
                             <UserManagement />
-                            {/* <MobileHead /> */}
+                            <MobileHead />
                         </>
                     )
                 }
