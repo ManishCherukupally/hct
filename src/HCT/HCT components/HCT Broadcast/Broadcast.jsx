@@ -26,13 +26,24 @@ const Broadcast = () => {
     const [sendModal, setsendModal] = useState(false)
 
     const [broadcastId, setbroadcastId] = useState(null)
+    const [editBroadcastId, seteditBroadcastId] = useState(null)
 
     const [templateData, settemplateData] = useState([])
     const [templatedropDownData, settemplatedropDownData] = useState([])
     const [selectedTemplate, setSelectedTemplate] = useState(null);
+    // console.log(selectedTemplate)
+
 
     const [userData, setuserData] = useState([])
     const [selectedUsers, setSelectedUsers] = useState([]);
+    // console.log(selectedUsers)
+
+    const [categoryList, setcategoryList] = useState([])
+    const [selectedCategory, setSelectedCategory] = useState([])
+    // console.log(selectedCategory);
+
+    const [selectedValue, setSelectedValue] = useState('')
+    // console.log(selectedValue)
 
     const [editData, setEditData] = useState(null);
     // const [userData, setuserData] = useState([])
@@ -45,6 +56,13 @@ const Broadcast = () => {
     const [newTemplateId, setnewTemplateId] = useState(null)
     const [newTemplate, setnewTemplate] = useState(null)
     const [newtemplateEdit, setnewtemplateEdit] = useState(false)
+    // console.log(newTemplate) 
+    // console.log(newtemplateEdit)   
+
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [editValue, setEditValue] = useState('')
+    // console.log(editValue);
+
     useEffect(() => {
         client.get("broadcast_pagination/", {
             params: {
@@ -57,6 +75,7 @@ const Broadcast = () => {
             .then((resp) => {
                 // console.log(resp.data['templates']);
                 setbroadcastData(resp.data['templates'])
+                console.log(resp.data['templates'])
 
                 // resp.data['templates'].map(item => item.users.map(item => ({
                 //     value: item.user_id,
@@ -69,7 +88,6 @@ const Broadcast = () => {
                 //     }))));
                 //     console.log(userData);
                 // }, 500);
-
 
                 setRecordsPerPage(resp.data.number_of_pages)
             })
@@ -84,7 +102,6 @@ const Broadcast = () => {
         })
             .then((resp) => {
                 settemplateData(resp.data['template_list']);
-
                 settemplatedropDownData(resp.data['template_list'].map(template => ({
                     value: template.template_id,
                     label: template.template_name,
@@ -112,17 +129,42 @@ const Broadcast = () => {
     }, [])
     // console.log(templatedropDownData);
 
+    useEffect(() => {
+        client.get('hct_category_dd/', {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            }
+        })
+            .then((resp) => {
+                setcategoryList(resp.data['category_list'].map(item => ({
+                    value: item.category_id,
+                    label: item.category
+                })))
+                // console.log(resp.data['category_list'])
+            })
+    }, [])
+    // console.log(selectedCategory);
+    // console.log(gender);
+    // console.log(value);
+
     const handleSelectTemplate = (value) => {
         const selectedTemplateId = parseInt(value);
-        newtemplateEdit ? setnewTemplate(selectedTemplateId) : setSelectedTemplate(selectedTemplateId);
+        isEditMode ? setnewTemplate(selectedTemplateId) : setSelectedTemplate(selectedTemplateId);
+        // setSelectedTemplate(selectedTemplateId)
     };
 
-    console.log(newTemplate);
+    // console.log(newTemplate);
+
     const handleSelectUsers = (values) => {
         // setSelectedUsers(values);
         // Convert the selected values to the corresponding user IDs
         const selectedUserIds = values.map(value => parseInt(value));
         setSelectedUsers(selectedUserIds);
+    };
+
+    const handleCategoryChange = (values) => {
+        const selectedcategoryIds = values.map(value => parseInt(value));
+        setSelectedCategory(selectedcategoryIds);
     };
 
     // const handleEditData = (item) => {
@@ -136,17 +178,22 @@ const Broadcast = () => {
     // };
 
     const handleEditData = (item) => {
-
+        if (item.users && item.users.length > 0) {
+            setEditValue('User');
+        } else if (item.category && item.category.length > 0) {
+            setEditValue('Category');
+        }
+        setIsEditMode(true);
         setEditData(item);
         setSelectedTemplate(parseInt(item.template_id)); // Make sure this sets the correct template ID
         setSelectedUsers(item.users.map(user => user.user_id));
         setSelectedFrequency(item.frequency);
         setSelectedSource(item.follow_up);
         form.setFieldValue('time', item.time); // Set the initial time value
-        // setEditModal(true);
         // console.log("Editing item:", item);
         // console.log("Selected template ID:", item.id);
         // console.log("Template data:", templateData);
+        setSelectedCategory(item.category.map(cat => cat.category_id));
     };
 
     const handleAddData = () => {
@@ -155,87 +202,100 @@ const Broadcast = () => {
         setSelectedFrequency("");
         setSelectedSource("");
         form.setFieldValue('time', "");
+        setIsEditMode(false);
     }
-
     // console.log(templatedropDownData);
+
     const rows = broadcastData.map((item) => (
         <tr key={item.id} style={{ height: 50 }}>
             <td style={{ width: '346px' }}>{item.template}</td>
             <td style={{ width: '346px' }}>
-                {
-                    item.users.length > 1 ?
-                        (
-                            <Spoiler maxHeight={25} showLabel="Show more" hideLabel="Hide">
-
-                                {item.users.map((item) => (
-                                    <div key={item.user_id}>{item.username}</div>
-                                ))}
-
-                            </Spoiler>
-                        ) : (
-
-                            item.users.map((item) => (
-                                <div key={item.user_id}>{item.username}</div>
-                            ))
-
-                        )
-                }
-
+                {item.users.length === 0 ? (
+                    item.category.length > 1 ? (
+                        <Spoiler maxHeight={25} showLabel="Show more" hideLabel="Hide">
+                            {item.category.map((categoryData) => (
+                                <div key={categoryData.category_id}>{categoryData.category}</div>
+                            ))}
+                        </Spoiler>
+                    ) : (
+                        item.category.map((categoryData) => (
+                            <div key={categoryData.category_id}>{categoryData.category}</div>
+                        ))
+                    )
+                ) : (
+                    item.users.length > 1 ? (
+                        <Spoiler maxHeight={25} showLabel="Show more" hideLabel="Hide">
+                            {item.users.map((userData) => (
+                                <div key={userData.user_id}>{userData.username}</div>
+                            ))}
+                        </Spoiler>
+                    ) : (
+                        item.users.map((userData) => (
+                            <div key={userData.user_id}>{userData.username}</div>
+                        ))
+                    )
+                )}
             </td>
             <td style={{ width: '346px' }}>{item.frequency}</td>
             <td style={{ width: '346px' }}>{item.follow_up}</td>
             <td style={{ width: '346px' }}>{item.time}</td>
             <td>
                 <Flex gap={"0.5rem"}>
-                    <Tooltip label={"Send"}><ActionIcon variant='subtle' onClick={() => {
-                        setsendModal(true)
-                        setbroadcastId(item.id)
-                    }} ><FaTelegramPlane color="#0096FF" /></ActionIcon></Tooltip>
+                    <Tooltip label={"Send"}>
+                        <ActionIcon variant='subtle' onClick={() => {
+                            setsendModal(true);
+                            setbroadcastId(item.id);
+                        }}>
+                            <FaTelegramPlane color="#0096FF" />
+                        </ActionIcon>
+                    </Tooltip>
 
-                    <Tooltip label={"Edit"}><ActionIcon variant='subtle'
-                        onClick={() => {
-                            // handleEditData(item)
-                            setEditModal(true)
-                            setnewtemplateEdit(true)
-                            handleEditData(item)
+                    <Tooltip label={"Edit"}>
+                        <ActionIcon variant='subtle' onClick={() => {
+                            setEditModal(true);
+                            setnewtemplateEdit(true);
+                            handleEditData(item);
+                            seteditBroadcastId(item.id)
+                        }}>
+                            <MdEdit color="#233c79" />
+                        </ActionIcon>
+                    </Tooltip>
 
-                            // console.log(templateData.find(template => template.template_id === item.id));
-                            // setSelectedTemplate()
-                            // // setSelectedUsers(item["users"].map(item => ({
-                            // //     value: item.user_id,
-                            // //     label: item.username
-                            // // })))
-                            // setSelectedFrequency(item.frequency)
-                            // setSelectedSource(item.follow_up)
-
-                            // setEditStatus(true)
-                        }} ><MdEdit color="#233c79" /></ActionIcon></Tooltip>
-                    <Tooltip label={"Delete"}><ActionIcon variant='subtle' onClick={() => {
-                        setOpenModal(true)
-                        setbroadcastId(item.id)
-                        // setUserName(item.u_business_email)
-                    }} ><MdDeleteForever color="FF3C5F" /></ActionIcon></Tooltip>
+                    <Tooltip label={"Delete"}>
+                        <ActionIcon variant='subtle' onClick={() => {
+                            setOpenModal(true);
+                            setbroadcastId(item.id);
+                        }}>
+                            <MdDeleteForever color="FF3C5F" />
+                        </ActionIcon>
+                    </Tooltip>
                 </Flex>
             </td>
         </tr>
-    ))
+    ));
+
 
     const form = useForm({
         initialValues: {
+            broadcast_id: null,
             template_id: null,
             users: [],
+            categories: [],
             frequency: "",
             follow_up: "",
             time: null,
             new_template_id: null
         },
         transformValues: (values) => ({
+            broadcast_id: editBroadcastId,
             template_id: selectedTemplate,
-            users: selectedUsers,
+            users: selectedValue === "User" ? selectedUsers : [],
             frequency: selectedFrequency,
             follow_up: selectedSource,
+            categories: selectedValue === "Category" ? selectedCategory : [],
             time: selectedFrequency === 'once' ? null : `${values.time}`,
-            new_template_id: newTemplate,
+            new_template_id: isEditMode ? newTemplate : selectedTemplate,
+            // new_template_id:newTemplate
         })
     })
 
@@ -244,6 +304,7 @@ const Broadcast = () => {
         // console.log(form.getTransformedValues());
         client.post("create_broadcast/", form.getTransformedValues(), {
             headers: {
+                "Content-Type": "application/json",
                 Authorization: `Bearer ${window.localStorage.getItem("access")}`
             }
         })
@@ -287,6 +348,7 @@ const Broadcast = () => {
         }, 1000);
         setSelectedTemplate(newTemplate)
         setnewtemplateEdit(false)
+        // setSelectedCategory(parseInt(value))
     }
 
     const handleSend = () => {
@@ -318,16 +380,37 @@ const Broadcast = () => {
                         onChange={handleSelectTemplate}
                     />
 
-                    <MultiSelect
-                        dropdownPosition='bottom'
-                        searchable
-                        clearable
-                        data={userData}
-                        placeholder="Select users"
-                        label="Users"
-                        value={selectedUsers}
-                        onChange={handleSelectUsers}
+                    <Select
+                        data={[
+                            { value: 'User', label: 'User' },
+                            { value: 'Category', label: 'Category' }
+                        ]}
+                        placeholder="Select By"
+                        label="Select By"
+                        value={selectedValue}
+                        onChange={setSelectedValue}
                     />
+
+                    {
+                        selectedValue === "User" && (<MultiSelect
+                            data={userData}
+                            placeholder="Select User"
+                            label="User"
+                            value={selectedUsers}
+                            onChange={handleSelectUsers}
+                        />)
+                    }
+
+                    {
+                        selectedValue === "Category" && (<MultiSelect
+                            data={categoryList}
+                            placeholder="Select Category"
+                            label="Category"
+                            value={selectedCategory}
+                            onChange={handleCategoryChange}
+                        />)
+                    }
+
 
                     <Select
                         data={[
@@ -370,28 +453,43 @@ const Broadcast = () => {
                     </Flex>
                 </Modal>
 
+                {/* Edit Broadcast */}
+
                 <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={editModal} onClose={() => setEditModal(false)} title="Edit Broadcast">
                     <Select
                         data={templatedropDownData}
                         placeholder="Select a template"
                         label="Templates"
-                        value={newtemplateEdit && newTemplate === null ? selectedTemplate : newTemplate}
-                        onChange={(value) => {
-                            setnewtemplateEdit ? setnewTemplate(parseInt(value)) : setSelectedTemplate(parseInt(value));
-                        }}
-                    // onChange={handleSelectTemplate}
+                        value={isEditMode && newTemplate === null ? selectedTemplate : newTemplate}
+                        // onChange={(value) => {
+                        //     // setnewtemplateEdit ? setnewTemplate(parseInt(value)) : setSelectedTemplate(parseInt(value));
+                        //     // setnewtemplateEdit && setnewTemplate(parseInt(value))
+                        // }}
+                        onChange={handleSelectTemplate}
                     />
+                    {
+                        editValue === "User" ? (
+                            <MultiSelect
+                                dropdownPosition="bottom"
+                                searchable
+                                clearable
+                                data={userData}
+                                placeholder="Select users"
+                                label="Users"
+                                value={selectedUsers}
+                                onChange={handleSelectUsers}
+                            />) : (<MultiSelect
+                                dropdownPosition="bottom"
+                                searchable
+                                clearable
+                                data={categoryList}
+                                placeholder="Select Category"
+                                label="Category"
+                                value={selectedCategory}
+                                onChange={handleCategoryChange}
+                            />)
+                    }
 
-                    <MultiSelect
-                        dropdownPosition='bottom'
-                        searchable
-                        clearable
-                        data={userData}
-                        placeholder="Select users"
-                        label="Users"
-                        value={selectedUsers}
-                        onChange={handleSelectUsers}
-                    />
 
                     <Select
                         data={[
@@ -414,6 +512,8 @@ const Broadcast = () => {
                             />) : (null)
                     }
 
+
+
                     <Select
                         data={[
                             { value: 'mail', label: 'Mail' },
@@ -434,7 +534,6 @@ const Broadcast = () => {
                     </Flex>
 
                 </Modal>
-
 
 
                 <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={openModal} onClose={() => setOpenModal(false)} title="Are you sure?!">
@@ -473,12 +572,22 @@ const Broadcast = () => {
                     <Button onClick={() => {
                         setbroadcastModal(true)
                         handleAddData()
+                        form.setValues({
+                            broadcast_id: null,
+                            template_id: null,
+                            users: [],
+                            categories: [],
+                            frequency: "",
+                            follow_up: "",
+                            time: null,
+                            new_template_id: null
+                        })
+                        setSelectedValue('')
                         // setUserModal(true)
                         // setEditStatus(false)
-                    }} radius={10} style={{ backgroundColor: "#233c79" }} >Add Broadcast  </Button>
+                    }} radius={10} style={{ backgroundColor: "#233c79" }}> Add Broadcast </Button>
 
                 </Flex>
-
                 <Space h={15} />
                 <Card withBorder radius={10} shadow='md'>
                     {
