@@ -11,6 +11,9 @@ import { ActionIcon, Overlay } from '@mantine/core'
 import Party from "../../../assets/Party.mp4"
 
 import { FaThumbsUp } from "react-icons/fa6";
+import Mantine5 from './Mantine5'
+import TestimonialCarousel from './TestimonialCarousel'
+import Mantine6 from './Mantine6'
 
 const LandingPage = () => {
 
@@ -21,6 +24,9 @@ const LandingPage = () => {
             <Mantine1 />
             <Mantine2 />
             <Mantine3 />
+            <Mantine6 />
+            <TestimonialCarousel />
+            <Mantine5 />
             <Mantine4 />
         </div>
     )

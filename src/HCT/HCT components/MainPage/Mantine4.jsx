@@ -1,4 +1,4 @@
-import { AspectRatio, Badge, Button, CardSection, Group, BackgroundImage, Modal, Box, TextInput, NumberInput, Radio } from '@mantine/core';
+import { AspectRatio, Badge, Button, CardSection, Group, BackgroundImage, Modal, Box, TextInput, NumberInput, Radio, Textarea, Select } from '@mantine/core';
 import { Card, Grid, Footer, Container, Anchor, SimpleGrid, Image, Text, List } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
@@ -6,6 +6,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import facebookImage from '../../../assets/facebook-logo-facebook-icon-transparent-free-png.png';
+import Image11 from '../../../assets/IMG-0069-832x1024.jpg'
 import facebookImage1 from '../../../assets/colored-instagram-logo-new.png';
 import client from '../../../API/api';
 import './page.css'
@@ -13,6 +14,7 @@ import { MdDone } from 'react-icons/md';
 import { ImCross } from "react-icons/im";
 import { IoMdClose } from "react-icons/io";
 import { PiWarningFill } from "react-icons/pi";
+import Footer1 from './Footer1';
 
 
 // import { FaSquareFacebook } from "react-icons/fa6";
@@ -21,11 +23,12 @@ import { PiWarningFill } from "react-icons/pi";
 const Mantine4 = () => {
   const mediumScreen = useMediaQuery("(min-width: 1100px)");
   const largeScreen = useMediaQuery("(min-width: 1440px)");
+
   const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
 
 
   const [opened, { open, close }] = useDisclosure(false);
-  const isMobile = useMediaQuery('(max-width: 800px)');
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const [loader, setLoader] = useState(false)
 
   const [successful, setSuccessful] = useState(false)
@@ -42,9 +45,12 @@ const Mantine4 = () => {
       location: "",
       user_status: value,
       username: "",
-      category: "",
+      // category: "",
       age: '',
-      gender: ''
+      gender: '',
+      goal: '',
+      how_did_you_learn_about_us: '',
+      type_of_challange: ''
     },
     validate: {
       business_email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
@@ -57,9 +63,12 @@ const Mantine4 = () => {
       user_status: `${value}`,
       location: `${values.location}`,
       username: `${values.business_email}`,
-      category: 'gold',
+      // category: 'gold',
       age: values.age,
-      gender: `${values.gender}`
+      gender: `${values.gender}`,
+      goal: `${values.goal}`,
+      how_did_you_learn_about_us: `${values.how_did_you_learn_about_us}`,
+      type_of_challange: `${values.type_of_challange}`
     })
   });
 
@@ -154,7 +163,7 @@ const Mantine4 = () => {
         <form >
           <SimpleGrid cols={1}>
             <TextInput
-
+              required
               label="Name"
               name='name'
               placeholder="Enter name"
@@ -163,7 +172,7 @@ const Mantine4 = () => {
 
             />
             <TextInput
-
+              required
               label="Email"
               name='business_email'
               placeholder="user@email.com"
@@ -190,7 +199,7 @@ const Mantine4 = () => {
 
 /> */}
             <TextInput
-
+              required
               label="Contact No."
               name='contact_no'
               placeholder="Enter Contact No."
@@ -222,165 +231,242 @@ const Mantine4 = () => {
               </Group>
             </Radio.Group>
 
+            <Textarea maxRows={4}
+              name='goal'
+              {...form.getInputProps('goal')}
+              label='Goals'
+              placeholder='Enter here..'>
+
+            </Textarea>
+            <Select
+              name='how_did_you_learn_about_us'
+              label=" How do you get to know ? "
+              placeholder="Pick one"
+              searchable
+              nothingFound="No options"
+              data={['Facebook', 'Instagram Add', 'Friend refered', 'Community promotion', 'Others']}
+              {...form.getInputProps('how_did_you_learn_about_us')}
+            />
+
 
             <Radio.Group
-              value={value}
-              onChange={setValue}
+              name='type_of_challange'
+              label="Choose Your Journey"
 
-              label="Select status of the user"
-
-
+              {...form.getInputProps('type_of_challange')} radius='md'
+              style={{ color: 'blue' }}
             >
-              <Group mt={"xs"}>
-                <Radio value="active" label="Active" />
-                <Radio value="inactive" label="Inactive" />
+              <Group mt="xs">
+                <Radio value="100dayschallenge" label="100 Days Challenge" />
+                <Radio value="longtermjourney" label="Longterm Journey" />
+
               </Group>
             </Radio.Group>
+
+
           </SimpleGrid>
 
           <Group position="right" mt="md">
-            <Button onClick={handleRegistration} loading={loader}>Submit</Button>
+            <Button onClick={handleRegistration} fullWidth radius='md' loading={loader} bg={'#1F3469'}>Submit</Button>
           </Group>
         </form>
       </Modal>
 
 
-      <BackgroundImage src="https://wallpapercave.com/wp/wp8298483.jpg" style={{ height: isMobile ? '177vh' : '95vh' }}>
-        <Grid h={isMobile ? 'auto' : '125vh'} align='center' opacity={0.9} >
+      <BackgroundImage
+        src="https://wallpapercave.com/wp/wp8298483.jpg"
+        style={{
+          height: isMobile ? 'auto' : '100vh',
+          padding: isMobile ? '2rem 0' : '2.5rem 0',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Grid
+          h="auto"
+          align="center"
+          justify="center"
+          opacity={0.9}
+          style={{ padding: isMobile ? '1rem' : 'auto' }}
+        >
           <Grid.Col span={12}>
-            <Group position='center'>
-              <SimpleGrid cols={isMobile ? 1 : 3} spacing={isMobile ? 'md' : '5rem'} m={'0.3rem'} pb={'0.9rem'}>
-                <Card shadow="xl" bg="#1F3469" h="auto" w={isMobile ? '290px' : '325.33px'} radius="lg"
+            <Group position="center">
+              <SimpleGrid
+                cols={isMobile ? 1 : 3}
+                spacing={isMobile ? '2rem' : '5rem'}
+                m={isMobile ? '1rem' : '0.3rem'}
+                pb={isMobile ? '2rem' : '0.9rem'}
+                style={{
+                  maxWidth: '100%',
+                  justifyContent: 'center',
+                }}
+              >
+
+                <Card
+                  shadow="xl"
+                  bg="#1F3469"
+                  h="auto"
+                  w={isMobile ? '80vw' : '325.33px'}
+                  radius="lg"
                   sx={{
                     transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
                     '&:hover': {
                       boxShadow: '0 0 20px 5px #FBD40B',
                       transform: 'scale(1.05)',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
                     },
-                  }}>
+                  }}
+                >
                   <CardSection>
-                    <AspectRatio ratio={9 / 5}>
-                      <Image src="https://cdni.iconscout.com/illustration/premium/thumb/rules-list-6211246-5116152.png" width={340} height={350} />
+                    <AspectRatio ratio={9 / 5} >
+                      <Image
+                        src="https://images.newscientist.com/wp-content/uploads/2021/12/08150023/PRI_214108755.jpg"
+                        width="100%"
+                        height='100%'
+
+                      />
                     </AspectRatio>
                   </CardSection>
-                  <Text style={{ fontFamily: '"Poppins", Sans-serif' }} fz='16px' color='#FBD40B' fw='500' m='sm'>Rules</Text>
-                  <Badge variant='light'>Cool Badge</Badge>
-                  <List style={{ fontFamily: '"Poppins", Sans-serif', color: 'white' }} fz='16px' color='#FBD40B' fw='500' m='lg'>
-                    <List.Item>Rule 1</List.Item>
-                    <List.Item>Rule 2</List.Item>
+                  <Text fz="15px" color="#FBD40B" fw="500" m="xs" >What will you learn</Text>
+
+                  <List style={{ color: 'white' }} fz="14px" m="lg">
+                    <List.Item>Customised workout and meal plans</List.Item>
+                    <List.Item>Follow-up team: daily follow-up to check with clients' progress (accountability)</List.Item>
+                    <List.Item>Weekly calls direct with the coach to discuss various health and nutrition concepts. The agenda is to ensure clients learn and implement health concepts for a lifetime.</List.Item>
+                    <List.Item>Supplement suggestions customised to the client transformation goal.</List.Item>
+                    <List.Item>WhatsApp fitness community and challenges given to clients in the community to build synergy and an environment to learn and grow.</List.Item>
                   </List>
                 </Card>
 
-                {/* Target Card */}
-                <Card shadow="xl" bg="#1F3469" h="auto" w={isMobile ? '290px' : '325.33px'} radius="lg"
+
+                <Card
+                  shadow="xl"
+                  bg="#1F3469"
+                  h="auto"
+                  w={isMobile ? '80vw' : '325.33px'}
+                  radius="lg"
                   sx={{
                     transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
                     '&:hover': {
                       boxShadow: '0 0 20px 5px #FBD40B',
                       transform: 'scale(1.05)',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
                     },
-                  }}>
+                  }}
+                >
                   <CardSection>
                     <AspectRatio ratio={9 / 5}>
-                      <Image src="https://cdn2.iconfinder.com/data/icons/business-line-color-bg-strawberry-economy/512/goal-512.png" width={250} height={200} ml='2.5rem' />
+                      <Image
+                        src={Image11}
+
+                        width='100%' height="100%"
+                        style={{ objectFit: 'cover' }}
+                      />
                     </AspectRatio>
                   </CardSection>
-                  <Text style={{ fontFamily: '"Poppins", Sans-serif' }} fz='16px' color='#FBD40B' fw='500' m='sm'>Target</Text>
-                  <Badge variant='light'>Cool Badge1</Badge>
-                  <List style={{ fontFamily: '"Poppins", Sans-serif', color: 'white' }} fz='16px' color='#FBD40B' fw='500' m='lg'>
-                    <List.Item>Target 1</List.Item>
-                    <List.Item>Target 2</List.Item>
+                  <Text fz="15px" color="#FBD40B" fw="500" m="xs">Challenges we delt</Text>
+
+                  <List style={{ color: 'white' }} fz="14px" m="lg">
+                    <List.Item>Knee rehab</List.Item>
+                    <List.Item>Cricket strength and conditioning</List.Item>
+                    <List.Item>Lifestyle disorders</List.Item>
+                    <List.Item>Lower back pain and sciatica</List.Item>
+                    <List.Item>Clients with imbalanced blood lipid profiles and other deficiencies.</List.Item>
+                    <List.Item>Working proffesional facing posture imbalance</List.Item>
+                    <List.Item>Strength and conditioning to professional weekend sport player.</List.Item>
                   </List>
                 </Card>
 
-                {/* Rewards Card */}
-                <Card shadow="xl" bg="#1F3469" h="auto" w={isMobile ? '290px' : '325.33px'} radius="lg"
+
+                <Card
+                  shadow="xl"
+                  bg="#1F3469"
+                  h="auto"
+
+                  w={isMobile ? '80vw' : '325.33px'}
+                  radius="lg"
                   sx={{
                     transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
                     '&:hover': {
                       boxShadow: '0 0 20px 5px #FBD40B',
                       transform: 'scale(1.05)',
-                      cursor: 'pointer'
+                      cursor: 'pointer',
                     },
-                  }}>
+                  }}
+                >
                   <CardSection>
                     <AspectRatio ratio={9 / 5}>
-                      <Image src="https://cdni.iconscout.com/illustration/premium/thumb/online-rewards-8023219-6354904.png" width={250} height={250} ml='2rem' />
+                      <Image
+                        src="https://img.freepik.com/free-photo/front-view-young-female-sport-outfit-holding-dumbbells-white-speech-bubble_140725-83616.jpg"
+                        width="100%"
+                        height='100%'
+
+
+
+                      />
                     </AspectRatio>
                   </CardSection>
-                  <Text style={{ fontFamily: '"Poppins", Sans-serif' }} fz='16px' color='#FBD40B' fw='500' m='sm'>Rewards</Text>
-                  <Badge variant='light'>Cool Badge2</Badge>
-                  <List style={{ fontFamily: '"Poppins", Sans-serif', color: 'white' }} fz='16px' color='#FBD40B' fw='500' m='lg'>
-                    <List.Item>Winner</List.Item>
-                    <List.Item>Runner</List.Item>
-                  </List>
+
+                  <Text fz="15px" color="#FBD40B" fw="500" m="xs" >
+                    Have Questions? Let’s Talk!
+                  </Text>
+                  <Text fz="14px" m="lg" color='white'>Not sure where to start on your fitness journey? </Text>
+
+                  <Text fz="14px" m="lg" color='white'>Need help choosing the right membership or personal training plan?</Text>
+                  {/* Centering ONLY the Button */}
+                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: isMobile ? '4rem' : '7rem', marginBottom: isMobile ? '3rem' : 'none' }}>
+                    <a href='tel:%20+91%2074165%2060259'>
+                      <Button
+                        h={isMobile ? '2.5rem' : '3rem'}
+                        mt="xs"
+                        styles={(theme) => ({
+                          root: {
+                            backgroundColor: '#FBD40B',
+                            color: 'white',
+                            padding: isMobile ? '0.3rem 1.5rem' : '0.5rem 2rem',
+                            fontSize: isMobile ? '14px' : '16px',
+                            fontWeight: 700,
+                            borderRadius: '30px',
+                            boxShadow: '0 0 20px rgba(255, 255, 255, 0.6)',
+                            transition: 'background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease',
+                            backgroundSize: '200%',
+                            backgroundImage: 'linear-gradient(90deg, #fbd40b, #ff9933, #fbd40b)',
+                            animation: 'glowAnimation 3s infinite',
+                            '&:hover': {
+                              backgroundColor: '#FBD40B',
+                              boxShadow: '0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(255, 165, 0, 0.7)',
+                              transform: 'scale(1.05)',
+                            },
+                          },
+                          '@keyframes glowAnimation': {
+                            '0%': {
+                              backgroundPosition: '-200%',
+                            },
+                            '100%': {
+                              backgroundPosition: '200%',
+                            },
+                          },
+                        })}
+
+                      >
+                        Book Now !
+                      </Button>
+                    </a>
+
+                  </div>
                 </Card>
+
+
               </SimpleGrid>
             </Group>
-
-            <Footer mt={isMobile ? '-0.4rem' : '12.9rem'} height={isMobile ? "9rem" : '9rem'} pt={isMobile ? "0.5rem" : '1.5rem'} style={{ backgroundColor: '#FBD40B' }}>
-              <Container style={{ display: 'flex', alignItems: 'center', padding: 0 }}>
-
-                <Link to="https://www.facebook.com/people/Sai-Teja/100063960496461/?mibextid=LQQJ4d" target='_blank'>
-                  <img
-                    src={facebookImage}
-                    alt="Facebook"
-                    style={{ width: '4.4rem', height: '100%', objectFit: 'cover' }}
-                  />
-                </Link>
-                <Link to="https://www.instagram.com/healthcoach_saiteja/?igshid=YmMyMTA2M2Y%3D" target='_blank'>
-                  <img
-                    src={facebookImage1}
-                    alt="Instagram"
-                    style={{ width: '2.5rem', height: '99.8%', objectFit: 'cover' }}
-                  />
-                </Link>
-
-
-                {/* Button Section */}
-                <div style={{ marginLeft: 'auto' }}>
-                  <Button
-                    mr={'2rem'}
-                    mb={'1rem'}
-                    radius="xl"
-                    size="xl"
-                    component="a"
-                    mt="8px"
-                    styles={(theme) => ({
-                      root: {
-                        backgroundColor: '#1F3469',
-                        color: 'white',
-                        padding: '1rem 2.5rem',
-                        fontSize: '18px',
-                        fontWeight: 700,
-                        borderRadius: '30px',
-                        boxShadow:
-                          '10px 0 40px rgba(255, 253, 208, 1), -10px 0 40px rgba(255, 253, 208, 1), 0 0 30px rgba(255, 253, 208, 0.8)',
-                        transition: 'background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease',
-                        '&:hover': {
-                          backgroundColor: '#FBD40B',
-                          boxShadow:
-                            '10px 0 40px rgba(255, 253, 208, 1), -10px 0 40px rgba(255, 253, 208, 1), 0 0 30px rgba(255, 253, 208, 0.8)',
-                          transform: 'scale(1.05)',
-                        },
-                      },
-                    })}
-                    onClick={open}
-                  >
-                    Register Here
-                  </Button>
-                </div>
-              </Container>
-            </Footer>
-
 
           </Grid.Col>
 
         </Grid>
 
       </BackgroundImage>
+      <Footer1 openModal={open} />
     </>
 
 

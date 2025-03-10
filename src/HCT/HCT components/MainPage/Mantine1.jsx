@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppShell, BackgroundImage, Button, Card, Container, Flex, Footer, Text, Group, Radio, TextInput, Modal, Box, NumberInput, Transition, Overlay, SimpleGrid } from '@mantine/core';
+import { AppShell, BackgroundImage, Button, Card, Container, Flex, Footer, Text, Group, Radio, TextInput, Modal, Box, NumberInput, Transition, Overlay, SimpleGrid, Textarea, Select } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import client from '../../../API/api';
@@ -38,9 +38,13 @@ const Mantine1 = () => {
       location: "",
       user_status: value,
       username: "",
-      category: "",
+      // category: "",
       age: '',
-      gender: ''
+      gender: '',
+      goal: '',
+      how_did_you_learn_about_us: '',
+      type_of_challange: ''
+
     },
 
     validate: {
@@ -54,9 +58,12 @@ const Mantine1 = () => {
       user_status: `${value}`,
       location: `${values.location}`,
       username: `${values.business_email}`,
-      category: 'gold',
+      // category: 'gold',
       age: values.age,
-      gender: `${values.gender}`
+      gender: `${values.gender}`,
+      goal: `${values.goal}`,
+      how_did_you_learn_about_us: `${values.how_did_you_learn_about_us}`,
+      type_of_challange: `${values.type_of_challange}`
     })
 
   });
@@ -229,12 +236,12 @@ const Mantine1 = () => {
               label="Name"
               name='name'
               placeholder="Enter name"
-
+              required
               {...form.getInputProps('name')}
 
             />
             <TextInput
-
+              required
               label="Email"
               name='business_email'
               placeholder="user@email.com"
@@ -245,7 +252,7 @@ const Mantine1 = () => {
             <NumberInput
               placeholder="Your age"
               label="Your age"
-
+              required
               {...form.getInputProps('age')} radius='md'
             />
 
@@ -265,7 +272,7 @@ const Mantine1 = () => {
               label="Contact No."
               name='contact_no'
               placeholder="Enter Contact No."
-
+              required
               {...form.getInputProps('contact_no')}
 
             />
@@ -274,7 +281,7 @@ const Mantine1 = () => {
               label="Location"
               name='location'
               placeholder="Enter Location"
-
+              required
               {...form.getInputProps('location')}
 
             />
@@ -293,23 +300,42 @@ const Mantine1 = () => {
               </Group>
             </Radio.Group>
 
+            <Textarea maxRows={4} label='Goals' required name='goal' placeholder='Enter here..'
+              {...form.getInputProps('goal')}
+            >
+
+            </Textarea>
+            <Select
+              required
+              name='how_did_you_learn_about_us'
+              label=" How do you get to know ? "
+              placeholder="Pick one"
+              searchable
+              nothingFound="No options"
+              data={['Facebook', 'Instagram Add', 'Friend refered', 'Community promotion', 'Others']}
+              {...form.getInputProps('how_did_you_learn_about_us')}
+            />
+
 
             <Radio.Group
-              value={value}
-              onChange={setValue}
+              required
+              name='type_of_challange'
+              label="Choose Your Journey"
 
-              label="Select status of the user"
-
-
+              {...form.getInputProps('type_of_challange')} radius='md'
+              style={{ color: 'blue' }}
             >
-              <Group mt={"xs"}>
-                <Radio value="active" label="Active" />
-                <Radio value="inactive" label="Inactive" />
+              <Group mt="xs">
+                <Radio value="100dayschallenge" label="100 Days Challenge" />
+                <Radio value="longtermjourney" label="Longterm Journey" />
+
               </Group>
             </Radio.Group>
+
+
           </SimpleGrid>
           <Group position="right" mt="md">
-            <Button onClick={handleRegistration} loading={loader}>Submit</Button>
+            <Button onClick={handleRegistration} loading={loader} bg={'#1F3469'} fullWidth radius='md'>Submit</Button>
           </Group>
         </form>
       </Modal>
@@ -321,118 +347,146 @@ const Mantine1 = () => {
       <BackgroundImage
         src="https://static.vecteezy.com/system/resources/previews/022/653/988/non_2x/treadmill-in-modern-gym-toned-image-3d-rendering-generative-ai-free-photo.jpg"
         mt="xl"
-        h={isMobile ? "70vh" : "90vh"}
-
+        h={isMobile ? "80vh" : "90vh"}
+        style={{ backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
-        <Container>
+        <Container fluid p={isMobile ? '1rem' : '2rem'}>
           <AppShell
             footer={
-              <Footer height={isMobile ? 65 : 70} bg="#1F3469" withBorder={false} style={{ width: isMobile ? '99%' : '100%', padding: isMobile ? '0 0.1rem' : '0 2rem' }}>
-                <Container mt={'0.2rem'}>
-                  <Flex justify="space-between" >
-                    <Text
+              <Footer
+                fixed
+                height={isMobile ? 60 : 80}
+                bg="#1F3469"
+                withBorder={false}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: isMobile ? '0 0.5rem' : '0 2rem',
+                }}
+              >
+                <Container
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    maxWidth: '1200px',
+                  }}
+                >
+                  {/* Glowing "HURRY UP AND REGISTER" Text */}
+                  <Text
+                    sx={{
+                      fontFamily: '"Poppins", Sans-serif',
+                      background: 'linear-gradient(90deg, #fff, #fbd40b, #fff)',
+                      backgroundSize: '200%',
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      color: 'transparent',
+                      animation: 'glowAnimation 1.5s infinite',
+                      textAlign: isMobile ? 'center' : 'left',
+                      '@keyframes glowAnimation': {
+                        '0%': { backgroundPosition: '-200%' },
+                        '100%': { backgroundPosition: '200%' },
+                      },
+                    }}
+                    fz={isMobile ? '16px' : '28px'}
+                    fw={600}
+                    ml={isMobile ? '0' : '2rem'}
+                  >
+                    HURRY UP AND REGISTER
+                  </Text>
 
-                      sx={{
-
-                        fontFamily: '"Poppins", Sans-serif',
-                        background: 'linear-gradient(90deg, #fff, #fbd40b, #fff)',
+                  {/* Register Button */}
+                  <Button
+                    h={isMobile ? '2.5rem' : '3rem'}
+                    mt="xs"
+                    styles={(theme) => ({
+                      root: {
+                        backgroundColor: '#FBD40B',
+                        color: 'white',
+                        padding: isMobile ? '0.3rem 1.5rem' : '0.5rem 2rem',
+                        fontSize: isMobile ? '14px' : '16px',
+                        fontWeight: 700,
+                        borderRadius: '30px',
+                        boxShadow: '0 0 20px rgba(255, 255, 255, 0.6)',
+                        transition: 'background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease',
                         backgroundSize: '200%',
-                        backgroundClip: 'text',
-                        WebkitBackgroundClip: 'text',
-                        color: 'transparent',
-                        animation: 'glowAnimation 1.5s infinite',
-                        '@keyframes glowAnimation': {
-                          '0%': {
-                            backgroundPosition: '-200%',
-                          },
-                          '100%': {
-                            backgroundPosition: '200%',
-                          },
-                        },
-                      }}
-                      fz={isMobile ? '15px' : '30px'}
-                      fw={500}
-                      ml={isMobile ? '1rem' : '2rem'}
-                      mt="md"
-                    >
-                      HURRY UP AND REGISTER
-                    </Text>
-                    <Button
-                      h={isMobile ? '2.5rem' : '3rem'}
-                      mt="xs"
-                      styles={(theme) => ({
-                        root: {
+                        backgroundImage: 'linear-gradient(90deg, #fbd40b, #ff9933, #fbd40b)',
+                        animation: 'glowAnimation 3s infinite',
+                        '&:hover': {
                           backgroundColor: '#FBD40B',
-                          color: 'white',
-                          padding: isMobile ? '0.3rem 1.5rem' : '0.5rem 2rem',
-                          fontSize: isMobile ? '14px' : '16px',
-                          fontWeight: 700,
-                          borderRadius: '30px',
-                          boxShadow: '0 0 20px rgba(255, 255, 255, 0.6)',
-                          transition: 'background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease',
-                          backgroundSize: '200%',
-                          backgroundImage: 'linear-gradient(90deg, #fbd40b, #ff9933, #fbd40b)',
-                          animation: 'glowAnimation 3s infinite',
-                          '&:hover': {
-                            backgroundColor: '#FBD40B',
-                            boxShadow: '0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(255, 165, 0, 0.7)',
-                            transform: 'scale(1.05)',
-                          },
+                          boxShadow: '0 0 30px rgba(255, 255, 255, 0.8), 0 0 60px rgba(255, 165, 0, 0.7)',
+                          transform: 'scale(1.05)',
                         },
-                        '@keyframes glowAnimation': {
-                          '0%': {
-                            backgroundPosition: '-200%',
-                          },
-                          '100%': {
-                            backgroundPosition: '200%',
-                          },
+                      },
+                      '@keyframes glowAnimation': {
+                        '0%': {
+                          backgroundPosition: '-200%',
                         },
-                      })}
-                      onClick={open}
-                    >
-                      Register Here
-                    </Button>
+                        '100%': {
+                          backgroundPosition: '200%',
+                        },
+                      },
+                    })}
+                    onClick={open}
+                  >
+                    Register Here
+                  </Button>
 
-                  </Flex>
                 </Container>
               </Footer>
             }
           >
-            <Flex mt={isMobile ? '3.5rem' : '5rem'} justify="center" align={'center'}>
+            {/* Card Section */}
+            <Flex mt={isMobile ? '4rem' : '5rem'} justify="center" align="center">
               <Card
-                h={isMobile ? '20rem' : '30rem'}
-                w={isMobile ? '90vw' : '52rem'}
+                h={isMobile ? '22rem' : '30rem'}
+                w={isMobile ? '90vw' : '50rem'}
                 bg="#1F3469"
-                style={{ borderRadius: '25px', opacity: '0.91', alignContent: 'center', justifyContent: 'center' }}
+                radius="lg"
+                p={isMobile ? '1rem' : '2rem'}
+                style={{
+                  opacity: '0.91',
+                  textAlign: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}
               >
                 <Text
                   style={{ fontFamily: '"Poppins", Sans-serif' }}
-                  fz="20px"
+                  fz={isMobile ? '2.2rem' : '3.5rem'}
                   color="white"
-                  align="center"
-                  fw="500"
-                ></Text>
-                <Text
-                  style={{ fontFamily: '"Poppins", Sans-serif' }}
-                  fz={isMobile ? '2.5rem' : '3.78rem'}
-                  color="white"
-                  align="center"
-                  lh="1.4"
                   fw="700"
+                  lh="1.4"
                 >
-                  100 Days Of Fitness Challenge
+                  100 Days Fitness Challenge
                 </Text>
                 <Text
                   style={{ fontFamily: '"Poppins", Sans-serif' }}
                   fz="20px"
                   color="white"
-                  align="center"
-                  fw="500"
+                  mt="sm"
                 >
-                  Participate and Win the rewards<br />
-                  <Text align="center" component="a" onClick={open} color="#FBD40B" pl="6px"> Join Here</Text>
+                  Get fit to "LEAD"
                 </Text>
-
+                <Text
+                  style={{
+                    fontFamily: '"Poppins", Sans-serif',
+                    cursor: 'pointer',
+                    display: 'inline-block',
+                    marginTop: '0.5rem',
+                  }}
+                  component="a"
+                  onClick={open}
+                  color="#FBD40B"
+                  fz="18px"
+                  fw={600}
+                >
+                  Join Here
+                </Text>
               </Card>
             </Flex>
           </AppShell>

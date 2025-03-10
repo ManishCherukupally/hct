@@ -4,6 +4,13 @@ import ReactECharts from 'echarts-for-react';
 const Piechart = (props) => {
 
     const { data } = props
+    // console.log(data['categories'][0].count);
+    const categories = data['categories'] || [];
+
+    const chartData = categories.map(item => ({
+        value: item.count,
+        name: item.category.charAt(0).toUpperCase() + item.category.slice(1) // Capitalize first letter
+    }));
 
     const option = {
         title: {
@@ -19,10 +26,7 @@ const Piechart = (props) => {
             {
                 type: 'pie',
                 radius: '65%',
-                data: [
-                    { value: data.inactive, name: 'Inactive' },
-                    { value: data.active, name: 'Active' }
-                ],
+                data: chartData,
                 color: ['#fbc313', '#233c79'],
                 emphasis: {
                     itemStyle: {
