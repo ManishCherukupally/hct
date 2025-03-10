@@ -27,7 +27,7 @@ const Piechart = (props) => {
                 type: 'pie',
                 radius: '65%',
                 data: chartData,
-                color: ['#fbc313', '#233c79'],
+                color: ['#233c79', '#fbc313'],
                 emphasis: {
                     itemStyle: {
                         shadowBlur: 10,
