@@ -345,9 +345,10 @@ const Mantine1 = () => {
       </Modal> */}
 
       <BackgroundImage
-        src="https://static.vecteezy.com/system/resources/previews/022/653/988/non_2x/treadmill-in-modern-gym-toned-image-3d-rendering-generative-ai-free-photo.jpg"
+        src="https://healthcoachsaiteja.com/wp-content/uploads/2022/11/IMG-1431-scaled.jpg"
         mt="xl"
-        h={isMobile ? "80vh" : "90vh"}
+        // h={isMobile ? "80vh" : "90vh"}
+        h='auto'
         style={{ backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
         <Container fluid p={isMobile ? '1rem' : '2rem'}>
@@ -440,7 +441,7 @@ const Mantine1 = () => {
             }
           >
             {/* Card Section */}
-            <Flex mt={isMobile ? '4rem' : '5rem'} justify="center" align="center">
+            <Flex mt={isMobile ? '4rem' : '5rem'} mb={isMobile ? '4rem' : '5rem'} justify="center" align="center">
               <Card
                 h={isMobile ? '22rem' : '30rem'}
                 w={isMobile ? '90vw' : '50rem'}
@@ -448,7 +449,7 @@ const Mantine1 = () => {
                 radius="lg"
                 p={isMobile ? '1rem' : '2rem'}
                 style={{
-                  opacity: '0.91',
+                  opacity: '0.8',
                   textAlign: 'center',
                   display: 'flex',
                   flexDirection: 'column',
@@ -456,11 +457,12 @@ const Mantine1 = () => {
                 }}
               >
                 <Text
-                  style={{ fontFamily: '"Poppins", Sans-serif' }}
+                  style={{ fontFamily: '"Poppins", Sans-serif',}}
                   fz={isMobile ? '2.2rem' : '3.5rem'}
                   color="white"
                   fw="700"
                   lh="1.4"
+                 
                 >
                   100 Days Fitness Challenge
                 </Text>
@@ -470,7 +472,7 @@ const Mantine1 = () => {
                   color="white"
                   mt="sm"
                 >
-                  Get fit to "LEAD"
+                  Get Fit to "LEAD"
                 </Text>
                 <Text
                   style={{

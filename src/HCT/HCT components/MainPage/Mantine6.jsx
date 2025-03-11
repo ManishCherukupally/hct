@@ -15,21 +15,22 @@ const Mantine6 = () => {
     return (
         <BackgroundImage src='https://png.pngtree.com/background/20230516/original/pngtree-large-room-full-of-equipment-in-a-gym-picture-image_2611111.jpg'>
             <div style={{
-                height: isMobile ? "85vh" : "60vh", opacity: '0.9', backgroundColor: '#1F3469', display: 'flex', alignItems: 'center',
+                height: isMobile ? "85vh" : "60vh", opacity: '0.95', backgroundColor: '#1F3469', display: 'flex', alignItems: 'center',
                 justifyContent: 'center',
-                borderBottom: 'none',
+                borderBottom: 'none', 
             }}>
-                <Container size='lg'>
+                <Container size='lg' >
                     <div style={{
-                        height: isMobile ? "75vh" : "60vh", opacity: '0.9', backgroundColor: '#1F3469', display: 'flex', alignItems: 'center',
+                        height: isMobile ? "75vh" : "60vh", opacity: '0.95', backgroundColor: '#1F3469', display: 'flex', alignItems: 'center',
                         justifyContent: 'center',
                         borderBottom: 'none',
+                       
                         flexDirection: isMobile ? 'column' : 'row'
                     }}>
                         <div style={{
-                            flex: 0.1, borderBottom: 'none', margin: '3rem'
+                            flex: 0.1, borderBottom: 'none', margin: '3rem', 
                         }}>
-                            <Image height='20rem' width='15rem' mb={isMobile?'0rem':'none'} src={Image1}></Image>
+                            <Image   height='20rem' width='15rem' mb={isMobile?'0rem':'none'} src={Image1}></Image>
                         </div>
                         <div
                             style={{

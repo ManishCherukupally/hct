@@ -25,7 +25,7 @@ const TestimonialCarousel = () => {
     const autoplay = useRef(Autoplay({ delay: 2000, }));
     return (
         <BackgroundImage
-            src='https://healthcoachsaiteja.com/wp-content/uploads/2022/11/IMG-1431-scaled.jpg'
+            src='https://healthcoachsaiteja.com/wp-content/uploads/2022/11/1-scaled.jpg'
 
             style={{
                 height: '100vh',
@@ -49,7 +49,7 @@ const TestimonialCarousel = () => {
                     mt='2rem'
                     pt={isMobile ? '2rem' : '1rem'}
                 >
-                    Clients Across Global
+                    CLIENTS ACROSS GLOBAL
                 </Text>
                 <Carousel slideSize="100%" align="center" loop
                     mb='2rem'
