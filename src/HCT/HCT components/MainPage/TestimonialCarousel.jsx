@@ -49,7 +49,7 @@ const TestimonialCarousel = () => {
                     mt='2rem'
                     pt={isMobile ? '2rem' : '1rem'}
                 >
-                    CLIENTS ACROSS GLOBAL
+                    CLIENTS ACROSS GLOBE
                 </Text>
                 <Carousel slideSize="100%" align="center" loop
                     mb='2rem'

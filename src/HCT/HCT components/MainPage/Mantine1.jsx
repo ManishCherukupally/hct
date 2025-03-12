@@ -308,7 +308,7 @@ const Mantine1 = () => {
             <Select
               required
               name='how_did_you_learn_about_us'
-              label=" How do you get to know ? "
+              label="How did you get to know us? "
               placeholder="Pick one"
               searchable
               nothingFound="No options"
@@ -457,12 +457,12 @@ const Mantine1 = () => {
                 }}
               >
                 <Text
-                  style={{ fontFamily: '"Poppins", Sans-serif',}}
+                  style={{ fontFamily: '"Poppins", Sans-serif', }}
                   fz={isMobile ? '2.2rem' : '3.5rem'}
                   color="white"
                   fw="700"
                   lh="1.4"
-                 
+
                 >
                   100 Days Fitness Challenge
                 </Text>

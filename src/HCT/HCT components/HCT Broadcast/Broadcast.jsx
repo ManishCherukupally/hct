@@ -380,7 +380,7 @@ const Broadcast = () => {
                         onChange={handleSelectTemplate}
                     />
 
-                    <Select
+                    <Select required
                         data={[
                             { value: 'User', label: 'User' },
                             { value: 'Category', label: 'Category' }

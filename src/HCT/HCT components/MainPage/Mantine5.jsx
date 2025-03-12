@@ -37,7 +37,7 @@ const Mantine5 = () => {
 
     return (
         <div style={{ height: isMobile ? "65vh" : "100vh", backgroundColor: '#1F3469', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-            
+
             <Text
                 fz={isMobile ? '1.5rem' : '2.5rem'}
                 align='center'
@@ -46,7 +46,7 @@ const Mantine5 = () => {
                 color='white'
                 pt={isMobile ? '2rem' : '1rem'}
             >
-                CLIENTS TRANSRORMATION
+                CLIENT TRANSFORMATIONS
             </Text>
 
             <Carousel

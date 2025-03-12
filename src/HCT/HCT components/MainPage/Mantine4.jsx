@@ -240,7 +240,7 @@ const Mantine4 = () => {
             </Textarea>
             <Select
               name='how_did_you_learn_about_us'
-              label=" How do you get to know ? "
+              label="How did you get to know us? "
               placeholder="Pick one"
               searchable
               nothingFound="No options"
@@ -374,7 +374,7 @@ const Mantine4 = () => {
                     <List.Item>Lower back pain and sciatica</List.Item>
                     <List.Item>Clients with imbalanced blood lipid profiles and other deficiencies.</List.Item>
                     <List.Item>Working proffesional facing posture imbalance</List.Item>
-                    <List.Item>Strength and conditioning to professional weekend sport player.</List.Item>
+                    <List.Item>Strength and conditioning to professional/weekend sport enthusiasts</List.Item>
                   </List>
                 </Card>
 
