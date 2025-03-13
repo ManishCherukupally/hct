@@ -183,7 +183,7 @@ const Mantine4 = () => {
             <NumberInput
               placeholder="Your age"
               label="Your age"
-
+              required
               {...form.getInputProps('age')} radius='md'
             />
 
@@ -212,7 +212,7 @@ const Mantine4 = () => {
               label="Location"
               name='location'
               placeholder="Enter Location"
-
+              required
               {...form.getInputProps('location')}
 
             />
@@ -235,6 +235,7 @@ const Mantine4 = () => {
               name='goal'
               {...form.getInputProps('goal')}
               label='Goals'
+              required
               placeholder='Enter here..'>
 
             </Textarea>
@@ -243,6 +244,7 @@ const Mantine4 = () => {
               label="How did you get to know us? "
               placeholder="Pick one"
               searchable
+              required
               nothingFound="No options"
               data={['Facebook', 'Instagram Add', 'Friend refered', 'Community promotion', 'Others']}
               {...form.getInputProps('how_did_you_learn_about_us')}
@@ -252,6 +254,7 @@ const Mantine4 = () => {
             <Radio.Group
               name='type_of_challange'
               label="Choose Your Journey"
+              required
 
               {...form.getInputProps('type_of_challange')} radius='md'
               style={{ color: 'blue' }}
@@ -288,6 +291,7 @@ const Mantine4 = () => {
           align="center"
           justify="center"
           opacity={0.9}
+          pb='4rem'
           style={{ padding: isMobile ? '1rem' : 'auto' }}
         >
           <Grid.Col span={12}>

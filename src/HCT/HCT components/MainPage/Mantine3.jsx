@@ -2,12 +2,12 @@ import React, { useRef } from 'react';
 import { Carousel } from '@mantine/carousel';
 import { Card, Text, BackgroundImage, Image, getStylesRef, createStyles } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import Image1 from '../../../assets/Certificates/Ace-certificate.JPG';
-import Image2 from '../../../assets/Certificates/Certified-supplement-coach.JPG';
-import Image3 from '../../../assets/Certificates/Diploma-in-nutrition.JPG';
-import Image4 from '../../../assets/Certificates/funtional-and-group.JPG';
-import Image5 from '../../../assets/Certificates/sports-injuries.JPG';
-import Image6 from '../../../assets/Certificates/Strength-and-conditioning.JPG';
+import Image1 from '../../../assets/Certificates/Ace-certificate.png';
+import Image2 from '../../../assets/Certificates/Certified-supplement-coach.png';
+import Image3 from '../../../assets/Certificates/Diploma-in-nutrition.png';
+import Image4 from '../../../assets/Certificates/funtional-and-group.png';
+import Image5 from '../../../assets/Certificates/sports-injuries.png';
+import Image6 from '../../../assets/Certificates/Strength-and-conditioning.png';
 
 import Autoplay from 'embla-carousel-autoplay';
 
