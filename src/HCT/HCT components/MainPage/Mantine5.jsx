@@ -11,6 +11,8 @@ import Image3 from '../../../assets/Before-after-minimal-skincare-Instagram-post
 import Image4 from '../../../assets/70CB0996-080E-4728-92B7-13A7A786F90E-768x614.png';
 import Image5 from '../../../assets/86A7915C-0940-4E11-AA20-FECB8A3D1141-768x614.png';
 import Image6 from '../../../assets/WhatsApp Image 2025-03-11 at 15.37.35_a088208c.jpg';
+import Image7 from '../../../assets/WhatsApp Image 2025-03-14 at 00.01.48_1d7d3e8f.jpg';
+
 
 
 const useStyles = createStyles(() => ({
@@ -67,7 +69,7 @@ const Mantine5 = () => {
                 onMouseEnter={() => autoplay.current.stop()}
                 onMouseLeave={() => autoplay.current.play()}
             >
-                {[Image1, Image2, Image3, Image4, Image5, Image6].map((image, index) => (
+                {[Image1, Image2, Image3, Image4, Image5, Image6, Image7].map((image, index) => (
                     <Carousel.Slide key={index}>
                         <Card
                             bg='#1F3469'
