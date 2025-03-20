@@ -413,7 +413,7 @@ const Mantine4 = () => {
                   </CardSection>
 
                   <Text fz="15px" color="#FBD40B" fw="500" m="xs" >
-                    Have Questions? Let’s Talk!
+                    Have Questions? 
                   </Text>
                   <Text fz="14px" m="lg" color='white'>Not sure where to start on your fitness journey? </Text>
 
@@ -454,7 +454,7 @@ const Mantine4 = () => {
                         })}
 
                       >
-                        Book Now !
+                        Let’s Talk !
                       </Button>
                     </a>
 

@@ -57,10 +57,11 @@ const Mantine5 = () => {
                 withControls
                 controlsOffset='sm'
                 w={isMobile ? '85vw' : '65vw'}
-                h={isMobile ? 240 : 250}
+                h={isMobile ? 255 : 270}
                 slideSize={isMobile ? '75%' : '5rem'}
                 slidesToScroll={1}
                 draggable
+                withIndicators
                 slideGap={isMobile ? '1rem' : '2rem'}
                 opacity={0.9}
                 mt={isMobile ? '3rem' : '5rem'}

@@ -36,14 +36,14 @@ const Mantine3 = () => {
       src="https://getwallpapers.com/wallpaper/full/9/7/9/200446.jpg"
       style={{ height: isMobile ? '100vh' : '120vh' }}
     >
-      <div style={{ height: isMobile ? "65vh" : "100vh", display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ height: isMobile ? "70vh" : "100vh", display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
         <Text
           fz={isMobile ? '1.5rem' : '2.5rem'}
           align='center'
           fw='bold'
           style={{ fontFamily: '"Poppins", Sans-serif' }}
           color='white'
-          pt={isMobile ? '2rem' : 'none'}
+          pt={isMobile ? '8.5rem' : 'none'}
         >
           CERTIFICATES
         </Text>
@@ -54,10 +54,11 @@ const Mantine3 = () => {
           withControls
           controlsOffset='sm'
           w={isMobile ? '85vw' : '65vw'}
-          h={isMobile ? 240 : 250}
+          h={isMobile ? 520 : 500}
           slideSize={isMobile ? '75%' : '5rem'}
           slidesToScroll={1}
           draggable
+          withIndicators
           slideGap={isMobile ? '1rem' : '2rem'}
           opacity={0.9}
           loop

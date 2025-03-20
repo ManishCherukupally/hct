@@ -38,7 +38,7 @@ const TestimonialCarousel = () => {
                 backgroundPosition: 'center'
             }}
         >
-            <Container size="lg" style={{ width: isMobile ? '100%' : "55%", }}>
+            <Container size="lg" style={{ width: isMobile ? '100%' : "55%", }} mb={isMobile?'9rem':'none'} mt={isMobile?'7rem':'none'}>
                 <Text
                     fz={isMobile ? '1.5rem' : '2.5rem'}
                     align='center'
@@ -46,14 +46,15 @@ const TestimonialCarousel = () => {
                     style={{ fontFamily: '"Poppins", Sans-serif' }}
                     color='white'
                     mb='2rem'
-                    mt='2rem'
-                    pt={isMobile ? '2rem' : '1rem'}
+                    mt='4rem'
+                    pt={isMobile ? '3rem' : '1rem'}
                 >
                     CLIENTS ACROSS GLOBE
                 </Text>
                 <Carousel slideSize="100%" align="center" loop
-                    mb='2rem'
+                    mb='5rem'
                     withControls={false}
+                    withIndicators
                     slideGap='xs'
                     plugins={[autoplay.current]}
                     onMouseEnter={() => autoplay.current.stop()}
@@ -64,6 +65,7 @@ const TestimonialCarousel = () => {
                         <Card
                             shadow="sm"
                             p="xl"
+                           
                             radius="md"
                             style={{
                                 backgroundColor: "#223472",
@@ -72,11 +74,10 @@ const TestimonialCarousel = () => {
                                 position: "relative",
                                 width: isMobile ? "95%" : "100%",
                                 opacity: '0.8',
-
                                 margin: "auto",
                                 borderRadius: "10px",
                                 paddingTop: isMobile ? "60px" : "80px",
-                                paddingBottom: isMobile ? "40px" : "50px",
+                                paddingBottom: isMobile ? "50px" : "50px",
                                 minHeight: isMobile ? "200px" : "450px",
                                 display: "flex",
                                 flexDirection: "column",

@@ -33,7 +33,7 @@ const Footer1 = ({ openModal }) => {
                     gap: isMobile ? '1rem' : '0',
                 }}
             >
-                {!isMobile && <Text>Copyrights @ Health Coach SaiTeja 2022</Text>}
+                {!isMobile && <Text> Copyrights © Health Coach SaiTeja 2025</Text>}
                 {/* Social Media Links */}
                 <div
                     style={{
@@ -43,14 +43,14 @@ const Footer1 = ({ openModal }) => {
                         flexDirection: isMobile ? 'row' : 'row',
                     }}
                 >
-                    <Link to="https://www.facebook.com/" target="_blank" rel="noopener noreferrer">
+                    <Link to="https://www.facebook.com/people/Sai-Teja/100063960496461/?mibextid=LQQJ4d" target="_blank" rel="noopener noreferrer">
                         <img
                             src={facebookImage}
                             alt="Facebook"
                             style={{ width: '4.5rem', height: 'auto' }}
                         />
                     </Link>
-                    <Link to="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
+                    <Link to="https://www.instagram.com/healthcoach_saiteja/?igshid=YmMyMTA2M2Y%3D" target="_blank" rel="noopener noreferrer">
                         <img
                             src={instagramImage}
                             alt="Instagram"
