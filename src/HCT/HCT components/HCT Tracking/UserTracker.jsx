@@ -99,62 +99,66 @@ const UserTracker = () => {
             });
     }, [loaderVisible, currentPage])
 
-    const rows = data.map((item) => (
-        <tr key={item.id} style={{ height: 50 }}>
-            <td> {item.date_of_activity} </td>
-            <td> {item.day_count} </td>
-            <td> {item.step_count} </td>
-            <td> {item.water_in_liters} </td>
-            <td> {item.hours_of_sleep} </td>
-            <td> {item.workout_duration}  </td>
-            {/* <td>{item.calories_initial} </td> */}
-            {/* <td>{item.calories_burn} </td> */}
-            {/* <td>
-                {Object.entries(item.diet).map(([key, value]) => (
-                    // <div key={key}>{value}</div>
-                    <ul style={{ paddingLeft: 20 }}>
-                        <li>{value}</li>
-                    </ul>
-                ))}
-            </td>     */}
-            <td> {item.Exercises} </td>
-            <td> {item.just_relief_activity} </td>
+    const rows = nodata ? (
+        <Text mt={"lg"}> No data found!</Text>
+    ) : (
+        data.map((item) => (
+            <tr key={item.id} style={{ height: 50 }}>
+                <td> {item.date_of_activity} </td>
+                <td> {item.day_count} </td>
+                <td> {item.step_count} </td>
+                <td> {item.water_in_liters} </td>
+                <td> {item.hours_of_sleep} </td>
+                <td> {item.workout_duration}  </td>
+                {/* <td>{item.calories_initial} </td> */}
+                {/* <td>{item.calories_burn} </td> */}
+                {/* <td>
+                    {Object.entries(item.diet).map(([key, value]) => (
+                        // <div key={key}>{value}</div>
+                        <ul style={{ paddingLeft: 20 }}>
+                            <li>{value}</li>
+                        </ul>
+                    ))}
+                </td>     */}
+                <td> {item.Exercises} </td>
+                <td> {item.just_relief_activity} </td>
 
-            <td>
-                <Group>
-                    <Tooltip label="Edit"><ActionIcon variant='subtle' onClick={() => {
-                        seteditModal(true)
-                        const dateObject = new Date(item.date_of_activity);
-                        setDate(dateObject);
-                        form.setValues({
+                <td>
+                    <Group>
+                        <Tooltip label="Edit"><ActionIcon variant='subtle' onClick={() => {
+                            seteditModal(true)
+                            const dateObject = new Date(item.date_of_activity);
+                            setDate(dateObject);
+                            form.setValues({
 
-                            user_id: userId,
-                            category: 1,
-                            date_of_activity: dateObject, day_count: item.day_count,
-                            step_count: item.step_count,
-                            diet: {},
-                            Exercises: item.Exercises,
-                            water_in_liters: item.water_in_liters,
-                            hours_of_sleep: item.hours_of_sleep,
-                            workout_duration: item.workout_duration,
-                            calories_initial: 0,
-                            calories_burn: 0,
-                            just_relief_activity: item.just_relief_activity
+                                user_id: userId,
+                                category: 1,
+                                date_of_activity: dateObject, day_count: item.day_count,
+                                step_count: item.step_count,
+                                diet: {},
+                                Exercises: item.Exercises,
+                                water_in_liters: item.water_in_liters,
+                                hours_of_sleep: item.hours_of_sleep,
+                                workout_duration: item.workout_duration,
+                                calories_initial: 0,
+                                calories_burn: 0,
+                                just_relief_activity: item.just_relief_activity
 
-                        })
-                    }}>
-                        <MdEdit color="#233c79" /> </ActionIcon></Tooltip>
-                    <Tooltip label="Delete"><ActionIcon variant='subtle'
-                        onClick={() => {
-                            setDate(item.date_of_activity)
-                            setdeleteModal(true)
-                        }}
-                    >
-                        <MdDeleteForever color="#FF3C5F" /> </ActionIcon></Tooltip>
-                </Group>
-            </td>
-        </tr>
-    ))
+                            })
+                        }}>
+                            <MdEdit color="#233c79" /> </ActionIcon></Tooltip>
+                        <Tooltip label="Delete"><ActionIcon variant='subtle'
+                            onClick={() => {
+                                setDate(item.date_of_activity)
+                                setdeleteModal(true)
+                            }}
+                        >
+                            <MdDeleteForever color="#FF3C5F" /> </ActionIcon></Tooltip>
+                    </Group>
+                </td>
+            </tr>
+        )
+        ))
 
     const handleAddrecord = () => {
         setLoaderVisible(true)
@@ -437,13 +441,15 @@ const UserTracker = () => {
 
                                     </tr>
                                 </thead>
-                                {
+                                <tbody>{rows}</tbody>
+
+                                {/* {
                                     nodata ? (
                                         <Text align="center">No records found</Text>
                                     ) : (
                                         <tbody>{rows}</tbody>
                                     )
-                                }
+                                } */}
 
                                 {/* <tbody>
                                     <tr >
