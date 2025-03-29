@@ -159,13 +159,13 @@ const HeadHCT = () => {
 
                         <Box w={80} className='hctHeadicon'
                             style={{
-                                borderBottom: `${window.location.pathname === "/trackingpage" || window.location.pathname === `/${usernameparam.username}` ? "4px solid #fab005" : ""}`
+                                borderBottom: `${window.location.pathname === "/trackingpage" || window.location.pathname === `/tracker/${usernameparam.username}` ? "4px solid #fab005" : ""}`
                             }}
                         >
                             <Tooltip label='Statistics'>
                                 <Link to={"/trackingpage"}>
                                     {/* <ActionIcon width="23px" src={window.location.pathname === "/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon> */}
-                                    <IoMdStats size={"1.5rem"} style={{ color: `${window.location.pathname === "/trackingpage" || window.location.pathname === `/${usernameparam.username}` ? "#fab005" : "gray"}` }} />
+                                    <IoMdStats size={"1.5rem"} style={{ color: `${window.location.pathname === "/trackingpage" || window.location.pathname === `/tracker/${usernameparam.username}` ? "#fab005" : "gray"}` }} />
 
                                 </Link>
                             </Tooltip>

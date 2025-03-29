@@ -95,7 +95,7 @@ const LoginHCT = (props) => {
 
     return (
         <div>
-            <Card style={props.style} radius={"xl"}>
+            <Card style={props.style} radius={"xl"} shadow='xl'>
 
                 <Center>
                     <Image

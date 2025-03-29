@@ -70,7 +70,7 @@ function App() {
           {/* HCT Routes*/}
           <Route path="/" element={window.localStorage.getItem("access") ? (<Navigate to={"/dashboard"} />) : (<Navigate to={"/login"} />)} />
 
-          <Route path ="/hctregistration" Component ={LandingPage} />
+          <Route path ="/100daysjourney" Component ={LandingPage} />
           <Route path="/login" Component={LoginHCTPage} />
           <Route path="/forgot-password" Component={ForgetPasswordHCTPage} />
           <Route path="/set-new-password" Component={HCTSetNewpasswordPage} />
@@ -79,7 +79,7 @@ function App() {
           <Route path="/template" Component={TemplatePage} />
           <Route path="/broadcast" Component={BroadcastPage} />
           <Route path="/trackingpage" Component={TrackerPage} />
-          <Route path="/:username" element={<UserTrackerPage/>} />
+          <Route path="/tracker/:username" element={<UserTrackerPage/>} />
 
 
         </Routes>
