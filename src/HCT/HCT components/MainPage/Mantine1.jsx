@@ -21,8 +21,240 @@ const Mantine1 = () => {
 
   const [opened, { open, close }] = useDisclosure(false);
   const isMobile = useMediaQuery('(max-width: 800px)');
-  const [loaderVisible, setLoaderVisible] = useState(false);
+  <form>
+    <SimpleGrid cols={1}>
+      <TextInput
 
+        label="Name"
+        name='name'
+        placeholder="Enter name"
+
+        {...form.getInputProps('name')}
+
+      />
+      <TextInput
+
+        label="Email"
+        name='business_email'
+        placeholder="user@email.com"
+
+        {...form.getInputProps('business_email')}
+
+      />
+      <NumberInput
+        placeholder="Your age"
+        label="Your age"
+
+
+        {...form.getInputProps('age')}
+      />
+
+      <TextInput
+
+        label="Height"
+        name='height'
+        placeholder="Enter Height"
+
+        {...form.getInputProps('height')}
+
+      />
+
+      <TextInput
+
+        label="Weight"
+        name='weight'
+        placeholder="Enter Weight"
+
+        {...form.getInputProps('weight')}
+
+      />
+
+      <Select
+        data={categoryList}
+        placeholder='Select category'
+        label="Category"
+        value={selectedCategory}
+
+        onChange={(value) => {
+          setselectedCategory(value)
+        }}
+      />
+
+
+      {/* <TextInput
+      
+                                          label="Password"
+                                          name='password'
+                                          placeholder=" password"
+                                         
+                                          {...form.getInputProps('password')}
+      
+                                      /> */}
+      <TextInput
+
+        label="Contact No."
+        name='contact_no'
+        placeholder="Enter Contact No."
+
+        {...form.getInputProps('contact_no')}
+
+      />
+      <TextInput
+
+        label="Location"
+        name='location'
+        placeholder="Enter Location"
+
+        {...form.getInputProps('location')}
+
+      />
+
+      <Radio.Group
+        name="favoriteFramework"
+        label="Gender"
+        value={gender}
+        onChange={setgender}
+      >
+        <Group mt="xs">
+          <Radio value="male" label="Male" />
+          <Radio value="female" label="Female" />
+          <Radio value="other" label="Other" />
+        </Group>
+      </Radio.Group>
+
+      <Select
+        required
+        name='how_did_you_learn_about_us'
+        label="How did you get to know us? "
+        placeholder="Pick one"
+        searchable
+        nothingFound="No options"
+        data={['Facebook', 'Instagram Ad', 'Friend refered', 'Community promotion', 'Others']}
+        {...form.getInputProps('how_did_you_learn_about_us')}
+      />
+
+      <Radio.Group
+        required
+        name='type_of_challange'
+        label="Choose Your Journey"
+
+        {...form.getInputProps('type_of_challange')}
+        radius='md'
+        style={{ color: 'blue' }}
+      >
+        <Group mt="xs">
+          <Radio value="100dayschallenge" label="100 Days Challenge" />
+          <Radio value="longtermjourney" label="Longterm Journey" />
+
+        </Group>
+      </Radio.Group>
+
+      <Textarea maxRows={4} label='Goals' required name='goal' placeholder='Enter here..'
+        {...form.getInputProps('goal')}
+      >
+
+      </Textarea>
+
+
+      <DateInput
+        value={date}
+        onChange={setDate}
+        label="Date"
+        placeholder=" Enter Date"
+      />
+
+      <TextInput
+
+        label="Body Type"
+        name='body_type'
+        placeholder="Enter Body Type"
+
+        {...form.getInputProps('body_type')}
+
+      />
+      <TextInput
+
+        label="Blood Group"
+        name='blood_test'
+        placeholder="Enter Blood Group"
+
+        {...form.getInputProps('blood_test')}
+
+      />
+
+      <NumberInput
+
+        label="Bone Density"
+        name='bone_density'
+        placeholder="Enter Blood Group"
+
+        {...form.getInputProps('bone_density')}
+
+      />
+
+      <NumberInput
+
+        label="Fat Percentage"
+        name='body_fatpercentage'
+        placeholder="Enter Fat Percentage"
+
+        {...form.getInputProps('body_fatpercentage')}
+
+      />
+
+      <NumberInput
+
+        label="Muscel Mass"
+        name='muscle_mass'
+        placeholder="Enter Muscel Mass"
+
+        {...form.getInputProps('muscle_mass')}
+
+      />
+
+      <TextInput
+
+        label="Physical Limitations"
+        name='any_physical_limitations'
+        placeholder="Enter Physical Limitations"
+
+        {...form.getInputProps('any_physical_limitations')}
+
+      />
+
+      <TextInput
+
+        label="Any Concerns"
+        name='any_concerns'
+        placeholder="Enter Concerns"
+
+        {...form.getInputProps('any_concerns')}
+
+      />
+
+
+
+      <Radio.Group
+        value={value}
+        onChange={setValue}
+
+        label="Select status of the user"
+
+        withAsterisk
+      >
+        <Group>
+          <Radio value="active" label="Active" />
+          <Radio value="inactive" label="Inactive" />
+        </Group>
+      </Radio.Group>
+    </SimpleGrid>
+    <Space h={15} />
+    <Flex justify={"end"} gap={"2%"}>
+      <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
+        variant='filled' onClick={handleRegistration}>Done</Button>
+      <Button variant='outline' color='dark' onClick={close}>No</Button>
+    </Flex>
+  </form>
   const [successful, setSuccessful] = useState(false)
   const [unsuccessful, setunSuccessful] = useState(false)
   const [emailexist, setEmailExist] = useState(false)
