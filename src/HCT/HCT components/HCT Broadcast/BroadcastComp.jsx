@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Broadcast from './Broadcast';
 import { AppShell, Header } from '@mantine/core';
 import HeadHCT from '../HCT head/HeadHCT';
+import MobileHead from '../HCT head/MobileHead';
 
 const BroadcastComp = () => {
     const mediumScreen = useMediaQuery("(min-width: 1200px)");
@@ -22,7 +23,7 @@ const BroadcastComp = () => {
                     ) : (
                         <>
                             <Broadcast />
-                            {/* <MobileHead /> */}
+                            <MobileHead />
                         </>
                     )
                 }

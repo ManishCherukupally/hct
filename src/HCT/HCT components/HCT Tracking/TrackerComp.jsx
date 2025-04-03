@@ -3,6 +3,7 @@ import Tracker from './Tracker'
 import { useMediaQuery } from '@mantine/hooks';
 import { AppShell, Header } from '@mantine/core';
 import HeadHCT from '../HCT head/HeadHCT';
+import MobileHead from '../HCT head/MobileHead';
 
 const TrackerComp = () => {
     const mediumScreen = useMediaQuery("(min-width: 1200px)");
@@ -18,7 +19,7 @@ const TrackerComp = () => {
                 ) : (
                     <>
                         <Tracker />
-                        {/* <MobileHead /> */}
+                        <MobileHead />
                     </>
                 )
             }

@@ -183,6 +183,16 @@
 
 }
 
+.hctmobileHeadicon {
+    bottom: 2%;
+    padding :3%;
+    border-width: 2px;
+    display: flex;
+    justify-content: center;
+    align-items :center;
+
+}
+
 /* .hctTemplate {
     padding-bottom: 1.4%;
     border-width: 2px;

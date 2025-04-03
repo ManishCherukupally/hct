@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Card, Container, Flex, Group, Modal, NumberInput, Pagination, SegmentedControl, SimpleGrid, Space, Stack, Table, Text, Textarea, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Button, Card, Container, Flex, Group, Modal, NumberInput, Pagination, ScrollArea, SegmentedControl, SimpleGrid, Space, Stack, Table, Text, Textarea, TextInput, Tooltip } from '@mantine/core'
 import { useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
 import { PiTableFill } from 'react-icons/pi';
@@ -391,7 +391,7 @@ const UserTracker = () => {
                 </Modal>
 
                 <Flex justify={"space-between"}>
-                    <Group>
+                    <Group align={"center"} gap={2}>
                         <Link to={"/trackingpage"}>
                             <FaArrowLeftLong />
                         </Link>
@@ -406,7 +406,8 @@ const UserTracker = () => {
                                 setDate(null);
                             }}> Add Record  </Button>
 
-                        <SegmentedControl w={"10rem"}
+                        <SegmentedControl w={mediumScreen ? "10rem" : "5rem"}
+                            size={mediumScreen ? "md" : "sm"}
                             value={value}
                             onChange={setValue}
                             data={[
@@ -423,28 +424,28 @@ const UserTracker = () => {
                 {
                     value === 'table' ? (
                         <Card withBorder radius={10} shadow='md'>
+                            {mediumScreen ? (
+                                <Table striped>
+                                    <thead>
+                                        <tr>
+                                            <th> Date </th>
+                                            <th> Day Count </th>
+                                            <th> Step Count </th>
+                                            <th> Water in Liters </th>
+                                            <th> Hours of Sleep </th>
+                                            <th> Workout Duration  </th>
+                                            {/* <th> Calories Initial </th> */}
+                                            {/* <th>Calories Burn </th> */}
+                                            {/* <th> Diet </th> */}
+                                            <th> Exercises </th>
+                                            <th> Just Relief Activity </th>
+                                            <th> Action </th>
 
-                            <Table striped>
-                                <thead>
-                                    <tr>
-                                        <th> Date </th>
-                                        <th> Day Count </th>
-                                        <th> Step Count </th>
-                                        <th> Water in Liters </th>
-                                        <th> Hours of Sleep </th>
-                                        <th> Workout Duration  </th>
-                                        {/* <th> Calories Initial </th> */}
-                                        {/* <th>Calories Burn </th> */}
-                                        {/* <th> Diet </th> */}
-                                        <th> Exercises </th>
-                                        <th> Just Relief Activity </th>
-                                        <th> Action </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>{rows}</tbody>
 
-                                    </tr>
-                                </thead>
-                                <tbody>{rows}</tbody>
-
-                                {/* {
+                                    {/* {
                                     nodata ? (
                                         <Text align="center">No records found</Text>
                                     ) : (
@@ -452,14 +453,51 @@ const UserTracker = () => {
                                     )
                                 } */}
 
-                                {/* <tbody>
+                                    {/* <tbody>
                                     <tr >
                                         <td>Name</td>
                                     </tr>
                                 </tbody> */}
-                            </Table>
+                                </Table>
+                            ) : (
+                                <ScrollArea offsetScrollbars h={400} >
+                                    <Table striped>
+                                        <thead>
+                                            <tr>
+                                                <th> Date </th>
+                                                <th> Day Count </th>
+                                                <th> Step Count </th>
+                                                <th> Water in Liters </th>
+                                                <th> Hours of Sleep </th>
+                                                <th> Workout Duration  </th>
+                                                {/* <th> Calories Initial </th> */}
+                                                {/* <th>Calories Burn </th> */}
+                                                {/* <th> Diet </th> */}
+                                                <th> Exercises </th>
+                                                <th> Just Relief Activity </th>
+                                                <th> Action </th>
 
-                            <Flex justify={"end"}>
+                                            </tr>
+                                        </thead>
+                                        <tbody>{rows}</tbody>
+
+                                        {/* {
+                                    nodata ? (
+                                        <Text align="center">No records found</Text>
+                                    ) : (
+                                        <tbody>{rows}</tbody>
+                                    )
+                                } */}
+
+                                        {/* <tbody>
+                                    <tr >
+                                        <td>Name</td>
+                                    </tr>
+                                </tbody> */}
+                                    </Table>
+                                </ScrollArea>
+                            )}
+                            < Flex justify={"end"}>
                                 <Pagination value={currentPage} onChange={setCurrentPage} total={recordsPerPage} color="yellow" siblings={1} />
                             </Flex>
                         </Card>
@@ -484,7 +522,7 @@ const UserTracker = () => {
                 }
 
             </Container>
-        </div>
+        </div >
     )
 }
 

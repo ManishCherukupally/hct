@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Card, Container, Flex, Group, Modal, NumberInput, Pagination, Space, Stack, Table, Text, Textarea, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Button, Card, Container, Flex, Group, Modal, NumberInput, Pagination, ScrollArea, Space, Stack, Table, Text, Textarea, TextInput, Tooltip } from '@mantine/core'
 import { useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
@@ -261,29 +261,55 @@ const Tracker = () => {
                 </Flex>
                 <Space h={15} />
                 <Card withBorder radius={10} shadow='md'>
-                    <Table striped>
-                        <thead>
-                            <tr>
-                                {/* <th> User ID </th> */}
-                                <th> Name </th>
-                                <th> Goal </th>
-                                <th> Date of Joining </th>
-                                <th> Total Attendance </th>
-                                <th> Total Water Intake </th>
-                                <th> Total Step Count </th>
-                                <th> Total Workout Duration </th>
-                                {/* <th> Body Type </th> */}
-                                <th> Action </th>
-                            </tr>
-                        </thead>
-                        <tbody>{rows}</tbody>
-                        {/* <tbody>
+                    {mediumScreen ? (
+                        <Table striped>
+                            <thead>
+                                <tr>
+                                    {/* <th> User ID </th> */}
+                                    <th> Name </th>
+                                    <th> Goal </th>
+                                    <th> Date of Joining </th>
+                                    <th> Total Attendance </th>
+                                    <th> Total Water Intake </th>
+                                    <th> Total Step Count </th>
+                                    <th> Total Workout Duration </th>
+                                    {/* <th> Body Type </th> */}
+                                    <th> Action </th>
+                                </tr>
+                            </thead>
+                            <tbody>{rows}</tbody>
+                            {/* <tbody>
                             <tr onClick={() => navigate(`/${data.name}`)}>
                                 <td>Name</td>
                             </tr>
                         </tbody> */}
-                    </Table>
-
+                        </Table>
+                    ) : (
+                        <ScrollArea offsetScrollbars h={400} >
+                            <Table striped>
+                                <thead>
+                                    <tr>
+                                        {/* <th> User ID </th> */}
+                                        <th> Name </th>
+                                        <th> Goal </th>
+                                        <th> Date of Joining </th>
+                                        <th> Total Attendance </th>
+                                        <th> Total Water Intake </th>
+                                        <th> Total Step Count </th>
+                                        <th> Total Workout Duration </th>
+                                        {/* <th> Body Type </th> */}
+                                        <th> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>{rows}</tbody>
+                                {/* <tbody>
+                            <tr onClick={() => navigate(`/${data.name}`)}>
+                                <td>Name</td>
+                            </tr>
+                        </tbody> */}
+                            </Table>
+                        </ScrollArea>
+                    )}
                     <Space h={"xl"} />
                     <Flex justify={"end"}>
                         <Pagination value={currentPage} onChange={setCurrentPage} total={recordsPerPage} color="yellow" siblings={1} />
