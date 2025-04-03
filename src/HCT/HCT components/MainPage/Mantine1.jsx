@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { AppShell, BackgroundImage, Button, Card, Container, Flex, Footer, Text, Group, Radio, TextInput, Modal, Box, NumberInput, Transition, Overlay, SimpleGrid, Textarea, Select, Space } from '@mantine/core';
+import React, { useState } from 'react';
+import { AppShell, BackgroundImage, Button, Card, Container, Flex, Footer, Text, Group, Radio, TextInput, Modal, Box, NumberInput, Transition, Overlay, SimpleGrid, Textarea, Select } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import client from '../../../API/api';
@@ -10,7 +10,6 @@ import { MdDone } from 'react-icons/md';
 import { ImCross } from "react-icons/im";
 import { IoMdClose } from "react-icons/io";
 import { PiWarningFill } from "react-icons/pi";
-import { DateInput } from '@mantine/dates';
 
 
 
@@ -21,22 +20,17 @@ const Mantine1 = () => {
 
   const [opened, { open, close }] = useDisclosure(false);
   const isMobile = useMediaQuery('(max-width: 800px)');
-  const [loaderVisible, setLoaderVisible] = useState(false);
+  const [loader, setLoader] = useState(false)
 
   const [successful, setSuccessful] = useState(false)
   const [unsuccessful, setunSuccessful] = useState(false)
   const [emailexist, setEmailExist] = useState(false)
   const [page, setPage] = useState(false)
   const [value, setValue] = useState('active');
-  const [date, setDate] = useState(null);
-  const [selectedCategory, setselectedCategory] = useState('')
-  const [categoryList, setcategoryList] = useState([])
-  const [gender, setgender] = useState('male')
 
 
 
   const form = useForm({
-
     initialValues: {
       name: "",
       business_email: "",
@@ -46,22 +40,21 @@ const Mantine1 = () => {
       username: "",
       category: "",
       age: '',
-      gender: gender,
-
+      gender: '',
+      goal: '',
       how_did_you_learn_about_us: '',
       type_of_challange: '',
-      goal: '',
-      date_of_joining: '',
-      height: '',
-      weight: '',
       body_type: '',
       blood_test: '',
-      bone_density: '',
-      body_fatpercentage: '',
-      muscle_mass: '',
       any_physical_limitations: '',
       any_concerns: ''
+
     },
+
+    validate: {
+      business_email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+    },
+
     transformValues: (values) => ({
       name: `${values.name}`,
       business_email: `${values.business_email}`,
@@ -69,47 +62,24 @@ const Mantine1 = () => {
       user_status: `${value}`,
       location: `${values.location}`,
       username: `${values.business_email}`,
-      category: `${selectedCategory}`,
+      category: '100days_challenge',
       age: values.age,
-      gender: `${gender}`,
-
+      gender: `${values.gender}`,
+      goal: `${values.goal}`,
       how_did_you_learn_about_us: `${values.how_did_you_learn_about_us}`,
       type_of_challange: `${values.type_of_challange}`,
-      goal: `${values.goal}`,
-      date_of_joining: new Date(date).toLocaleDateString("en-CA"),
-      height: parseFloat(values.height),
-      weight: parseFloat(values.weight),
-      body_type: `${values.body_type}`,
-      blood_test: `${values.blood_test}`,
-      bone_density: values.bone_density,
-      body_fatpercentage: values.body_fatpercentage,
-      muscle_mass: values.muscle_mass,
-      any_physical_limitations: `${values.any_physical_limitations}`,
-      any_concerns: `${values.any_concerns}`
-      // company: '',
-      // years_of_experience: '',
-      // job_position: ''
+      body_type: '',
+      blood_test: '',
+      any_physical_limitations: '',
+      any_concerns: ''
 
-    }),
-  })
-
-  useEffect(() => {
-    client.get('hct_category_dd/', {
-      headers: {
-        Authorization: `Bearer ${window.localStorage.getItem("access")}`
-      }
     })
-      .then((resp) => {
-        setcategoryList(resp.data['category_list'].map(item => ({
-          value: item.category,
-          label: item.category
-        })))
-      })
-  }, [])
+
+  });
 
 
   const handleRegistration = () => {
-    setLoaderVisible(true);
+    setLoader(true);
     client.post("register_user/", form.getTransformedValues())
       .then((resp) => {
         if (resp.data.status === "user_registered_successfully") {
@@ -117,7 +87,7 @@ const Mantine1 = () => {
 
           setTimeout(() => {
             setSuccessful(true)
-            setLoaderVisible(false)
+            setLoader(false)
             close()
             form.reset()
           }, 1000)
@@ -128,7 +98,7 @@ const Mantine1 = () => {
 
           setTimeout(() => {
             setunSuccessful(true)
-            setLoaderVisible(false)
+            setLoader(false)
             close()
             form.reset()
 
@@ -140,7 +110,7 @@ const Mantine1 = () => {
 
           setTimeout(() => {
             setEmailExist(true)
-            setLoaderVisible(false)
+            setLoader(false)
             close()
             form.reset()
           }, 1000)
@@ -268,19 +238,19 @@ const Mantine1 = () => {
 
 
       <Modal opened={opened} onClose={close} title="Registration" centered size={isMobile ? "xs" : "md"}>
-        <form>
+        <form >
           <SimpleGrid cols={1}>
             <TextInput
 
               label="Name"
               name='name'
               placeholder="Enter name"
-
+              required
               {...form.getInputProps('name')}
 
             />
             <TextInput
-
+              required
               label="Email"
               name='business_email'
               placeholder="user@email.com"
@@ -291,58 +261,27 @@ const Mantine1 = () => {
             <NumberInput
               placeholder="Your age"
               label="Your age"
-
-
-              {...form.getInputProps('age')}
+              required
+              {...form.getInputProps('age')} radius='md'
             />
 
-            <TextInput
-
-              label="Height"
-              name='height'
-              placeholder="Enter Height"
-
-              {...form.getInputProps('height')}
-
-            />
-
-            <TextInput
-
-              label="Weight"
-              name='weight'
-              placeholder="Enter Weight"
-
-              {...form.getInputProps('weight')}
-
-            />
-
-            <Select
-              data={categoryList}
-              placeholder='Select category'
-              label="Category"
-              value={selectedCategory}
-
-              onChange={(value) => {
-                setselectedCategory(value)
-              }}
-            />
 
 
             {/* <TextInput
-      
-                                          label="Password"
-                                          name='password'
-                                          placeholder=" password"
-                                         
-                                          {...form.getInputProps('password')}
-      
-                                      /> */}
+
+    label="Password"
+    name='password'
+    placeholder=" password"
+   
+    {...form.getInputProps('password')}
+
+/> */}
             <TextInput
 
               label="Contact No."
               name='contact_no'
               placeholder="Enter Contact No."
-
+              required
               {...form.getInputProps('contact_no')}
 
             />
@@ -351,7 +290,7 @@ const Mantine1 = () => {
               label="Location"
               name='location'
               placeholder="Enter Location"
-
+              required
               {...form.getInputProps('location')}
 
             />
@@ -359,8 +298,9 @@ const Mantine1 = () => {
             <Radio.Group
               name="favoriteFramework"
               label="Gender"
-              value={gender}
-              onChange={setgender}
+
+              {...form.getInputProps('gender')} radius='md'
+              style={{ color: 'blue' }}
             >
               <Group mt="xs">
                 <Radio value="male" label="Male" />
@@ -369,6 +309,11 @@ const Mantine1 = () => {
               </Group>
             </Radio.Group>
 
+            <Textarea maxRows={4} label='Goals' required name='goal' placeholder='Enter here..'
+              {...form.getInputProps('goal')}
+            >
+
+            </Textarea>
             <Select
               required
               name='how_did_you_learn_about_us'
@@ -380,13 +325,13 @@ const Mantine1 = () => {
               {...form.getInputProps('how_did_you_learn_about_us')}
             />
 
+
             <Radio.Group
               required
               name='type_of_challange'
               label="Choose Your Journey"
 
-              {...form.getInputProps('type_of_challange')}
-              radius='md'
+              {...form.getInputProps('type_of_challange')} radius='md'
               style={{ color: 'blue' }}
             >
               <Group mt="xs">
@@ -396,111 +341,11 @@ const Mantine1 = () => {
               </Group>
             </Radio.Group>
 
-            <Textarea maxRows={4} label='Goals' required name='goal' placeholder='Enter here..'
-              {...form.getInputProps('goal')}
-            >
 
-            </Textarea>
-
-
-            <DateInput
-              value={date}
-              onChange={setDate}
-              label="Date"
-              placeholder=" Enter Date"
-            />
-
-            <TextInput
-
-              label="Body Type"
-              name='body_type'
-              placeholder="Enter Body Type"
-
-              {...form.getInputProps('body_type')}
-
-            />
-            <TextInput
-
-              label="Blood Group"
-              name='blood_test'
-              placeholder="Enter Blood Group"
-
-              {...form.getInputProps('blood_test')}
-
-            />
-
-            <NumberInput
-
-              label="Bone Density"
-              name='bone_density'
-              placeholder="Enter Blood Group"
-
-              {...form.getInputProps('bone_density')}
-
-            />
-
-            <NumberInput
-
-              label="Fat Percentage"
-              name='body_fatpercentage'
-              placeholder="Enter Fat Percentage"
-
-              {...form.getInputProps('body_fatpercentage')}
-
-            />
-
-            <NumberInput
-
-              label="Muscel Mass"
-              name='muscle_mass'
-              placeholder="Enter Muscel Mass"
-
-              {...form.getInputProps('muscle_mass')}
-
-            />
-
-            <TextInput
-
-              label="Physical Limitations"
-              name='any_physical_limitations'
-              placeholder="Enter Physical Limitations"
-
-              {...form.getInputProps('any_physical_limitations')}
-
-            />
-
-            <TextInput
-
-              label="Any Concerns"
-              name='any_concerns'
-              placeholder="Enter Concerns"
-
-              {...form.getInputProps('any_concerns')}
-
-            />
-
-
-
-            <Radio.Group
-              value={value}
-              onChange={setValue}
-
-              label="Select status of the user"
-
-              withAsterisk
-            >
-              <Group>
-                <Radio value="active" label="Active" />
-                <Radio value="inactive" label="Inactive" />
-              </Group>
-            </Radio.Group>
           </SimpleGrid>
-          <Space h={15} />
-          <Flex justify={"end"} gap={"2%"}>
-            <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
-              variant='filled' onClick={handleRegistration}>Done</Button>
-            <Button variant='outline' color='dark' onClick={close}>No</Button>
-          </Flex>
+          <Group position="right" mt="md">
+            <Button onClick={handleRegistration} loading={loader} bg={'#1F3469'} fullWidth radius='md'>Submit</Button>
+          </Group>
         </form>
       </Modal>
 

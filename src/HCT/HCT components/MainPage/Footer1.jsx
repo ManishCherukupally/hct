@@ -7,7 +7,7 @@ import { useMediaQuery } from '@mantine/hooks';
 
 const Footer1 = ({ openModal }) => {
     const isMobile = useMediaQuery('(max-width: 800px)');
-    
+
 
     return (
         <Footer
@@ -18,8 +18,8 @@ const Footer1 = ({ openModal }) => {
                 display: 'flex',
                 alignItems: 'center',
                 display: 'flex',
-                position:'relative',
-                top: isMobile? '-3rem':'-5rem'
+                position: 'relative',
+                top: isMobile ? '-3rem' : '-5rem'
             }}
         >
             <Container
@@ -27,7 +27,7 @@ const Footer1 = ({ openModal }) => {
                     display: 'flex',
                     flexDirection: isMobile ? 'row' : 'row',
                     alignItems: 'center',
-                    justifyContent:  'space-between',
+                    justifyContent: 'space-between',
                     width: '100%',
                     padding: '1rem',
                     gap: isMobile ? '1rem' : '0',
