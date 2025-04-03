@@ -133,7 +133,8 @@ const UserTracker = () => {
 
                                 user_id: userId,
                                 category: 1,
-                                date_of_activity: dateObject, day_count: item.day_count,
+                                date_of_activity: dateObject,
+                                day_count: item.day_count,
                                 step_count: item.step_count,
                                 diet: {},
                                 Exercises: item.Exercises,
@@ -465,16 +466,16 @@ const UserTracker = () => {
                     ) : (
                         <>
                             <SimpleGrid cols={2}>
-                                <Card withBorder radius={"md"}>
+                                <Card withBorder radius={"md"} shadow='md'>
                                     <WaterIntakechart data={data} />
                                 </Card>
 
-                                <Card withBorder radius={"md"}>
+                                <Card withBorder radius={"md"} shadow='md'>
                                     <Sleepchart data={data} />
                                 </Card>
                             </SimpleGrid>
                             <Space h={15} />
-                            <Card withBorder radius={"md"} mb={"1rem"}>
+                            <Card withBorder radius={"md"} mb={"1rem"} shadow='md'>
                                 <Usertrackchart data={data} />
                             </Card>
 

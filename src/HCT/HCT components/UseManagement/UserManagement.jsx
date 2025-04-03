@@ -1,4 +1,4 @@
-import { ActionIcon, Button, Card, Center, Container, Flex, Group, Loader, Modal, NumberInput, Overlay, Pagination, Radio, ScrollArea, Select, SimpleGrid, Space, Table, Text, TextInput, Tooltip } from '@mantine/core'
+import { ActionIcon, Button, Card, Center, Container, Flex, Group, Loader, Modal, NumberInput, Overlay, Pagination, Radio, ScrollArea, Select, SimpleGrid, Space, Stack, Table, Text, Textarea, TextInput, Tooltip } from '@mantine/core'
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
 import { BiSearch } from 'react-icons/bi';
@@ -7,6 +7,7 @@ import axios from 'axios';
 import { MdCircle, MdEdit, MdDeleteForever } from "react-icons/md";
 import { useForm } from '@mantine/form';
 import client from '../../../API/api';
+import { DateInput } from '@mantine/dates';
 
 
 const UserManagement = () => {
@@ -40,6 +41,14 @@ const UserManagement = () => {
 
     const [categoryList, setcategoryList] = useState([])
     const [selectedCategory, setselectedCategory] = useState('')
+
+    const [fulldetails, setfulldetails] = useState(false)
+    const [name, setname] = useState("")
+    const [userDetails, setuserDetails] = useState({})
+    const [date, setDate] = useState(null);
+    console.log(date);
+
+
     // console.log(userName)
     const form = useForm({
 
@@ -52,7 +61,21 @@ const UserManagement = () => {
             username: "",
             category: "",
             age: '',
-            gender: gender
+            gender: gender,
+
+            how_did_you_learn_about_us: '',
+            type_of_challange: '',
+            goal: '',
+            date_of_joining: '',
+            height: '',
+            weight: '',
+            body_type: '',
+            blood_test: '',
+            bone_density: '',
+            body_fatpercentage: '',
+            muscle_mass: '',
+            any_physical_limitations: '',
+            any_concerns: ''
         },
         transformValues: (values) => ({
             name: `${values.name}`,
@@ -63,13 +86,28 @@ const UserManagement = () => {
             username: `${values.business_email}`,
             category: `${selectedCategory}`,
             age: values.age,
-            gender: `${gender}`
+            gender: `${gender}`,
+
+            how_did_you_learn_about_us: `${values.how_did_you_learn_about_us}`,
+            type_of_challange: `${values.type_of_challange}`,
+            goal: `${values.goal}`,
+            date_of_joining: new Date(date).toLocaleDateString("en-CA"),
+            height: parseFloat(values.height),
+            weight: parseFloat(values.weight),
+            body_type: `${values.body_type}`,
+            blood_test: `${values.blood_test}`,
+            bone_density: values.bone_density,
+            body_fatpercentage: values.body_fatpercentage,
+            muscle_mass: values.muscle_mass,
+            any_physical_limitations: `${values.any_physical_limitations}`,
+            any_concerns: `${values.any_concerns}`
             // company: '',
             // years_of_experience: '',
             // job_position: ''
 
         }),
     })
+
     useEffect(() => {
         client.get("pagination/", {
             params: {
@@ -104,7 +142,17 @@ const UserManagement = () => {
     //         location: `${values.location}`,
     //     }),
     // })
+
+    const handlefulldetails = (data) => {
+        setfulldetails(true)
+        setname(data.name)
+        setuserDetails(data)
+    }
+
+
     const handleDate = (value) => {
+        console.log(value);
+
         const date = new Date(value);
 
         // Get day, month, and year from the Date object
@@ -139,18 +187,20 @@ const UserManagement = () => {
 
             }</td>
             {/* <td style={{ color: "orange" }}>{item.category}</td> */}
-            <td >{item.category}</td>
-            <td>{item.name}</td>
-            <td>{item.age}</td>
-            <td>{item.gender}</td>
-            <td>{item.contact_no}</td>
-            <td>{item.business_email}</td>
-            <td>{handleDate(item.date_joined)}</td>
-            <td>{item.location}</td>
+            <td onClick={() => handlefulldetails(item)}>{item.category}</td>
+            <td onClick={() => handlefulldetails(item)}>{item.name}</td>
+            <td onClick={() => handlefulldetails(item)}>{item.age}</td>
+            <td onClick={() => handlefulldetails(item)}>{item.gender}</td>
+            <td onClick={() => handlefulldetails(item)}>{item.contact_no}</td>
+            <td onClick={() => handlefulldetails(item)}>{item.business_email}</td>
+            <td onClick={() => handlefulldetails(item)}>{new Date(item.date_joined).toLocaleDateString("en-CA")}</td>
+            <td onClick={() => handlefulldetails(item)}>{item.location}</td>
             <td>
                 <Flex>
                     <Tooltip label={"Edit"}><ActionIcon variant='subtle'
                         onClick={() => {
+                            const dateObject = new Date(item.date_joined);
+                            setDate(dateObject);
                             // handleEditData(item)
                             setEditModal(true)
                             setUserName(item.business_email)
@@ -167,18 +217,46 @@ const UserManagement = () => {
     ))
 
     const editDetails = (data) => {
+        // console.log(new Date(data.date_joined).toLocaleDateString("en-CA"));
+        // console.log(data.date_joined);
+        // const dateObject = new Date(data.date_joined);
+        // console.log(dateObject);
+
+        // setDate(dateObject);
         form.setValues({
             name: data.name,
-            business_email: data.business_email,
-            category: setselectedCategory(data.category),
-            contact_no: data.contact_no,
-            location: data.location,
-            user_status: setValue(data.user_status),
-            age: data.age,
-            gender: setgender(data.gender)
-
+            business_email: data.business_email || "",
+            category: data.category || "",
+            contact_no: data.contact_no || "",
+            location: data.location || "",
+            user_status: data.user_status || "",
+            age: Number(data.age) || 0,
+            gender: data.gender || "",
+            date_joined: date,
+            how_did_you_learn_about_us: data.how_did_you_learn_about_us || "",
+            type_of_challange: data.type_of_challange || "",
+            goal: data.goal || "",
+            height: data.height ? Number(data.height) : 0,  // Ensuring a valid number
+            weight: data.weight ? Number(data.weight) : 0,
+            body_type: data.body_type || "",
+            blood_test: data.blood_test || "",
+            bone_density: data.bone_density ? Number(data.bone_density) : 0.0,
+            body_fatpercentage: data.body_fatpercentage ? Number(data.body_fatpercentage) : 0.0,
+            muscle_mass: data.muscle_mass ? Number(data.muscle_mass) : 0.0,
+            any_physical_limitations: data.any_physical_limitations || "no",
+            any_concerns: data.any_concerns || "no",
+            Total_attendance: data.Total_attendance ? Number(data.Total_attendance) : 0,
+            Total_water_intake: data.Total_water_intake ? Number(data.Total_water_intake) : 0,
+            Total_step_count: data.Total_step_count ? Number(data.Total_step_count) : 0,
+            Total_workout_duration: data.Total_workout_duration || "00:00:00",
         });
-    }
+
+        // Separate state setters (if needed)
+        setselectedCategory(data.category);
+        setValue(data.user_status);
+        setgender(data.gender);
+    };
+
 
     const handleDelete = () => {
         setLoaderVisible(true)
@@ -281,7 +359,7 @@ const UserManagement = () => {
                                 label="Name"
                                 name='name'
                                 placeholder="Enter name"
-                                size={mediumScreen ? "md" : "lg"}
+
                                 {...form.getInputProps('name')}
 
                             />
@@ -290,23 +368,44 @@ const UserManagement = () => {
                                 label="Email"
                                 name='business_email'
                                 placeholder="user@email.com"
-                                size={mediumScreen ? "md" : "lg"}
+
                                 {...form.getInputProps('business_email')}
 
                             />
                             <NumberInput
                                 placeholder="Your age"
                                 label="Your age"
-                                size={mediumScreen ? "md" : "lg"}
+
 
                                 {...form.getInputProps('age')}
                             />
+
+                            <TextInput
+
+                                label="Height"
+                                name='height'
+                                placeholder="Enter Height"
+
+                                {...form.getInputProps('height')}
+
+                            />
+
+                            <TextInput
+
+                                label="Weight"
+                                name='weight'
+                                placeholder="Enter Weight"
+
+                                {...form.getInputProps('weight')}
+
+                            />
+
                             <Select
                                 data={categoryList}
                                 placeholder='Select category'
                                 label="Category"
                                 value={selectedCategory}
-                                size={mediumScreen ? "md" : "lg"}
+
                                 onChange={(value) => {
                                     setselectedCategory(value)
                                 }}
@@ -318,7 +417,7 @@ const UserManagement = () => {
                                     label="Password"
                                     name='password'
                                     placeholder=" password"
-                                    size={mediumScreen ? "md" : "lg"}
+                                   
                                     {...form.getInputProps('password')}
 
                                 /> */}
@@ -327,7 +426,7 @@ const UserManagement = () => {
                                 label="Contact No."
                                 name='contact_no'
                                 placeholder="Enter Contact No."
-                                size={mediumScreen ? "md" : "lg"}
+
                                 {...form.getInputProps('contact_no')}
 
                             />
@@ -336,7 +435,7 @@ const UserManagement = () => {
                                 label="Location"
                                 name='location'
                                 placeholder="Enter Location"
-                                size={mediumScreen ? "md" : "lg"}
+
                                 {...form.getInputProps('location')}
 
                             />
@@ -353,6 +452,117 @@ const UserManagement = () => {
                                     <Radio value="other" label="Other" />
                                 </Group>
                             </Radio.Group>
+
+                            <Select
+                                required
+                                name='how_did_you_learn_about_us'
+                                label="How did you get to know us? "
+                                placeholder="Pick one"
+                                searchable
+                                nothingFound="No options"
+                                data={['Facebook', 'Instagram Ad', 'Friend refered', 'Community promotion', 'Others']}
+                                {...form.getInputProps('how_did_you_learn_about_us')}
+                            />
+
+                            <Radio.Group
+                                required
+                                name='type_of_challange'
+                                label="Choose Your Journey"
+
+                                {...form.getInputProps('type_of_challange')}
+                                radius='md'
+                                style={{ color: 'blue' }}
+                            >
+                                <Group mt="xs">
+                                    <Radio value="100dayschallenge" label="100 Days Challenge" />
+                                    <Radio value="longtermjourney" label="Longterm Journey" />
+
+                                </Group>
+                            </Radio.Group>
+
+                            <Textarea maxRows={4} label='Goals' required name='goal' placeholder='Enter here..'
+                                {...form.getInputProps('goal')}
+                            >
+
+                            </Textarea>
+
+
+                            <DateInput
+                                value={date}
+                                onChange={setDate}
+                                label="Date"
+                                placeholder=" Enter Date"
+                            />
+
+                            <TextInput
+
+                                label="Body Type"
+                                name='body_type'
+                                placeholder="Enter Body Type"
+
+                                {...form.getInputProps('body_type')}
+
+                            />
+                            <TextInput
+
+                                label="Blood Group"
+                                name='blood_test'
+                                placeholder="Enter Blood Group"
+
+                                {...form.getInputProps('blood_test')}
+
+                            />
+
+                            <NumberInput
+
+                                label="Bone Density"
+                                name='bone_density'
+                                placeholder="Enter Blood Group"
+
+                                {...form.getInputProps('bone_density')}
+
+                            />
+
+                            <NumberInput
+
+                                label="Fat Percentage"
+                                name='body_fatpercentage'
+                                placeholder="Enter Fat Percentage"
+
+                                {...form.getInputProps('body_fatpercentage')}
+
+                            />
+
+                            <NumberInput
+
+                                label="Muscel Mass"
+                                name='muscle_mass'
+                                placeholder="Enter Muscel Mass"
+
+                                {...form.getInputProps('muscle_mass')}
+
+                            />
+
+                            <TextInput
+
+                                label="Physical Limitations"
+                                name='any_physical_limitations'
+                                placeholder="Enter Physical Limitations"
+
+                                {...form.getInputProps('any_physical_limitations')}
+
+                            />
+
+                            <TextInput
+
+                                label="Any Concerns"
+                                name='any_concerns'
+                                placeholder="Enter Concerns"
+
+                                {...form.getInputProps('any_concerns')}
+
+                            />
+
 
 
                             <Radio.Group
@@ -379,8 +589,6 @@ const UserManagement = () => {
 
                 </Modal>
 
-
-
                 <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={EditModal} onClose={() => {
                     setEditModal(false)
                     setEditStatus(false)
@@ -393,7 +601,7 @@ const UserManagement = () => {
                                 label="Name"
                                 name='name'
                                 placeholder="Enter name"
-                                size={mediumScreen ? "md" : "lg"}
+
                                 {...form.getInputProps('name')}
 
                             />
@@ -402,55 +610,74 @@ const UserManagement = () => {
                                 label="Email"
                                 name='business_email'
                                 placeholder="user@email.com"
-                                size={mediumScreen ? "md" : "lg"}
+
                                 {...form.getInputProps('business_email')}
 
                             />
-
                             <NumberInput
                                 placeholder="Your age"
                                 label="Your age"
-                                size={mediumScreen ? "md" : "lg"}
 
-                                {...form.getInputProps('age')} radius='md'
+
+                                {...form.getInputProps('age')}
+                            />
+
+                            <TextInput
+
+                                label="Height"
+                                name='height'
+                                placeholder="Enter Height"
+
+                                {...form.getInputProps('height')}
+
+                            />
+
+                            <TextInput
+
+                                label="Weight"
+                                name='weight'
+                                placeholder="Enter Weight"
+
+                                {...form.getInputProps('weight')}
+
                             />
 
                             <Select
                                 data={categoryList}
                                 placeholder='Select category'
                                 label="Category"
-                                size={mediumScreen ? "md" : "lg"}
                                 value={selectedCategory}
+
                                 onChange={(value) => {
                                     setselectedCategory(value)
                                 }}
                             />
 
+
                             {/* <TextInput
 
-                                    label="Password"
-                                    name='password'
-                                    placeholder=" password"
-                                    size={mediumScreen ? "md" : "lg"}
-                                    {...form.getInputProps('password')}
+    label="Password"
+    name='password'
+    placeholder=" password"
+   
+    {...form.getInputProps('password')}
 
-                                /> */}
+/> */}
                             <TextInput
 
                                 label="Contact No."
                                 name='contact_no'
                                 placeholder="Enter Contact No."
-                                size={mediumScreen ? "md" : "lg"}
+
                                 {...form.getInputProps('contact_no')}
 
                             />
                             <TextInput
 
                                 label="Location"
-
                                 name='location'
                                 placeholder="Enter Location"
-                                size={mediumScreen ? "md" : "lg"}
+
                                 {...form.getInputProps('location')}
 
                             />
@@ -468,6 +695,115 @@ const UserManagement = () => {
                                 </Group>
                             </Radio.Group>
 
+                            <Select
+                                required
+                                name='how_did_you_learn_about_us'
+                                label="How did you get to know us? "
+                                placeholder="Pick one"
+                                searchable
+                                nothingFound="No options"
+                                data={['Facebook', 'Instagram Ad', 'Friend refered', 'Community promotion', 'Others']}
+                                {...form.getInputProps('how_did_you_learn_about_us')}
+                            />
+
+                            <Radio.Group
+                                required
+                                name='type_of_challange'
+                                label="Choose Your Journey"
+
+                                {...form.getInputProps('type_of_challange')}
+                                radius='md'
+                                style={{ color: 'blue' }}
+                            >
+                                <Group mt="xs">
+                                    <Radio value="100dayschallenge" label="100 Days Challenge" />
+                                    <Radio value="longtermjourney" label="Longterm Journey" />
+
+                                </Group>
+                            </Radio.Group>
+
+                            <Textarea maxRows={4} label='Goals' required name='goal' placeholder='Enter here..'
+                                {...form.getInputProps('goal')}
+                            >
+
+                            </Textarea>
+
+
+                            <DateInput
+                                value={date}
+                                onChange={setDate}
+                                label="Date"
+                                placeholder=" Enter Date"
+                            />
+
+                            <TextInput
+
+                                label="Body Type"
+                                name='body_type'
+                                placeholder="Enter Body Type"
+
+                                {...form.getInputProps('body_type')}
+
+                            />
+                            <TextInput
+
+                                label="Blood Group"
+                                name='blood_test'
+                                placeholder="Enter Blood Group"
+
+                                {...form.getInputProps('blood_test')}
+
+                            />
+
+                            <NumberInput
+
+                                label="Bone Density"
+                                name='bone_density'
+                                placeholder="Enter Blood Group"
+
+                                {...form.getInputProps('bone_density')}
+
+                            />
+
+                            <NumberInput
+
+                                label="Fat Percentage"
+                                name='body_fatpercentage'
+                                placeholder="Enter Fat Percentage"
+
+                                {...form.getInputProps('body_fatpercentage')}
+
+                            />
+
+                            <NumberInput
+
+                                label="Muscel Mass"
+                                name='muscle_mass'
+                                placeholder="Enter Muscel Mass"
+
+                                {...form.getInputProps('muscle_mass')}
+
+                            />
+
+                            <TextInput
+
+                                label="Physical Limitations"
+                                name='any_physical_limitations'
+                                placeholder="Enter Physical Limitations"
+
+                                {...form.getInputProps('any_physical_limitations')}
+
+                            />
+
+                            <TextInput
+
+                                label="Any Concerns"
+                                name='any_concerns'
+                                placeholder="Enter Concerns"
+
+                                {...form.getInputProps('any_concerns')}
+
+                            />
 
                             <Radio.Group
                                 value={value}
@@ -496,8 +832,7 @@ const UserManagement = () => {
 
                 </Modal>
 
-
-                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={opened} onClose={close} title="Are you sure?!">
+                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={opened} onClose={close} title="Are you sure?">
                     <Text>Do you really want to change the status?</Text>
                     <Space h={15} />
                     <Flex justify={"end"} gap={"2%"}>
@@ -509,8 +844,6 @@ const UserManagement = () => {
                     </Flex>
                 </Modal>
 
-
-
                 <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={openModal} onClose={() => setOpenModal(false)} title="Are you sure?!">
                     <Text>Do you really want to delete this user?</Text>
                     <Space h={15} />
@@ -521,13 +854,43 @@ const UserManagement = () => {
                     </Flex>
                 </Modal>
 
+                <Modal centered opened={fulldetails} onClose={() => setfulldetails(false)} title={`${name} (${userDetails.category})`}>
+                    <Stack>
+                        <Text>Status : {userDetails.user_status}</Text>
+                        <Text>Date of Joining : {handleDate(userDetails.date_joined)}</Text>
+                        {/* <Text>Date of Joining : {userDetails.name}</Text> */}
+                        <Text>Age : {userDetails.age}</Text>
+                        <Text>Gender : {userDetails.gender}</Text>
+                        <Text>Contact no. : {userDetails.contact_no}</Text>
+                        <Text>Email : {userDetails.business_email}</Text>
+                        <Text>Location : {userDetails.location}</Text>
+                        <Text>Height : {userDetails.height}</Text>
+                        <Text>Weight : {userDetails.weight}</Text>
+                        <Text>Body Type : {userDetails.body_type}</Text>
+                        <Text>Blood : {userDetails.blood_test}</Text>
+                        <Text>Bone Density : {userDetails.bone_density}</Text>
+                        <Text>Body Fat : {userDetails.body_fatpercentage} %</Text>
+                        <Text>Muscel Mass : {userDetails.muscle_mass}</Text>
+                        <Text>Physical Limitations : {userDetails.any_physical_limitations}</Text>
+                        <Text>Concerns : {userDetails.any_concerns}</Text>
+                        <Text>Attendance : {userDetails.Total_attendance}</Text>
+                        <Text>Water Intake : {userDetails.Total_water_intake} L</Text>
+                        <Text>Step Count : {userDetails.Total_step_count}</Text>
+                        <Text>Workout Duration : {userDetails.Total_workout_duration}</Text>
+                        <Text>Got To Know Through : {userDetails.how_did_you_learn_about_us}</Text>
+                        <Text>Challenge : {userDetails.type_of_challange}</Text>
+                        <Text>Goal : {userDetails.goal}</Text>
+
+
+                    </Stack>
+                </Modal>
                 <Flex justify={"space-between"}>
                     <Text fz={22} fw={600}>Users</Text>
                     <Group>
                         {/* <Select searchable nothingFound="No related courses" fz={18} w={400} radius={"md"} variant='filled'
                             placeholder='Search user'
                             icon={<ActionIcon><BiSearch /></ActionIcon>} data={["react", "Js"]}
-                        // {data.map((option) => {
+                        // {data.map((option) => {  
                         //   return {
                         //     value: option.value,
                         //     label: option.course_name,
@@ -535,9 +898,12 @@ const UserManagement = () => {
                         // })} 
                         /> */}
                         <Button onClick={() => {
+
+                            form.reset()
+                            setDate(null);
                             setUserModal(true)
                             setEditStatus(false)
-                            form.reset()
+
                         }}
                             radius={10} style={{ backgroundColor: "#233c79" }}>Add User</Button>
                     </Group>

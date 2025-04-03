@@ -1,9 +1,9 @@
-import { AspectRatio, Badge, Button, CardSection, Group, BackgroundImage, Modal, Box, TextInput, NumberInput, Radio, Textarea, Select } from '@mantine/core';
+import { AspectRatio, Badge, Button, CardSection, Group, BackgroundImage, Modal, Box, TextInput, NumberInput, Radio, Textarea, Select, Space, Flex } from '@mantine/core';
 import { Card, Grid, Footer, Container, Anchor, SimpleGrid, Image, Text, List } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { useMediaQuery } from '@mantine/hooks';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import facebookImage from '../../../assets/facebook-logo-facebook-icon-transparent-free-png.png';
 import Image11 from '../../../assets/IMG-0069-832x1024.jpg'
@@ -15,6 +15,7 @@ import { ImCross } from "react-icons/im";
 import { IoMdClose } from "react-icons/io";
 import { PiWarningFill } from "react-icons/pi";
 import Footer1 from './Footer1';
+import { DateInput } from '@mantine/dates';
 
 
 // import { FaSquareFacebook } from "react-icons/fa6";
@@ -29,15 +30,19 @@ const Mantine4 = () => {
 
   const [opened, { open, close }] = useDisclosure(false);
   const isMobile = useMediaQuery('(max-width: 768px)');
-  const [loader, setLoader] = useState(false)
+  const [loaderVisible, setLoaderVisible] = useState(false);
 
   const [successful, setSuccessful] = useState(false)
   const [unsuccessful, setunSuccessful] = useState(false)
   const [emailexist, setEmailExist] = useState(false)
   const [value, setValue] = useState('active');
-
+  const [date, setDate] = useState(null);
+  const [selectedCategory, setselectedCategory] = useState('')
+  const [categoryList, setcategoryList] = useState([])
+  const [gender, setgender] = useState('male')
 
   const form = useForm({
+
     initialValues: {
       name: "",
       business_email: "",
@@ -45,17 +50,24 @@ const Mantine4 = () => {
       location: "",
       user_status: value,
       username: "",
-      // category: "",
+      category: "",
       age: '',
-      gender: '',
-      goal: '',
-      how_did_you_learn_about_us: '',
-      type_of_challange: ''
-    },
-    validate: {
-      business_email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-    },
+      gender: gender,
 
+      how_did_you_learn_about_us: '',
+      type_of_challange: '',
+      goal: '',
+      date_of_joining: '',
+      height: '',
+      weight: '',
+      body_type: '',
+      blood_test: '',
+      bone_density: '',
+      body_fatpercentage: '',
+      muscle_mass: '',
+      any_physical_limitations: '',
+      any_concerns: ''
+    },
     transformValues: (values) => ({
       name: `${values.name}`,
       business_email: `${values.business_email}`,
@@ -63,17 +75,46 @@ const Mantine4 = () => {
       user_status: `${value}`,
       location: `${values.location}`,
       username: `${values.business_email}`,
-      // category: 'gold',
+      category: `${selectedCategory}`,
       age: values.age,
-      gender: `${values.gender}`,
-      goal: `${values.goal}`,
+      gender: `${gender}`,
+
       how_did_you_learn_about_us: `${values.how_did_you_learn_about_us}`,
-      type_of_challange: `${values.type_of_challange}`
+      type_of_challange: `${values.type_of_challange}`,
+      goal: `${values.goal}`,
+      date_of_joining: new Date(date).toLocaleDateString("en-CA"),
+      height: parseFloat(values.height),
+      weight: parseFloat(values.weight),
+      body_type: `${values.body_type}`,
+      blood_test: `${values.blood_test}`,
+      bone_density: values.bone_density,
+      body_fatpercentage: values.body_fatpercentage,
+      muscle_mass: values.muscle_mass,
+      any_physical_limitations: `${values.any_physical_limitations}`,
+      any_concerns: `${values.any_concerns}`
+      // company: '',
+      // years_of_experience: '',
+      // job_position: ''
+
+    }),
+  })
+
+  useEffect(() => {
+    client.get('hct_category_dd/', {
+      headers: {
+        Authorization: `Bearer ${window.localStorage.getItem("access")}`
+      }
     })
-  });
+      .then((resp) => {
+        setcategoryList(resp.data['category_list'].map(item => ({
+          value: item.category,
+          label: item.category
+        })))
+      })
+  }, [])
 
   const handleRegistration = () => {
-    setLoader(true);
+    setLoaderVisible(true);
     client.post("register_user/", form.getTransformedValues())
       .then((resp) => {
         if (resp.data.status === "user_registered_successfully") {
@@ -81,7 +122,7 @@ const Mantine4 = () => {
 
           setTimeout(() => {
             setSuccessful(true)
-            setLoader(false)
+            setLoaderVisible(false)
             close()
             form.reset()
           }, 1000)
@@ -92,7 +133,7 @@ const Mantine4 = () => {
 
           setTimeout(() => {
             setunSuccessful(true)
-            setLoader(false)
+            setLoaderVisible(false)
             close()
             form.reset()
 
@@ -104,7 +145,7 @@ const Mantine4 = () => {
 
           setTimeout(() => {
             setEmailExist(true)
-            setLoader(false)
+            setLoaderVisible(false)
             close()
             form.reset()
           }, 1000)
@@ -160,10 +201,10 @@ const Mantine4 = () => {
 
 
       <Modal opened={opened} onClose={close} title="Registration" centered size={isMobile ? "xs" : "md"}>
-        <form >
+        <form>
           <SimpleGrid cols={1}>
             <TextInput
-              required
+
               label="Name"
               name='name'
               placeholder="Enter name"
@@ -172,7 +213,7 @@ const Mantine4 = () => {
 
             />
             <TextInput
-              required
+
               label="Email"
               name='business_email'
               placeholder="user@email.com"
@@ -183,23 +224,54 @@ const Mantine4 = () => {
             <NumberInput
               placeholder="Your age"
               label="Your age"
-              required
-              {...form.getInputProps('age')} radius='md'
+
+
+              {...form.getInputProps('age')}
+            />
+
+            <TextInput
+
+              label="Height"
+              name='height'
+              placeholder="Enter Height"
+
+              {...form.getInputProps('height')}
+
+            />
+
+            <TextInput
+
+              label="Weight"
+              name='weight'
+              placeholder="Enter Weight"
+
+              {...form.getInputProps('weight')}
+
+            />
+
+            <Select
+              data={categoryList}
+              placeholder='Select category'
+              label="Category"
+              value={selectedCategory}
+
+              onChange={(value) => {
+                setselectedCategory(value)
+              }}
             />
 
 
-
             {/* <TextInput
-
-    label="Password"
-    name='password'
-    placeholder=" password"
-   
-    {...form.getInputProps('password')}
-
-/> */}
+              
+                                                  label="Password"
+                                                  name='password'
+                                                  placeholder=" password"
+                                                 
+                                                  {...form.getInputProps('password')}
+              
+                                              /> */}
             <TextInput
-              required
+
               label="Contact No."
               name='contact_no'
               placeholder="Enter Contact No."
@@ -212,7 +284,7 @@ const Mantine4 = () => {
               label="Location"
               name='location'
               placeholder="Enter Location"
-              required
+
               {...form.getInputProps('location')}
 
             />
@@ -220,9 +292,8 @@ const Mantine4 = () => {
             <Radio.Group
               name="favoriteFramework"
               label="Gender"
-
-              {...form.getInputProps('gender')} radius='md'
-              style={{ color: 'blue' }}
+              value={gender}
+              onChange={setgender}
             >
               <Group mt="xs">
                 <Radio value="male" label="Male" />
@@ -231,32 +302,24 @@ const Mantine4 = () => {
               </Group>
             </Radio.Group>
 
-            <Textarea maxRows={4}
-              name='goal'
-              {...form.getInputProps('goal')}
-              label='Goals'
-              required
-              placeholder='Enter here..'>
-
-            </Textarea>
             <Select
+              required
               name='how_did_you_learn_about_us'
               label="How did you get to know us? "
               placeholder="Pick one"
               searchable
-              required
               nothingFound="No options"
-              data={['Facebook', 'Instagram Add', 'Friend refered', 'Community promotion', 'Others']}
+              data={['Facebook', 'Instagram Ad', 'Friend refered', 'Community promotion', 'Others']}
               {...form.getInputProps('how_did_you_learn_about_us')}
             />
 
-
             <Radio.Group
+              required
               name='type_of_challange'
               label="Choose Your Journey"
-              required
 
-              {...form.getInputProps('type_of_challange')} radius='md'
+              {...form.getInputProps('type_of_challange')}
+              radius='md'
               style={{ color: 'blue' }}
             >
               <Group mt="xs">
@@ -266,12 +329,111 @@ const Mantine4 = () => {
               </Group>
             </Radio.Group>
 
+            <Textarea maxRows={4} label='Goals' required name='goal' placeholder='Enter here..'
+              {...form.getInputProps('goal')}
+            >
 
+            </Textarea>
+
+
+            <DateInput
+              value={date}
+              onChange={setDate}
+              label="Date"
+              placeholder=" Enter Date"
+            />
+
+            <TextInput
+
+              label="Body Type"
+              name='body_type'
+              placeholder="Enter Body Type"
+
+              {...form.getInputProps('body_type')}
+
+            />
+            <TextInput
+
+              label="Blood Group"
+              name='blood_test'
+              placeholder="Enter Blood Group"
+
+              {...form.getInputProps('blood_test')}
+
+            />
+
+            <NumberInput
+
+              label="Bone Density"
+              name='bone_density'
+              placeholder="Enter Blood Group"
+
+              {...form.getInputProps('bone_density')}
+
+            />
+
+            <NumberInput
+
+              label="Fat Percentage"
+              name='body_fatpercentage'
+              placeholder="Enter Fat Percentage"
+
+              {...form.getInputProps('body_fatpercentage')}
+
+            />
+
+            <NumberInput
+
+              label="Muscel Mass"
+              name='muscle_mass'
+              placeholder="Enter Muscel Mass"
+
+              {...form.getInputProps('muscle_mass')}
+
+            />
+
+            <TextInput
+
+              label="Physical Limitations"
+              name='any_physical_limitations'
+              placeholder="Enter Physical Limitations"
+
+              {...form.getInputProps('any_physical_limitations')}
+
+            />
+
+            <TextInput
+
+              label="Any Concerns"
+              name='any_concerns'
+              placeholder="Enter Concerns"
+
+              {...form.getInputProps('any_concerns')}
+
+            />
+
+
+
+            <Radio.Group
+              value={value}
+              onChange={setValue}
+
+              label="Select status of the user"
+
+              withAsterisk
+            >
+              <Group>
+                <Radio value="active" label="Active" />
+                <Radio value="inactive" label="Inactive" />
+              </Group>
+            </Radio.Group>
           </SimpleGrid>
-
-          <Group position="right" mt="md">
-            <Button onClick={handleRegistration} fullWidth radius='md' loading={loader} bg={'#1F3469'}>Submit</Button>
-          </Group>
+          <Space h={15} />
+          <Flex justify={"end"} gap={"2%"}>
+            <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
+              variant='filled' onClick={handleRegistration}>Done</Button>
+            <Button variant='outline' color='dark' onClick={close}>No</Button>
+          </Flex>
         </form>
       </Modal>
 
@@ -413,7 +575,7 @@ const Mantine4 = () => {
                   </CardSection>
 
                   <Text fz="15px" color="#FBD40B" fw="500" m="xs" >
-                    Have Questions? 
+                    Have Questions?
                   </Text>
                   <Text fz="14px" m="lg" color='white'>Not sure where to start on your fitness journey? </Text>
 
