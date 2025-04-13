@@ -31,6 +31,7 @@ import BroadcastPage from "./HCT/HCTpages/BroadcastPage";
 import LandingPage from "./HCT/HCT components/MainPage/LandingPage";
 import TrackerPage from "./HCT/HCTpages/TrackerPage";
 import UserTrackerPage from "./HCT/HCTpages/UserTrackerPage";
+import PagesPage from "./HCT/HCTpages/PagesPage";
 
 function App() {
 
@@ -80,6 +81,7 @@ function App() {
           <Route path="/broadcast" Component={BroadcastPage} />
           <Route path="/trackingpage" Component={TrackerPage} />
           <Route path="/tracker/:username" element={<UserTrackerPage/>} />
+          <Route path="/pages" Component={PagesPage} />
 
 
         </Routes>

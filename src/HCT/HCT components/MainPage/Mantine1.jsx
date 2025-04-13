@@ -408,9 +408,9 @@ const Mantine1 = () => {
                     >
                       HURRY UP AND REGISTER
                     </Text>
-                    <Text ml={isMobile ? '-1rem' : '2rem'} color='white' style={{ fontfamily: '"Open Sans", Sans-serif', fontSize: isMobile ? '9.5px' : '12px' }}>
+                    {/* <Text ml={isMobile ? '-1rem' : '2rem'} color='white' style={{ fontfamily: '"Open Sans", Sans-serif', fontSize: isMobile ? '9.5px' : '12px' }}>
                       Designed and Developed by Automac Technologies
-                    </Text>
+                    </Text> */}
                   </Flex>
 
                   {/* Register Button */}

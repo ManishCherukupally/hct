@@ -22,6 +22,8 @@ const Template = () => {
     const [openModal, setOpenModal] = useState(false)
 
     const [templateId, settemplateId] = useState(null)
+    const [nodata, setnoData] = useState(false)
+
     // const [templateName, settemplateName] = useState('')
     // const [templateBody, settemplateBody] = useState('')
     // const [templateHeading, settemplateHeading] = useState('')
@@ -41,7 +43,10 @@ const Template = () => {
                 settemplateData(resp.data['templates'])
                 // console.log(resp.data['templates'][0].template_name);
                 setRecordsPerPage(resp.data.number_of_pages)
+                if (resp.data.status === 'page_not_found') {
+                    setnoData(true)
 
+                }
 
             })
             .catch(err => console.error(err))
@@ -56,45 +61,49 @@ const Template = () => {
         });
     }
 
-    const rows = templateData.map((item, index) => (
-        <tr key={index} style={{ height: 50 }}>
-            <td style={{ width: '346px' }}>{item.template_name}</td>
-            <td style={{ width: '346px' }}>{item.template_heading}</td>
-            {/* <Tooltip label={item.template_body} > */}
-            {
-                item.template_body.length > 50 ? (
-                    <Spoiler maxHeight={25} showLabel="..." hideLabel="Hide">
+    const rows = nodata ? (
+        <Text mt={"lg"}> No templates found!</Text>
+    ) : (
+        templateData.map((item, index) => (
+            <tr key={index} style={{ height: 50 }}>
+                <td style={{ width: '346px' }}>{item.template_name}</td>
+                <td style={{ width: '346px' }}>{item.template_heading}</td>
+                {/* <Tooltip label={item.template_body} > */}
+                {
+                    item.template_body.length > 50 ? (
+                        <Spoiler maxHeight={25} showLabel="..." hideLabel="Hide">
+                            <td style={{ width: '346px' }}>{item.template_body}</td>
+                        </Spoiler>
+                    ) : (
                         <td style={{ width: '346px' }}>{item.template_body}</td>
-                    </Spoiler>
-                ) : (
-                    <td style={{ width: '346px' }}>{item.template_body}</td>
-                )
-            }
-            {/* </Tooltip> */}
-            <td style={{ width: '200px' }}>
-                <Flex>
-                    <Tooltip label={"Edit"}><ActionIcon variant='subtle'
-                        onClick={() => {
-                            // handleEditData(item)
-                            editDetails(item)
-                            setEditModal(true)
-                            settemplateId(item.id)
-                            // settemplateName(item.template_name)
-                            // console.log(templateName);
-                            setEditStatus(true)
-                        }} ><MdEdit color="#233c79" /></ActionIcon></Tooltip>
-                    <Tooltip label={"Delete"}><ActionIcon variant='subtle' onClick={() => {
+                    )
+                }
+                {/* </Tooltip> */}
+                <td style={{ width: '200px' }}>
+                    <Flex>
+                        <Tooltip label={"Edit"}><ActionIcon variant='subtle'
+                            onClick={() => {
+                                // handleEditData(item)
+                                editDetails(item)
+                                setEditModal(true)
+                                settemplateId(item.id)
+                                // settemplateName(item.template_name)
+                                // console.log(templateName);
+                                setEditStatus(true)
+                            }} ><MdEdit color="#233c79" /></ActionIcon></Tooltip>
+                        <Tooltip label={"Delete"}><ActionIcon variant='subtle' onClick={() => {
 
-                        setOpenModal(true)
-                        settemplateId(item.id)
-                        console.log(item.id);
-                        // handleDelete()
-                        // setUserName(item.u_business_email)
-                    }} ><MdDeleteForever color="FF3C5F" /></ActionIcon></Tooltip>
-                </Flex>
-            </td>
-        </tr>
-    ))
+                            setOpenModal(true)
+                            settemplateId(item.id)
+                            console.log(item.id);
+                            // handleDelete()
+                            // setUserName(item.u_business_email)
+                        }} ><MdDeleteForever color="FF3C5F" /></ActionIcon></Tooltip>
+                    </Flex>
+                </td>
+            </tr>
+        )
+        ))
 
 
 

@@ -1,6 +1,6 @@
 import { ActionIcon, Button, Card, Container, Flex, Group, Modal, NumberInput, Pagination, ScrollArea, SegmentedControl, SimpleGrid, Space, Stack, Table, Text, Textarea, TextInput, Tooltip } from '@mantine/core'
 import { useMediaQuery } from '@mantine/hooks';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { PiTableFill } from 'react-icons/pi';
 import { SlGraph } from "react-icons/sl";
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -35,6 +35,8 @@ const UserTracker = () => {
     const [deleteModal, setdeleteModal] = useState(false)
     const [date, setDate] = useState(null);
     const [nodata, setnoData] = useState(false)
+    const sleepRef = useRef();
+    const workoutRef = useRef();
     // console.log(new Date(date).toLocaleDateString("en-CA"));
     // const [deleteDate, setdeleteDate] = useState("")
     // console.log(deleteDate);
@@ -87,7 +89,7 @@ const UserTracker = () => {
         })
             .then((resp) => {
                 setData(resp.data["user_daily_activity_records"])
-
+                setRecordsPerPage(resp.data.number_of_pages)
                 if (resp.data.status === 'page_not_found') {
                     setnoData(true)
 
@@ -287,7 +289,8 @@ const UserTracker = () => {
                             {...form.getInputProps('hours_of_sleep')}
                         /> */}
 
-                        <TimeInput
+                        <TimeInput onClick={() => sleepRef.current.showPicker()}
+                            ref={sleepRef}
                             withSeconds
                             label="Hours of Sleep"
                             placeholder="Enter Hours of Sleep"
@@ -295,7 +298,8 @@ const UserTracker = () => {
                             // onChange={(val) => form.setFieldValue("Total_workout_duration", val || "")}
                             {...form.getInputProps('hours_of_sleep')}
                         />
-                        <TimeInput
+                        <TimeInput onClick={() => workoutRef.current.showPicker()}
+                            ref={workoutRef}
                             withSeconds
                             label="Workout Duration"
                             placeholder="Enter Workout Duration"
@@ -353,7 +357,8 @@ const UserTracker = () => {
                             {...form.getInputProps('hours_of_sleep')}
                         /> */}
 
-                        <TimeInput
+                        <TimeInput onClick={() => sleepRef.current.showPicker()}
+                            ref={sleepRef}
                             withSeconds
                             label="Hours of Sleep"
                             placeholder="Enter Hours of Sleep"
@@ -361,7 +366,8 @@ const UserTracker = () => {
                             // onChange={(val) => form.setFieldValue("Total_workout_duration", val || "")}
                             {...form.getInputProps('hours_of_sleep')}
                         />
-                        <TimeInput
+                        <TimeInput onClick={() => workoutRef.current.showPicker()}
+                            ref={workoutRef}
                             withSeconds
                             label="Workout Duration"
                             placeholder="Enter Workout Duration"
@@ -461,7 +467,7 @@ const UserTracker = () => {
                                 </Table>
                             ) : (
                                 <ScrollArea offsetScrollbars h={400} >
-                                    <Table striped>
+                                    <Table striped style={{ tableLayout: 'fixed', width: '100%' }}>
                                         <thead>
                                             <tr>
                                                 <th> Date </th>

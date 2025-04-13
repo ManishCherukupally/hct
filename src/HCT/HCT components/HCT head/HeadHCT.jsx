@@ -8,9 +8,9 @@ import { BsChevronDown } from 'react-icons/bs'
 
 import { AiFillHome } from 'react-icons/ai'
 
-import { FaBookOpen } from 'react-icons/fa'
+import { FaBookOpen, FaExternalLinkSquareAlt } from 'react-icons/fa'
 
-import { MdAutoGraph, MdChevronLeft, MdHome, MdPerson } from 'react-icons/md'
+import { MdAutoGraph, MdChevronLeft, MdHome, MdLogout, MdPerson } from 'react-icons/md'
 
 // import Mycourses from '../MyCourses/Mycourses'
 
@@ -30,7 +30,8 @@ import User from '../../../assets/user.png';
 import Home from '../../../assets/home.png';
 
 import Home1 from '../../../assets/home1.png';
-
+import market from '../../../assets/market.png'
+import market1 from '../../../assets/market1.png'
 
 // import ChangePassword from '../ChangePassword'
 
@@ -45,7 +46,7 @@ import axios from 'axios'
 import client from '../../../API/api'
 import { TbTemplate } from 'react-icons/tb'
 import { GoBroadcast } from "react-icons/go";
-import { HiHome } from "react-icons/hi";
+import { HiHome, HiSpeakerphone } from "react-icons/hi";
 import { IoMdStats } from 'react-icons/io'
 
 
@@ -83,7 +84,7 @@ const HeadHCT = () => {
             <nav >
                 <Flex align={"center"} justify={"space-between"}>
                     <Box style={{ display: "flex", alignItems: "center" }}>
-                        <a href='http://healthcoachsaiteja.com/'>
+                        <a href='/dashboard'>
                             <Image
                                 style={{ margin: 50 }}
                                 maw={120}
@@ -113,36 +114,88 @@ const HeadHCT = () => {
                             </Link>
                         </Box> */}
 
-                        <Box w={80} className='hctHeadicon'
+                        {/* <Box w={80} className='hctHeadicon'
                             style={{
                                 borderBottom: window.location.pathname === "/dashboard" ? "4px solid #fab005" : ""
                             }}
                         >
                             <Tooltip label='Home'>
                                 <Link to={"/dashboard"}>
-                                    {/* <ActionIcon width="23px" src={window.location.pathname === "/template" ? <TbTemplate co /> : <TbTemplate />} ></ActionIcon> */}
+                                    <ActionIcon width="23px" src={window.location.pathname === "/template" ? <TbTemplate co /> : <TbTemplate />} ></ActionIcon>
 
                                     <HiHome size={"1.5rem"} style={{ color: `${window.location.pathname === "/dashboard" ? "#fab005" : "gray"}` }} />
 
                                 </Link>
                             </Tooltip>
-                        </Box>
+                        </Box> */}
 
                         <Box w={80} className='hctHeadicon'
                             style={{
-                                borderBottom: `${window.location.pathname === "/template" ? "4px solid #fab005" : ""}`
+                                borderBottom: `${window.location.pathname === "/template" || window.location.pathname === "/broadcast" ? "4px solid #fab005" : ""}`
                             }}
                         >
-                            <Tooltip label='Template'>
+                            {/* <Tooltip label='Template'>
                                 <Link to={"/template"}>
-                                    {/* <ActionIcon width="23px" src={window.location.pathname === "/template" ? <TbTemplate co /> : <TbTemplate />} ></ActionIcon> */}
+                                    <ActionIcon width="23px" src={window.location.pathname === "/template" ? <TbTemplate co /> : <TbTemplate />} ></ActionIcon>
                                     <TbTemplate size={"1.5rem"} style={{ color: `${window.location.pathname === "/template" ? "#fab005" : "gray"}` }} />
+
+                                </Link>
+                            </Tooltip> */}
+                            <Menu withArrow shadow="md" styles={{
+                                dropdown: {
+                                    position: "fixed",
+                                    zIndex: 999,
+                                },
+                            }}>
+                                <Menu.Target>
+                                    {/* {
+                                        window.location.pathname === "/template" || "/broadcast" ? (<Image src={market1} maw={"1.8rem"} />) : (<Image src={market} maw={"1.8rem"} />)
+                                    } */}
+                                    <Tooltip label='Marketing'>
+                                        <ActionIcon variant='transparent'> <HiSpeakerphone size={"1.5rem"} style={{ color: `${window.location.pathname === "/template" || window.location.pathname === "/broadcast" ? "#fab005" : "gray"}` }} /></ActionIcon>
+                                    </Tooltip>
+                                </Menu.Target>
+                                <Menu.Dropdown>
+                                    <Menu.Item onClick={() => navigate("/template")}>
+
+                                        <Group>
+                                            <TbTemplate size={"1rem"} />
+                                            <Text fw={500}>Templates</Text>
+                                        </Group>
+
+                                    </Menu.Item>
+
+                                    <Menu.Item onClick={() => navigate("/broadcast")}>
+
+                                        <Group>
+                                            <GoBroadcast size={"1rem"} />
+                                            <Text fw={500}>Broadcasts</Text>
+                                        </Group>
+                                    </Menu.Item>
+
+                                </Menu.Dropdown>
+                            </Menu>
+
+                        </Box>
+
+
+
+                        <Box w={80} className='hctHeadicon'
+                            style={{
+                                borderBottom: `${window.location.pathname === "/pages" ? "4px solid #fab005" : ""}`
+                            }}
+                        >
+                            <Tooltip label='Pages'>
+                                <Link to={"/pages"}>
+                                    {/* <ActionIcon width="23px" src={window.location.pathname === "/pages" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon> */}
+                                    <FaExternalLinkSquareAlt size={"1.5rem"} style={{ color: `${window.location.pathname === "/pages" ? "#fab005" : "gray"}` }} />
 
                                 </Link>
                             </Tooltip>
                         </Box>
 
 
+                        {/* 
                         <Box w={80} className='hctHeadicon'
                             style={{
                                 borderBottom: `${window.location.pathname === "/broadcast" ? "4px solid #fab005" : ""}`
@@ -150,12 +203,12 @@ const HeadHCT = () => {
                         >
                             <Tooltip label='Broadcast'>
                                 <Link to={"/broadcast"}>
-                                    {/* <ActionIcon width="23px" src={window.location.pathname === "/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon> */}
+                                    <ActionIcon width="23px" src={window.location.pathname === "/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon>
                                     <GoBroadcast size={"1.5rem"} style={{ color: `${window.location.pathname === "/broadcast" ? "#fab005" : "gray"}` }} />
 
                                 </Link>
                             </Tooltip>
-                        </Box>
+                        </Box> */}
 
                         <Box w={80} className='hctHeadicon'
                             style={{
@@ -171,6 +224,27 @@ const HeadHCT = () => {
                             </Tooltip>
                         </Box>
 
+
+                        <Box w={80} className='hctHeadicon'
+                            style={{
+                                borderBottom: `${window.location.pathname === "/usermanagement" ? "4px solid #fab005" : ""}`
+                            }}
+                        >
+                            <Tooltip label='Users'>
+                                <Link to={"/usermanagement"}>
+                                    {/* <ActionIcon width="23px" src={window.location.pathname === "/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon> */}
+                                    <MdPerson size={"1.5rem"} style={{ color: `${window.location.pathname === "/usermanagement" ? "#fab005" : "gray"}` }} />
+
+                                </Link>
+                            </Tooltip>
+                        </Box>
+                        <Box w={80} className='hctHeadicon' >
+                            <Tooltip label="Logout">
+                                <ActionIcon variant='transparent' c={"red"} onClick={handleLogout}><MdLogout size={"1.5rem"} /></ActionIcon>
+                            </Tooltip>
+                            {/* <Text fw={600} c={"red"} style={{ paddingBottom: 20, cursor: 'pointer' }} onClick={handleLogout}>Logout</Text> */}
+                        </Box>
+
                         {/* <Box h={"100%"} w={80} className='iconbox'
                             style={{
                                 borderBottom: `${window.location.pathname === "/mycourses" ? "3px solid #fab005" : ""}`
@@ -181,7 +255,7 @@ const HeadHCT = () => {
                             </Link>
                         </Box> */}
 
-                        <Box h={"100%"} w={80} className='hctHeadicon'
+                        {/* <Box h={"100%"} w={80} className='hctHeadicon'
                             style={{
                                 borderBottom: window.location.pathname === '/usermanagement' ? '4px solid #fab005' : "",
                             }}
@@ -195,9 +269,9 @@ const HeadHCT = () => {
                                     },
                                 }}>
                                 <Menu.Target>
-                                    {/* <Tooltip label='Home'> */}
+                                    <Tooltip label='Home'>
                                     <ActionIcon> <MdPerson size={"1.5rem"} style={{ color: `${window.location.pathname === "/usermanagement" ? "#fab005" : "gray"}` }} /></ActionIcon>
-                                    {/* </Tooltip> */}
+                                    </Tooltip>
                                 </Menu.Target>
 
                                 <Menu.Dropdown >
@@ -214,7 +288,7 @@ const HeadHCT = () => {
 
                                 </Menu.Dropdown>
                             </Menu>
-                        </Box>
+                        </Box> */}
                     </Box>
                 </Flex>
             </nav>

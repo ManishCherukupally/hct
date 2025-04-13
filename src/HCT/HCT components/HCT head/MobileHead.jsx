@@ -1,12 +1,15 @@
-import { ActionIcon, Box, Card, Divider, Flex, Menu, Tooltip } from '@mantine/core';
+import { ActionIcon, Box, Card, Divider, Flex, Group, Image, Menu, Text, Tooltip } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import React from 'react'
 import { GoBroadcast } from 'react-icons/go';
-import { HiHome } from 'react-icons/hi';
+import { HiHome, HiSpeakerphone } from 'react-icons/hi';
 import { IoMdStats } from 'react-icons/io';
 import { MdPerson } from 'react-icons/md';
 import { TbTemplate } from 'react-icons/tb';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import market from '../../../assets/market.png'
+import market1 from '../../../assets/market1.png'
+import { FaExternalLinkSquareAlt } from 'react-icons/fa';
 
 const MobileHead = () => {
     const mediumScreen = useMediaQuery("(min-width: 900px)");
@@ -54,12 +57,12 @@ const MobileHead = () => {
                             </Tooltip>
                         </Box>
 
-                        <Box w={80} className='hctmobileHeadicon'
+                        {/* <Box w={80} className='hctmobileHeadicon'
 
                         >
                             <Tooltip label='Template'>
                                 <Link to={"/template"}>
-                                    {/* <ActionIcon width="23px" src={window.location.pathname === "/template" ? <TbTemplate co /> : <TbTemplate />} ></ActionIcon> */}
+                                    <ActionIcon width="23px" src={window.location.pathname === "/template" ? <TbTemplate co /> : <TbTemplate />} ></ActionIcon>
                                     <TbTemplate size={"1.5rem"} style={{ color: `${window.location.pathname === "/template" ? "#fab005" : "gray"}` }} />
 
                                 </Link>
@@ -71,12 +74,65 @@ const MobileHead = () => {
                         >
                             <Tooltip label='Broadcast'>
                                 <Link to={"/broadcast"}>
-                                    {/* <ActionIcon width="23px" src={window.location.pathname === "/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon> */}
+                                    <ActionIcon width="23px" src={window.location.pathname === "/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon>
                                     <GoBroadcast size={"1.5rem"} style={{ color: `${window.location.pathname === "/broadcast" ? "#fab005" : "gray"}` }} />
 
                                 </Link>
                             </Tooltip>
+                        </Box> */}
+
+                        <Box h={"100%"} w={80} className='hctmobileHeadicon'
+
+                        >
+                            <Menu position="top" withArrow shadow="md"
+                                width={200}
+                                styles={{
+                                    dropdown: {
+                                        position: "fixed",
+                                        zIndex: 999,
+                                    },
+                                }}>
+                                <Menu.Target>
+                                    {/* <Tooltip label='Home'> */}
+                                    <ActionIcon> <HiSpeakerphone size={"1.5rem"} style={{ color: `${window.location.pathname === "/template" || window.location.pathname === "/broadcast" ? "#fab005" : "gray"}` }} /></ActionIcon>
+                                    {/* </Tooltip> */}
+                                </Menu.Target>
+
+                                <Menu.Dropdown >
+
+                                    <Menu.Item className='menutext' onClick={() => {
+                                        navigate('/template')
+                                    }}
+                                        icon={<TbTemplate />}
+                                    >
+                                        Templates
+                                    </Menu.Item>
+
+                                    <Menu.Item className='menutext' onClick={() => {
+                                        navigate('/broadcast')
+                                    }}
+                                        icon={<GoBroadcast />}
+                                    >
+                                        Broadcasts
+                                    </Menu.Item>
+
+                                </Menu.Dropdown>
+                            </Menu>
                         </Box>
+
+
+                        <Box w={80} className='hctmobileHeadicon'
+
+                        >
+                            <Tooltip label='Pages'>
+                                <Link to={"/pages"}>
+                                    {/* <ActionIcon width="23px" src={window.location.pathname === "/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon> */}
+                                    <FaExternalLinkSquareAlt size={"1.5rem"} style={{ color: `${window.location.pathname === "/pages" ? "#fab005" : "gray"}` }} />
+
+                                </Link>
+                            </Tooltip>
+                        </Box>
+
 
                         <Box w={80} className='hctmobileHeadicon'
 
@@ -115,7 +171,7 @@ const MobileHead = () => {
                                         User Management
                                     </Menu.Item>
                                     <Divider ml={'sm'} mr={"sm"} />
-                                    <Menu.Item className='menutext' onClick={handleLogout}>
+                                    <Menu.Item className='menutext' onClick={handleLogout} c={"red"}>
                                         Logout
                                     </Menu.Item>
 

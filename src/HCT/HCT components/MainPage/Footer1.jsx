@@ -33,7 +33,9 @@ const Footer1 = ({ openModal }) => {
                     gap: isMobile ? '1rem' : '0',
                 }}
             >
-                {!isMobile && <Text> Copyrights © Health Coach SaiTeja 2025</Text>}
+                {!isMobile && <Text fz={'sm'} fs={'italic'} ml={isMobile ? '-1rem' : '2rem'} style={{ fontfamily: '"Open Sans", Sans-serif' }}>
+                    Designed and Developed by Automac Technologies
+                </Text>}
                 {/* Social Media Links */}
                 <div
                     style={{

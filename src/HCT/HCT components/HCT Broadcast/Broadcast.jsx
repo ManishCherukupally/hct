@@ -62,6 +62,7 @@ const Broadcast = () => {
     const [isEditMode, setIsEditMode] = useState(false);
     const [editValue, setEditValue] = useState('')
     // console.log(editValue);
+    const [nodata, setnoData] = useState(false)
 
     useEffect(() => {
         client.get("broadcast_pagination/", {
@@ -90,6 +91,10 @@ const Broadcast = () => {
                 // }, 500);
 
                 setRecordsPerPage(resp.data.number_of_pages)
+                if (resp.data.status === 'page_not_found') {
+                    setnoData(true)
+
+                }
             })
             .catch(err => console.error(err))
     }, [currentPage, loaderVisible])
@@ -206,73 +211,78 @@ const Broadcast = () => {
     }
     // console.log(templatedropDownData);
 
-    const rows = broadcastData.map((item) => (
-        <tr key={item.id} style={{ height: 50 }}>
-            <td style={{ width: '346px' }}>{item.template}</td>
-            <td style={{ width: '346px' }}>
-                {item.users.length === 0 ? (
-                    item.category.length > 1 ? (
-                        <Spoiler maxHeight={25} showLabel="Show more" hideLabel="Hide">
-                            {item.category.map((categoryData) => (
-                                <div key={categoryData.category_id}>{categoryData.category}</div>
-                            ))}
-                        </Spoiler>
-                    ) : (
-                        item.category.map((categoryData) => (
-                            <div key={categoryData.category_id}>{categoryData.category}</div>
-                        ))
-                    )
-                ) : (
-                    item.users.length > 1 ? (
-                        <Spoiler maxHeight={25} showLabel="Show more" hideLabel="Hide">
-                            {item.users.map((userData) => (
-                                <div key={userData.user_id}>{userData.username}</div>
-                            ))}
-                        </Spoiler>
-                    ) : (
-                        item.users.map((userData) => (
-                            <div key={userData.user_id}>{userData.username}</div>
-                        ))
-                    )
-                )}
-            </td>
-            <td style={{ width: '346px' }}>{item.frequency}</td>
-            <td style={{ width: '346px' }}>{item.follow_up}</td>
-            <td style={{ width: '346px' }}>{item.time}</td>
-            <td>
-                <Flex gap={"0.5rem"}>
-                    <Tooltip label={"Send"}>
-                        <ActionIcon variant='subtle' onClick={() => {
-                            setsendModal(true);
-                            setbroadcastId(item.id);
-                        }}>
-                            <FaTelegramPlane color="#0096FF" />
-                        </ActionIcon>
-                    </Tooltip>
+    const rows =
+        nodata ? (
+            <Text mt={"lg"}> No broadcasts found!</Text>
+        ) : (
+            broadcastData.map((item) => (
+                <tr key={item.id} style={{ height: 50 }}>
+                    <td style={{ width: '346px' }}>{item.template}</td>
+                    <td style={{ width: '346px' }}>
+                        {item.users.length === 0 ? (
+                            item.category.length > 1 ? (
+                                <Spoiler maxHeight={25} showLabel="Show more" hideLabel="Hide">
+                                    {item.category.map((categoryData) => (
+                                        <div key={categoryData.category_id}>{categoryData.category}</div>
+                                    ))}
+                                </Spoiler>
+                            ) : (
+                                item.category.map((categoryData) => (
+                                    <div key={categoryData.category_id}>{categoryData.category}</div>
+                                ))
+                            )
+                        ) : (
+                            item.users.length > 1 ? (
+                                <Spoiler maxHeight={25} showLabel="Show more" hideLabel="Hide">
+                                    {item.users.map((userData) => (
+                                        <div key={userData.user_id}>{userData.username}</div>
+                                    ))}
+                                </Spoiler>
+                            ) : (
+                                item.users.map((userData) => (
+                                    <div key={userData.user_id}>{userData.username}</div>
+                                ))
+                            )
+                        )}
+                    </td>
+                    <td style={{ width: '346px' }}>{item.frequency}</td>
+                    <td style={{ width: '346px' }}>{item.follow_up}</td>
+                    <td style={{ width: '346px' }}>{item.time}</td>
+                    <td>
+                        <Flex gap={"0.5rem"}>
+                            <Tooltip label={"Send"}>
+                                <ActionIcon variant='subtle' onClick={() => {
+                                    setsendModal(true);
+                                    setbroadcastId(item.id);
+                                }}>
+                                    <FaTelegramPlane color="#0096FF" />
+                                </ActionIcon>
+                            </Tooltip>
 
-                    <Tooltip label={"Edit"}>
-                        <ActionIcon variant='subtle' onClick={() => {
-                            setEditModal(true);
-                            setnewtemplateEdit(true);
-                            handleEditData(item);
-                            seteditBroadcastId(item.id)
-                        }}>
-                            <MdEdit color="#233c79" />
-                        </ActionIcon>
-                    </Tooltip>
+                            <Tooltip label={"Edit"}>
+                                <ActionIcon variant='subtle' onClick={() => {
+                                    setEditModal(true);
+                                    setnewtemplateEdit(true);
+                                    handleEditData(item);
+                                    seteditBroadcastId(item.id)
+                                }}>
+                                    <MdEdit color="#233c79" />
+                                </ActionIcon>
+                            </Tooltip>
 
-                    <Tooltip label={"Delete"}>
-                        <ActionIcon variant='subtle' onClick={() => {
-                            setOpenModal(true);
-                            setbroadcastId(item.id);
-                        }}>
-                            <MdDeleteForever color="FF3C5F" />
-                        </ActionIcon>
-                    </Tooltip>
-                </Flex>
-            </td>
-        </tr>
-    ));
+                            <Tooltip label={"Delete"}>
+                                <ActionIcon variant='subtle' onClick={() => {
+                                    setOpenModal(true);
+                                    setbroadcastId(item.id);
+                                }}>
+                                    <MdDeleteForever color="FF3C5F" />
+                                </ActionIcon>
+                            </Tooltip>
+                        </Flex>
+                    </td>
+                </tr>
+            )
+            ));
 
 
     const form = useForm({
