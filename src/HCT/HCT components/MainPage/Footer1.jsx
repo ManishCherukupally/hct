@@ -1,4 +1,4 @@
-import { Button, Container, Footer, Text } from '@mantine/core';
+import { Button, Container, Flex, Footer, Text } from '@mantine/core';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import facebookImage from '../../../assets/facebook-logo-facebook-icon-transparent-free-png.png';
@@ -33,9 +33,12 @@ const Footer1 = ({ openModal }) => {
                     gap: isMobile ? '1rem' : '0',
                 }}
             >
-                {!isMobile && <Text fz={'sm'} fs={'italic'} ml={isMobile ? '-1rem' : '2rem'} style={{ fontfamily: '"Open Sans", Sans-serif' }}>
+                {!isMobile && (<Flex direction={'column'}><Text fz={'sm'} fs={'italic'} ml={isMobile ? '-1rem' : '2rem'} style={{ fontfamily: '"Open Sans", Sans-serif' }}>
                     Designed and Developed by Automac Technologies
-                </Text>}
+                </Text>
+                    <Link to={'https://automactechnologies.in/'} target='_blank'><Text fz={'sm'} style={{ fontfamily: '"Open Sans", Sans-serif' }} ml={isMobile ? '-1rem' : '2rem'}>https://automactechnologies.in/</Text></Link>
+                </Flex>)
+                }
                 {/* Social Media Links */}
                 <div
                     style={{

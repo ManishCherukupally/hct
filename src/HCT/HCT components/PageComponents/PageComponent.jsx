@@ -21,27 +21,29 @@ const PageComponent = () => {
                 {/* <Link to={'/100daysjourney'}> */}
                 <Text fz={22} fw={600} pb={15}>Pages</Text>
 
-                <Card shadow='sm' w={277} p={0} withBorder radius={"md"} onClick={() => navigate('/100daysjourney')} style={{ cursor: 'pointer' }}>
-                    <Skeleton visible={skeletonview}>
+                <a href='/100daysjourney' target='_blank' style={{ textDecoration: 'none' }}>
+                    <Card shadow='sm' w={277} p={0} withBorder radius={"md"} >
+                        <Skeleton visible={skeletonview}>
 
-                        <Card h={120} p={0} radius={0} >
-                            <Image
-                                src={"https://healthcoachsaiteja.com/wp-content/uploads/2022/11/IMG-1431-scaled.jpg"}
+                            <Card h={120} p={0} radius={0} >
+                                <Image
+                                    src={"https://healthcoachsaiteja.com/wp-content/uploads/2022/11/IMG-1431-scaled.jpg"}
 
-                                height={130}
+                                    height={130}
 
-                            />
-                        </Card >
+                                />
+                            </Card >
 
 
-                        <Card pt={6} h={67} radius={0} style={{ backgroundColor: "#ECECEC" }}>
-                            <Text fs={"Open Sans"} fz={16} fw={500}>100 Days Challenge</Text>
+                            <Card pt={6} h={67} radius={0} style={{ backgroundColor: "#ECECEC" }}>
+                                <Text fs={"Open Sans"} fz={16} fw={500}>100 Days Challenge</Text>
 
-                            <Text fs={"Open Sans"} fz="sm" color="dimmed">Register now!</Text>
+                                <Text fs={"Open Sans"} fz="sm" color="dimmed">Register now!</Text>
 
-                        </Card>
-                    </Skeleton>
-                </Card>
+                            </Card>
+                        </Skeleton>
+                    </Card>
+                </a>
                 {/* </Link> */}
             </Container>
         </div>

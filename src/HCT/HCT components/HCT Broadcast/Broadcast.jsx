@@ -154,9 +154,19 @@ const Broadcast = () => {
 
     const handleSelectTemplate = (value) => {
         const selectedTemplateId = parseInt(value);
-        isEditMode ? setnewTemplate(selectedTemplateId) : setSelectedTemplate(selectedTemplateId);
-        // setSelectedTemplate(selectedTemplateId)
+
+        if (isEditMode) {
+            if (selectedTemplateId !== selectedTemplate) {
+                setnewTemplate(selectedTemplateId); // template was changed
+            } else {
+                setnewTemplate(selectedTemplate); // unchanged, fallback to old
+            }
+        } else {
+            setSelectedTemplate(selectedTemplateId); // for non-edit mode
+        }
     };
+
+
 
     // console.log(newTemplate);
 
@@ -190,7 +200,7 @@ const Broadcast = () => {
         }
         setIsEditMode(true);
         setEditData(item);
-        setSelectedTemplate(parseInt(item.template_id)); // Make sure this sets the correct template ID
+        setSelectedTemplate(parseInt(item.template_id));
         setSelectedUsers(item.users.map(user => user.user_id));
         setSelectedFrequency(item.frequency);
         setSelectedSource(item.follow_up);
@@ -296,17 +306,21 @@ const Broadcast = () => {
             time: null,
             new_template_id: null
         },
-        transformValues: (values) => ({
-            broadcast_id: editBroadcastId,
-            template_id: selectedTemplate,
-            users: selectedValue === "User" ? selectedUsers : [],
-            frequency: selectedFrequency,
-            follow_up: selectedSource,
-            categories: selectedValue === "Category" ? selectedCategory : [],
-            time: selectedFrequency === 'once' ? null : `${values.time}`,
-            new_template_id: isEditMode ? newTemplate : selectedTemplate,
-            // new_template_id:newTemplate
-        })
+        transformValues: (values) => {
+            const typeValue = isEditMode ? editValue : selectedValue;
+
+            return {
+                broadcast_id: editBroadcastId,
+                template_id: selectedTemplate,
+                users: typeValue === "User" ? selectedUsers : [],
+                frequency: selectedFrequency,
+                follow_up: selectedSource,
+                categories: typeValue === "Category" ? selectedCategory : [],
+                time: selectedFrequency === 'once' ? null : `${values.time}`,
+                new_template_id: isEditMode ? (newTemplate ?? selectedTemplate) : selectedTemplate,
+            };
+        }
+
     })
 
     const handleAddBroadcast = () => {

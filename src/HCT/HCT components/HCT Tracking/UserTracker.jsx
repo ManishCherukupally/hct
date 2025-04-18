@@ -29,6 +29,8 @@ const UserTracker = () => {
     const [loaderVisible, setLoaderVisible] = useState(false);
 
     const [data, setData] = useState([])
+    const [graphdata, setgraphData] = useState([])
+
     const userId = localStorage.getItem("userId")
     const [recordModal, setrecordModal] = useState(false)
     const [editModal, seteditModal] = useState(false)
@@ -77,6 +79,22 @@ const UserTracker = () => {
 
         })
     })
+
+    useEffect(() => {
+        client.get("user_challenge_records_all/", {
+            params: {
+                user_id: userId
+            },
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            }
+        }).then((resp) => setgraphData(resp.data["user_daily_activity_records"])
+        ).catch((err) => {
+            console.log(err)
+            setgraphData([]);
+        });
+    }, [])
+
     useEffect(() => {
         client.get("user_challenge_records/", {
             params: {
@@ -100,6 +118,7 @@ const UserTracker = () => {
                 setData([]);
             });
     }, [loaderVisible, currentPage])
+
 
     const rows = nodata ? (
         <Text mt={"lg"}> No data found!</Text>
@@ -402,7 +421,7 @@ const UserTracker = () => {
                             <FaArrowLeftLong />
                         </Link>
                         {/* <ActionIcon onClick={() => navigate()}></ActionIcon> */}
-                        <Text fz={22} fw={600}>{username.username}</Text>
+                        <Text fz={22} fw={600}>{mediumScreen ? username.username : username.username.split(" ")[0]}</Text>
                     </Group>
                     <Group>
                         <Button radius={10} style={{ backgroundColor: "#233c79" }}
@@ -467,7 +486,7 @@ const UserTracker = () => {
                                 </Table>
                             ) : (
                                 <ScrollArea offsetScrollbars h={400} >
-                                    <Table striped style={{ tableLayout: 'fixed', width: '100%' }}>
+                                    <Table striped >
                                         <thead>
                                             <tr>
                                                 <th> Date </th>
@@ -509,19 +528,59 @@ const UserTracker = () => {
                         </Card>
                     ) : (
                         <>
-                            <SimpleGrid cols={2}>
-                                <Card withBorder radius={"md"} shadow='md'>
-                                    <WaterIntakechart data={data} />
-                                </Card>
+                            {
+                                graphdata ? (
 
-                                <Card withBorder radius={"md"} shadow='md'>
-                                    <Sleepchart data={data} />
-                                </Card>
-                            </SimpleGrid>
-                            <Space h={15} />
-                            <Card withBorder radius={"md"} mb={"1rem"} shadow='md'>
-                                <Usertrackchart data={data} />
-                            </Card>
+                                    <>
+                                        {
+                                            mediumScreen ? (
+                                                <>
+                                                    <SimpleGrid cols={2}>
+                                                        <Card withBorder radius={"md"} shadow='md'>
+                                                            <WaterIntakechart data={graphdata} />
+                                                        </Card>
+
+                                                        <Card withBorder radius={"md"} shadow='md'>
+                                                            <Sleepchart data={graphdata} />
+                                                        </Card>
+                                                    </SimpleGrid>
+                                                    <Space h={15} />
+                                                    <Card withBorder radius={"md"} mb={"1rem"} shadow='md'>
+                                                        <Usertrackchart data={graphdata} />
+                                                    </Card>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Card withBorder radius={"md"} shadow='md'>
+                                                        <ScrollArea w="100%" offsetScrollbars scrollX scrollY={false}>
+                                                            <div style={{ minWidth: "600px", display: "inline-block" }}>
+                                                                <WaterIntakechart data={graphdata} />
+                                                            </div>
+                                                        </ScrollArea>
+                                                    </Card>
+
+                                                    <Card withBorder radius={"md"} shadow='md'>
+                                                        <ScrollArea w="100%" offsetScrollbars scrollX scrollY={false}>
+                                                            <div style={{ minWidth: "600px", display: "inline-block" }}>
+                                                                <Sleepchart data={graphdata} />
+                                                            </div>
+                                                        </ScrollArea>
+                                                    </Card>
+
+                                                    <Card withBorder radius={"md"} mb={"1rem"} shadow='md'>
+                                                        <ScrollArea w="100%" offsetScrollbars scrollX scrollY={false}>
+                                                            <div style={{ minWidth: "600px", display: "inline-block" }}>
+                                                                <Usertrackchart data={graphdata} />
+                                                            </div>
+                                                        </ScrollArea>
+                                                    </Card>
+                                                </>
+                                            )
+                                        }
+
+                                    </>
+                                ) : (<Text>No data found!</Text>)
+                            }
 
                         </>
                     )
