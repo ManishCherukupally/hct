@@ -34,9 +34,9 @@ const Footer1 = ({ openModal }) => {
                 }}
             >
                 {!isMobile && (<Flex direction={'column'}><Text fz={'sm'} fs={'italic'} ml={isMobile ? '-1rem' : '2rem'} style={{ fontfamily: '"Open Sans", Sans-serif' }}>
-                    Designed and Developed by Automac Technologies
+                    Designed and Developed by <span><Link to={'https://automactechnologies.in/'} target='_blank'>Automac Technologies</Link></span>
                 </Text>
-                    <Link to={'https://automactechnologies.in/'} target='_blank'><Text fz={'sm'} style={{ fontfamily: '"Open Sans", Sans-serif' }} ml={isMobile ? '-1rem' : '2rem'}>https://automactechnologies.in/</Text></Link>
+                    {/* <Link to={'https://automactechnologies.in/'} target='_blank'><Text fz={'sm'} style={{ fontfamily: '"Open Sans", Sans-serif' }} ml={isMobile ? '-1rem' : '2rem'}>https://automactechnologies.in/</Text></Link> */}
                 </Flex>)
                 }
                 {/* Social Media Links */}

@@ -55,6 +55,24 @@ import { IoMdStats } from 'react-icons/io'
 // axios.defaults.xsrfHeaderName = 'x-csrftoken'
 const HeadHCT = () => {
     const navigate = useNavigate()
+    const [categoryList, setcategoryList] = useState([])
+    console.log(categoryList);
+
+    useEffect(() => {
+        client.get('hct_category_dd/', {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            }
+        })
+            .then((resp) => {
+                setcategoryList(resp.data['category_list'].map(item => ({
+                    value: item.category,
+                    label: item.category
+                })))
+                // console.log(resp.data['category_list'])
+            })
+    }, [])
+
     const handleLogout = () => {
         // try {
         //     client.get("logout/", {
@@ -78,29 +96,22 @@ const HeadHCT = () => {
     }
 
     const usernameparam = useParams()
+    const categoryparam = useParams()
 
     return (
         <>
             <nav >
                 <Flex align={"center"} justify={"space-between"}>
                     <Box style={{ display: "flex", alignItems: "center" }}>
-                        <a href='/dashboard'>
+                        <a href="/dashboard" style={{ display: "inline-block", margin: 50 }}>
                             <Image
-                                style={{ margin: 50 }}
                                 maw={120}
-                                src={"https://healthcoachsaiteja.com/wp-content/uploads/2022/11/saiteja_health_coach-2048x674.png"} /></a>
-
-                        {/* <Select searchable nothingFound="No related courses" fz={18} w={400} radius={"md"} variant='filled'
-                            placeholder='Search course'
-                            icon={<ActionIcon><BiSearch /></ActionIcon>} data={["react", "Js"]}
-                        // {data.map((option) => {
-                        //   return {
-                        //     value: option.value,
-                        //     label: option.course_name,
-                        //   };
-                        // })} 
-                        /> */}
+                                src="https://healthcoachsaiteja.com/wp-content/uploads/2022/11/saiteja_health_coach-2048x674.png"
+                                style={{ display: "block" }}
+                            />
+                        </a>
                     </Box>
+
 
                     <Box pt={13} style={{ display: "flex", alignItems: "center" }}>
                         {/* <Box w={80} className='hctHeadicon'
@@ -212,16 +223,39 @@ const HeadHCT = () => {
 
                         <Box w={80} className='hctHeadicon'
                             style={{
-                                borderBottom: `${window.location.pathname === "/trackingpage" || window.location.pathname === `/tracker/${usernameparam.username}` ? "4px solid #fab005" : ""}`
+                                borderBottom: `${window.location.pathname === `/tracking/${categoryparam.category}` || window.location.pathname === `/tracker/${encodeURIComponent(usernameparam.username)}` ? "4px solid #fab005" : ""}`
                             }}
                         >
-                            <Tooltip label='Statistics'>
+
+                            <Menu withArrow shadow="md" styles={{
+                                dropdown: {
+                                    position: "fixed",
+                                    zIndex: 999,
+                                },
+                            }}>
+                                <Menu.Target>
+                                    <Tooltip label='Tracker'>
+                                        <ActionIcon variant='transparent'><IoMdStats size={"1.5rem"} style={{ color: `${window.location.pathname === `/tracking/${categoryparam.category}` || window.location.pathname === `/tracker/${encodeURIComponent(usernameparam.username)}` ? "#fab005" : "gray"}` }} /></ActionIcon>
+                                    </Tooltip>
+                                </Menu.Target>
+
+                                <Menu.Dropdown>
+                                    {
+                                        categoryList.map((item) => (
+                                            <Menu.Item onClick={() => navigate(`/tracking/${item.value}`)}>
+                                                <Text fw={500}>{item.value}</Text>
+                                            </Menu.Item>
+                                        ))
+                                    }
+                                </Menu.Dropdown>
+                            </Menu>
+                            {/* <Tooltip label='Tracker'>
                                 <Link to={"/trackingpage"}>
-                                    {/* <ActionIcon width="23px" src={window.location.pathname === "/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon> */}
-                                    <IoMdStats size={"1.5rem"} style={{ color: `${window.location.pathname === "/trackingpage" || window.location.pathname === `/tracker/${usernameparam.username}` ? "#fab005" : "gray"}` }} />
+                                    <ActionIcon width="23px" src={window.location.pathname === "/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon>
+                                    <IoMdStats size={"1.5rem"} style={{ color: `${window.location.pathname === `/trackingpage/${categoryparam.category}` || window.location.pathname === `/tracker/${usernameparam.username}` ? "#fab005" : "gray"}` }} />
 
                                 </Link>
-                            </Tooltip>
+                            </Tooltip> */}
                         </Box>
 
 

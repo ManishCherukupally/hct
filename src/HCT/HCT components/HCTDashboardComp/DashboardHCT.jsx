@@ -32,7 +32,7 @@ const DashboardHCT = () => {
 
                     <Piechart data={hctData} />
                     <Flex justify={"center"}>
-                        <Text fw={600} fz={18}>Total members: {hctData.total_users}</Text>
+                        <Text fw={600} fz={18}>Total Active Members: {hctData.total_users}</Text>
                     </Flex>
                 </Card>
             </Container>

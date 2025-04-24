@@ -54,6 +54,8 @@ const Mantine4 = () => {
     },
     validate: {
       business_email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+      contact_no: (value) =>
+        value && /^[6-9]\d{9}$/.test(value) ? null : 'Phone number must be a valid 10-digit number starting with 6-9',
     },
 
     transformValues: (values) => ({
@@ -63,7 +65,7 @@ const Mantine4 = () => {
       user_status: `${value}`,
       location: `${values.location}`,
       username: `${values.business_email}`,
-      category: '100days_challenge',
+      category: 'lead',
       age: values.age,
       gender: `${values.gender}`,
       goal: `${values.goal}`,
@@ -99,7 +101,7 @@ const Mantine4 = () => {
           }, 1000)
         }
 
-        else if (resp.data.email) {
+        else if (resp.data.status === 'failed') {
           // emailexist()
 
           setTimeout(() => {
@@ -119,6 +121,12 @@ const Mantine4 = () => {
       // setCheckmarkVisible(false); // Hide checkmark after 2 seconds
     }, 5000);
   }
+  const handleMobileChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+    if (value.length <= 10) {
+      form.setFieldValue('contact_no', value);
+    }
+  };
 
 
   return (
@@ -205,7 +213,7 @@ const Mantine4 = () => {
               placeholder="Enter Contact No."
 
               {...form.getInputProps('contact_no')}
-
+              onChange={handleMobileChange}
             />
             <TextInput
 
@@ -251,7 +259,7 @@ const Mantine4 = () => {
             />
 
 
-            <Radio.Group
+            {/* <Radio.Group
               name='type_of_challange'
               label="Choose Your Journey"
               required
@@ -264,7 +272,7 @@ const Mantine4 = () => {
                 <Radio value="longtermjourney" label="Longterm Journey" />
 
               </Group>
-            </Radio.Group>
+            </Radio.Group> */}
 
 
           </SimpleGrid>

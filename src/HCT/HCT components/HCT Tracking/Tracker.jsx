@@ -1,7 +1,7 @@
 import { ActionIcon, Button, Card, Container, Flex, Group, Modal, NumberInput, Pagination, ScrollArea, Space, Stack, Table, Text, Textarea, TextInput, Tooltip } from '@mantine/core'
 import { useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import client from '../../../API/api';
 import { MdDeleteForever, MdEdit } from 'react-icons/md';
 import { useForm } from '@mantine/form';
@@ -26,6 +26,8 @@ const Tracker = () => {
     const [deleteModal, setdeleteModal] = useState(false)
     const [noData, setnoData] = useState(false)
     const [userId, setuserId] = useState(null)
+
+    const categoryparam = useParams()
     // const form = useForm({
     //     initialValues: {
     //         user_id: '',
@@ -52,7 +54,8 @@ const Tracker = () => {
     useEffect(() => {
         client.get("challenge_pagination/", {
             params: {
-                page: currentPage
+                page: currentPage,
+                category: categoryparam.category
             },
             headers: {
                 Authorization: `Bearer ${window.localStorage.getItem("access")}`
@@ -64,7 +67,7 @@ const Tracker = () => {
                 setRecordsPerPage(resp.data.number_of_pages)
 
             })
-    }, [currentPage, loaderVisible])
+    }, [currentPage, loaderVisible, categoryparam.category])
 
 
     const handleDelete = () => {
@@ -253,7 +256,7 @@ const Tracker = () => {
                 </Modal>
 
                 <Flex justify={"space-between"}>
-                    <Text fz={22} fw={600}>Tracker - 100 Days Journey</Text>
+                    <Text fz={22} fw={600}>Tracker - {categoryparam.category}</Text>
                     {/* <Button onClick={() => {
                         setmemberModal(true)
                         form.reset()
@@ -312,7 +315,7 @@ const Tracker = () => {
                     )}
                     <Space h={"xl"} />
                     <Flex justify={"end"}>
-                        <Pagination value={currentPage} onChange={setCurrentPage} total={recordsPerPage} color="yellow" siblings={1} />
+                        <Pagination value={currentPage} onChange={setCurrentPage} total={recordsPerPage} color="yellow" />
                     </Flex>
                 </Card>
             </Container>

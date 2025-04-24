@@ -13,11 +13,16 @@ import client from '../../../API/api';
 import { useForm } from '@mantine/form';
 import { MdDeleteForever, MdEdit } from 'react-icons/md';
 import { DateInput, TimeInput } from '@mantine/dates';
+// import TimePicker from 'react-time-picker';
+
+
 
 const UserTracker = () => {
     const mediumScreen = useMediaQuery("(min-width: 1200px)");
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
+
+
     const username = useParams()
     const navigate = useNavigate()
     const [value, setValue] = useState('table');
@@ -39,9 +44,22 @@ const UserTracker = () => {
     const [nodata, setnoData] = useState(false)
     const sleepRef = useRef();
     const workoutRef = useRef();
+
+    const [inputs, setInputs] = useState({
+        sleephours: '',
+        sleepminutes: '',
+        workouthours: '',
+        workoutminutes: '',
+    })
+    console.log(inputs.workouthours);
+    console.log(inputs.workoutminutes);
+
+
     // console.log(new Date(date).toLocaleDateString("en-CA"));
     // const [deleteDate, setdeleteDate] = useState("")
     // console.log(deleteDate);
+
+
 
     const form = useForm({
         initialValues: {
@@ -71,8 +89,8 @@ const UserTracker = () => {
             diet: {},
             Exercises: `${values.Exercises}`,
             water_in_liters: parseFloat(values.water_in_liters),
-            hours_of_sleep: `${values.hours_of_sleep}`,
-            workout_duration: `${values.workout_duration}`,
+            hours_of_sleep: `${inputs.sleephours}:${inputs.sleepminutes}:00`,
+            workout_duration: `${inputs.workouthours}:${inputs.workoutminutes}:00`,
             calories_initial: 0,
             calories_burn: 0,
             just_relief_activity: `${values.just_relief_activity}`
@@ -93,7 +111,7 @@ const UserTracker = () => {
             console.log(err)
             setgraphData([]);
         });
-    }, [])
+    }, [loaderVisible])
 
     useEffect(() => {
         client.get("user_challenge_records/", {
@@ -147,6 +165,14 @@ const UserTracker = () => {
                 <td>
                     <Group>
                         <Tooltip label="Edit"><ActionIcon variant='subtle' onClick={() => {
+                            const sleepdata = item.hours_of_sleep
+                            const workoutdata = item.workout_duration
+                            setInputs({
+                                sleephours: sleepdata.split(":")[0],
+                                sleepminutes: sleepdata.split(":")[1],
+                                workouthours: workoutdata.split(":")[0],
+                                workoutminutes: workoutdata.split(":")[1],
+                            })
                             seteditModal(true)
                             const dateObject = new Date(item.date_of_activity);
                             setDate(dateObject);
@@ -264,6 +290,7 @@ const UserTracker = () => {
 
         })
     }
+
     return (
         <div>
             <Container mt={mediumScreen ? "6rem" : "2rem"} size={"xxl"} style={{ zIndex: 150 }}>
@@ -307,25 +334,90 @@ const UserTracker = () => {
                             placeholder='Enter Hours of Sleep'
                             {...form.getInputProps('hours_of_sleep')}
                         /> */}
+                        <div>
+                            <Text style={{ fontWeight: 500, fontSize: '0.875rem', paddingBottom: 5 }}>Hours of Sleep</Text>
+                            <Group align="center" >
+                                <Group spacing={'xs'} style={{ flex: 1 }} noWrap>
+                                    <TextInput
+                                        type='number'
+                                        max={12}
+                                        min={0}
+                                        w="100%"
+                                        value={inputs.sleephours}
+                                        onChange={(e) => setInputs(prev => ({ ...prev, sleephours: e.target.value }))}
+                                    // placeholder="Hours"
+                                    />
+                                    <Text fz="xs" fw={500}>Hrs</Text>
+                                </Group>
+                                <Text fz="xl" fw={700}>:</Text>
+                                <Group spacing={'xs'} style={{ flex: 1 }} noWrap>
+                                    <TextInput
+                                        type='number'
+                                        max={59}
+                                        min={0}
+                                        w="100%"
+                                        value={inputs.sleepminutes}
+                                        onChange={(e) => setInputs(prev => ({ ...prev, sleepminutes: e.target.value }))}
+                                    // placeholder="Minutes"
+                                    />
+                                    <Text fz="xs" fw={500}>Min</Text>
+                                </Group>
+                            </Group>
+                        </div>
 
-                        <TimeInput onClick={() => sleepRef.current.showPicker()}
+                        <div>
+                            <Text style={{ fontWeight: 500, fontSize: '0.875rem', paddingBottom: 5 }}>Workout Duration</Text>
+                            <Group align="center">
+                                <Group spacing={'xs'} style={{ flex: 1 }} noWrap>
+                                    <TextInput
+                                        type='number'
+                                        max={12}
+                                        min={0}
+                                        w="100%"
+                                        value={inputs.workouthours}
+                                        onChange={(e) => setInputs(prev => ({ ...prev, workouthours: e.target.value }))}
+                                    // placeholder="Hours"
+                                    />
+                                    <Text fz="xs" fw={500}>Hrs</Text>
+                                </Group>
+                                <Text fz="xl" fw={700}>:</Text>
+                                <Group spacing={'xs'} style={{ flex: 1 }} noWrap>
+                                    <TextInput
+                                        type='number'
+                                        max={59}
+                                        min={0}
+                                        w="100%"
+                                        value={inputs.workoutminutes}
+                                        onChange={(e) => setInputs(prev => ({ ...prev, workoutminutes: e.target.value }))}
+                                    // placeholder="Minutes"
+                                    />
+                                    <Text fz="xs" fw={500}>Min</Text>
+                                </Group>
+                            </Group>
+                        </div>
+                        {/* 
+                        <TimeInput
                             ref={sleepRef}
-                            withSeconds
                             label="Hours of Sleep"
                             placeholder="Enter Hours of Sleep"
-                            // value={form.values.Total_workout_duration || ""}
-                            // onChange={(val) => form.setFieldValue("Total_workout_duration", val || "")}
+                            withSeconds
+                            // valueFormat="hh:mm:ss" // force 24-hour format
+                            onClick={() => sleepRef.current.showPicker()}
                             {...form.getInputProps('hours_of_sleep')}
-                        />
+                        /> */}
+
+
+                        {/* 
                         <TimeInput onClick={() => workoutRef.current.showPicker()}
                             ref={workoutRef}
+                            
                             withSeconds
                             label="Workout Duration"
                             placeholder="Enter Workout Duration"
                             // value={form.values.Total_workout_duration || ""}
                             // onChange={(val) => form.setFieldValue("Total_workout_duration", val || "")}
                             {...form.getInputProps('workout_duration')}
-                        />
+                        /> */}
 
                         <Textarea
                             label="Just Relief Activity"
@@ -337,6 +429,8 @@ const UserTracker = () => {
                             variant='filled' onClick={handleAddrecord}>Done</Button>
                     </Stack>
                 </Modal>
+
+
                 <Modal centered opened={editModal} onClose={() => seteditModal(false)} title="Edit Record">
                     <Stack>
                         <DateInput
@@ -376,7 +470,67 @@ const UserTracker = () => {
                             {...form.getInputProps('hours_of_sleep')}
                         /> */}
 
-                        <TimeInput onClick={() => sleepRef.current.showPicker()}
+                        <div>
+                            <Text style={{ fontWeight: 500, fontSize: '0.875rem', paddingBottom: 5 }}>Hours of Sleep</Text>
+                            <Group align="center">
+                                <Group spacing={'xs'}>
+                                    <TextInput
+                                        type='number'
+                                        max={12}
+                                        min={0}
+                                        w={'auto'}
+                                        value={inputs.sleephours}
+                                        onChange={(e) => setInputs(prev => ({ ...prev, sleephours: e.target.value }))}
+                                    // placeholder="Hours"
+                                    />
+                                    <Text fz="xs" fw={500}>Hrs</Text>
+                                </Group>
+                                <Text fz="xl" fw={700}>:</Text>
+                                <Group spacing={'xs'}>
+                                    <TextInput
+                                        type='number'
+                                        max={59}
+                                        min={0}
+                                        w={'auto'}
+                                        value={inputs.sleepminutes}
+                                        onChange={(e) => setInputs(prev => ({ ...prev, sleepminutes: e.target.value }))}
+                                    // placeholder="Minutes"
+                                    />  <Text fz="xs" fw={500}>Min</Text>
+                                </Group>
+                            </Group>
+                        </div>
+
+                        <div>
+                            <Text style={{ fontWeight: 500, fontSize: '0.875rem', paddingBottom: 5 }}>Workout Duration</Text>
+                            <Group align="center">
+                                <Group spacing={'xs'}>
+                                    <TextInput
+                                        type='number'
+                                        max={12}
+                                        min={0}
+                                        w={'auto'}
+                                        value={inputs.workouthours}
+                                        onChange={(e) => setInputs(prev => ({ ...prev, workouthours: e.target.value }))}
+                                    // placeholder="Hours"
+                                    />
+                                    <Text fz="xs" fw={500}>Hrs</Text>
+                                </Group>
+                                <Text fz="xl" fw={700}>:</Text>
+                                <Group spacing={'xs'}>
+                                    <TextInput
+                                        type='number'
+                                        max={59}
+                                        min={0}
+                                        w={'auto'}
+                                        value={inputs.workoutminutes}
+                                        onChange={(e) => setInputs(prev => ({ ...prev, workoutminutes: e.target.value }))}
+                                    // placeholder="Minutes"
+                                    />  <Text fz="xs" fw={500}>Min</Text>
+                                </Group>
+                            </Group>
+                        </div>
+
+                        {/* <TimeInput onClick={() => sleepRef.current.showPicker()}
                             ref={sleepRef}
                             withSeconds
                             label="Hours of Sleep"
@@ -393,7 +547,7 @@ const UserTracker = () => {
                             // value={form.values.Total_workout_duration || ""}
                             // onChange={(val) => form.setFieldValue("Total_workout_duration", val || "")}
                             {...form.getInputProps('workout_duration')}
-                        />
+                        /> */}
 
                         <Textarea
                             label="Just Relief Activity"
@@ -417,7 +571,7 @@ const UserTracker = () => {
 
                 <Flex justify={"space-between"}>
                     <Group align={"center"} gap={2}>
-                        <Link to={"/trackingpage"}>
+                        <Link to={-1}>
                             <FaArrowLeftLong />
                         </Link>
                         {/* <ActionIcon onClick={() => navigate()}></ActionIcon> */}
@@ -429,6 +583,12 @@ const UserTracker = () => {
                                 setrecordModal(true)
                                 form.reset()
                                 setDate(null);
+                                setInputs({
+                                    sleephours: '',
+                                    sleepminutes: '',
+                                    workouthours: '',
+                                    workoutminutes: '',
+                                })
                             }}> Add Record  </Button>
 
                         <SegmentedControl w={mediumScreen ? "10rem" : "5rem"}
@@ -551,7 +711,7 @@ const UserTracker = () => {
                                                 </>
                                             ) : (
                                                 <>
-                                                    <Card withBorder radius={"md"} shadow='md'>
+                                                    <Card withBorder radius={"md"} shadow='md' mb={"md"}>
                                                         <ScrollArea w="100%" offsetScrollbars scrollX scrollY={false}>
                                                             <div style={{ minWidth: "600px", display: "inline-block" }}>
                                                                 <WaterIntakechart data={graphdata} />
@@ -559,7 +719,7 @@ const UserTracker = () => {
                                                         </ScrollArea>
                                                     </Card>
 
-                                                    <Card withBorder radius={"md"} shadow='md'>
+                                                    <Card withBorder radius={"md"} shadow='md' mb={"md"}>
                                                         <ScrollArea w="100%" offsetScrollbars scrollX scrollY={false}>
                                                             <div style={{ minWidth: "600px", display: "inline-block" }}>
                                                                 <Sleepchart data={graphdata} />
@@ -567,7 +727,7 @@ const UserTracker = () => {
                                                         </ScrollArea>
                                                     </Card>
 
-                                                    <Card withBorder radius={"md"} mb={"1rem"} shadow='md'>
+                                                    <Card withBorder radius={"md"} shadow='md' mb={"md"}>
                                                         <ScrollArea w="100%" offsetScrollbars scrollX scrollY={false}>
                                                             <div style={{ minWidth: "600px", display: "inline-block" }}>
                                                                 <Usertrackchart data={graphdata} />

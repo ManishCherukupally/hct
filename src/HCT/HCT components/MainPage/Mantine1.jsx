@@ -53,6 +53,8 @@ const Mantine1 = () => {
 
     validate: {
       business_email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
+      contact_no: (value) =>
+        value && /^[6-9]\d{9}$/.test(value) ? null : 'Phone number must be a valid 10-digit number starting with 6-9',
     },
 
     transformValues: (values) => ({
@@ -62,7 +64,7 @@ const Mantine1 = () => {
       user_status: `${value}`,
       location: `${values.location}`,
       username: `${values.business_email}`,
-      category: '100days_challenge',
+      category: 'lead',
       age: values.age,
       gender: `${values.gender}`,
       goal: `${values.goal}`,
@@ -105,7 +107,7 @@ const Mantine1 = () => {
           }, 1000)
         }
 
-        else if (resp.data.email) {
+        else if (resp.data.status = 'failed') {
           // emailexist()
 
           setTimeout(() => {
@@ -177,7 +179,12 @@ const Mantine1 = () => {
   //   setunSuccessful(false)
   //   setEmailExist(false)
   // }, 3000)
-
+  const handleMobileChange = (e) => {
+    const value = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+    if (value.length <= 10) {
+      form.setFieldValue('contact_no', value);
+    }
+  };
 
   return (
     <>
@@ -283,6 +290,7 @@ const Mantine1 = () => {
               placeholder="Enter Contact No."
               required
               {...form.getInputProps('contact_no')}
+              onChange={handleMobileChange}
 
             />
             <TextInput
@@ -326,7 +334,7 @@ const Mantine1 = () => {
             />
 
 
-            <Radio.Group
+            {/* <Radio.Group
               required
               name='type_of_challange'
               label="Choose Your Journey"
@@ -339,7 +347,7 @@ const Mantine1 = () => {
                 <Radio value="longtermjourney" label="Longterm Journey" />
 
               </Group>
-            </Radio.Group>
+            </Radio.Group> */}
 
 
           </SimpleGrid>
@@ -445,7 +453,10 @@ const Mantine1 = () => {
                         },
                       },
                     })}
-                    onClick={open}
+                    onClick={() => {
+                      open()
+                      form.reset()
+                    }}
                   >
                     Register Here
                   </Button>
@@ -498,7 +509,10 @@ const Mantine1 = () => {
                     marginTop: '0.5rem',
                   }}
                   component="a"
-                  onClick={open}
+                  onClick={() => {
+                    open()
+                    form.reset()
+                  }}
                   color="#FBD40B"
                   fz="18px"
                   fw={600}

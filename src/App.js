@@ -79,7 +79,7 @@ function App() {
           <Route path="/usermanagement" Component={UserManagementPage} />
           <Route path="/template" Component={TemplatePage} />
           <Route path="/broadcast" Component={BroadcastPage} />
-          <Route path="/trackingpage" Component={TrackerPage} />
+          <Route path="/tracking/:category" Component={TrackerPage} />
           <Route path="/tracker/:username" element={<UserTrackerPage/>} />
           <Route path="/pages" Component={PagesPage} />
 

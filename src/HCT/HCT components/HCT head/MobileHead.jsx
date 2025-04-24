@@ -1,6 +1,6 @@
 import { ActionIcon, Box, Card, Divider, Flex, Group, Image, Menu, Text, Tooltip } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { GoBroadcast } from 'react-icons/go';
 import { HiHome, HiSpeakerphone } from 'react-icons/hi';
 import { IoMdStats } from 'react-icons/io';
@@ -10,6 +10,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import market from '../../../assets/market.png'
 import market1 from '../../../assets/market1.png'
 import { FaExternalLinkSquareAlt } from 'react-icons/fa';
+import client from '../../../API/api';
 
 const MobileHead = () => {
     const mediumScreen = useMediaQuery("(min-width: 900px)");
@@ -17,7 +18,24 @@ const MobileHead = () => {
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
     const navigate = useNavigate();
     const usernameparam = useParams()
+    const categoryparam = useParams()
+    const [categoryList, setcategoryList] = useState([])
 
+
+    useEffect(() => {
+        client.get('hct_category_dd/', {
+            headers: {
+                Authorization: `Bearer ${window.localStorage.getItem("access")}`
+            }
+        })
+            .then((resp) => {
+                setcategoryList(resp.data['category_list'].map(item => ({
+                    value: item.category,
+                    label: item.category
+                })))
+                // console.log(resp.data['category_list'])
+            })
+    }, [])
     const handleLogout = () => {
         // try {
         //     client.get("logout/", {
@@ -133,18 +151,52 @@ const MobileHead = () => {
                             </Tooltip>
                         </Box>
 
-
                         <Box w={80} className='hctmobileHeadicon'
 
                         >
-                            <Tooltip label='Statistics'>
+
+                            <Menu withArrow shadow="md" styles={{
+                                dropdown: {
+                                    position: "fixed",
+                                    zIndex: 999,
+                                },
+                            }}>
+                                <Menu.Target>
+                                    <Tooltip label='Tracker'>
+                                        <ActionIcon variant='transparent'><IoMdStats size={"1.5rem"} style={{ color: `${window.location.pathname === `/tracking/${categoryparam.category}` || window.location.pathname === `/tracker/${encodeURIComponent(usernameparam.username)}` ? "#fab005" : "gray"}` }} /></ActionIcon>
+                                    </Tooltip>
+                                </Menu.Target>
+
+                                <Menu.Dropdown>
+                                    {
+                                        categoryList.map((item) => (
+                                            <Menu.Item onClick={() => navigate(`/tracking/${item.value}`)}>
+                                                <Text fw={500}>{item.value}</Text>
+                                            </Menu.Item>
+                                        ))
+                                    }
+                                </Menu.Dropdown>
+                            </Menu>
+                            {/* <Tooltip label='Tracker'>
                                 <Link to={"/trackingpage"}>
-                                    {/* <ActionIcon width="23px" src={window.location.pathname === "/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon> */}
+                                    <ActionIcon width="23px" src={window.location.pathname === "/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon>
+                                    <IoMdStats size={"1.5rem"} style={{ color: `${window.location.pathname === `/trackingpage/${categoryparam.category}` || window.location.pathname === `/tracker/${usernameparam.username}` ? "#fab005" : "gray"}` }} />
+
+                                </Link>
+                            </Tooltip> */}
+                        </Box>
+
+                        {/* <Box w={80} className='hctmobileHeadicon'
+
+                        >
+                            <Tooltip label='Tracker'>
+                                <Link to={"/trackingpage"}>
+                                    <ActionIcon width="23px" src={window.location.pathname === "/broadcast" ? <Tbbroadcast co /> : <Tbbroadcast />} ></ActionIcon>
                                     <IoMdStats size={"1.5rem"} style={{ color: `${window.location.pathname === "/trackingpage" || window.location.pathname === `/tracker/${usernameparam.username}` ? "#fab005" : "gray"}` }} />
 
                                 </Link>
                             </Tooltip>
-                        </Box>
+                        </Box> */}
 
                         <Box h={"100%"} w={80} className='hctmobileHeadicon'
 
