@@ -46,7 +46,8 @@ const UserManagement = () => {
     const [name, setname] = useState("")
     const [userDetails, setuserDetails] = useState({})
     const [date, setDate] = useState(null);
-    console.log(date);
+    const [dobdate, setdobdate] = useState(null)
+    // console.log(date);
 
 
     // console.log(userName)
@@ -54,6 +55,7 @@ const UserManagement = () => {
 
         initialValues: {
             name: "",
+            date_of_birth: "",
             business_email: "",
             contact_no: "",
             location: "",
@@ -79,6 +81,7 @@ const UserManagement = () => {
         },
         transformValues: (values) => ({
             name: `${values.name}`,
+            date_of_birth: new Date(dobdate).toLocaleDateString("en-CA"),
             business_email: `${values.business_email}`,
             contact_no: `${values.contact_no}`,
             user_status: `${value}`,
@@ -190,6 +193,7 @@ const UserManagement = () => {
             <td onClick={() => handlefulldetails(item)}>{item.category}</td>
             <td onClick={() => handlefulldetails(item)}>{item.name}</td>
             <td onClick={() => handlefulldetails(item)}>{item.age}</td>
+            <td onClick={() => handlefulldetails(item)}>{item.date_of_birth ? new Date(item.date_of_birth).toLocaleDateString("en-CA") : ''}</td>
             <td onClick={() => handlefulldetails(item)}>{item.gender}</td>
             <td onClick={() => handlefulldetails(item)}>{item.contact_no}</td>
             <td onClick={() => handlefulldetails(item)}>{item.business_email}</td>
@@ -199,6 +203,11 @@ const UserManagement = () => {
                 <Flex>
                     <Tooltip label={"Edit"}><ActionIcon variant='subtle'
                         onClick={() => {
+                            if (item.date_of_birth) {
+                                const dobobject = new Date(item.date_of_birth)
+                                setdobdate(dobobject)
+                            }
+
                             const dateObject = new Date(item.date_joined);
                             setDate(dateObject);
                             // handleEditData(item)
@@ -225,6 +234,7 @@ const UserManagement = () => {
         // setDate(dateObject);
         form.setValues({
             name: data.name,
+            date_of_joining: dobdate ? dobdate : '',
             business_email: data.business_email || "",
             category: data.category || "",
             contact_no: data.contact_no || "",
@@ -363,6 +373,24 @@ const UserManagement = () => {
                                 {...form.getInputProps('name')}
 
                             />
+
+                            <NumberInput
+                                placeholder="Your age"
+                                label="Your age"
+
+
+                                {...form.getInputProps('age')}
+                            />
+
+                            <DateInput
+
+                                value={dobdate}
+                                onChange={setdobdate}
+                                label="Date of birth"
+                                placeholder=" Enter Date of birth"
+                            />
+
+
                             <TextInput
 
                                 label="Email"
@@ -372,13 +400,8 @@ const UserManagement = () => {
                                 {...form.getInputProps('business_email')}
 
                             />
-                            <NumberInput
-                                placeholder="Your age"
-                                label="Your age"
 
 
-                                {...form.getInputProps('age')}
-                            />
 
                             <TextInput
 
@@ -490,8 +513,8 @@ const UserManagement = () => {
                             <DateInput
                                 value={date}
                                 onChange={setDate}
-                                label="Date"
-                                placeholder=" Enter Date"
+                                label="Date of joining"
+                                placeholder=" Enter Date of joining"
                             />
 
                             <TextInput
@@ -605,6 +628,22 @@ const UserManagement = () => {
                                 {...form.getInputProps('name')}
 
                             />
+
+                            <NumberInput
+                                placeholder="Your age"
+                                label="Your age"
+
+
+                                {...form.getInputProps('age')}
+                            />
+
+                            <DateInput
+                                value={dobdate}
+                                onChange={setdobdate}
+                                label="Date of birth"
+                                placeholder=" Enter Date of birth"
+                            />
+
                             <TextInput
 
                                 label="Email"
@@ -614,13 +653,7 @@ const UserManagement = () => {
                                 {...form.getInputProps('business_email')}
 
                             />
-                            <NumberInput
-                                placeholder="Your age"
-                                label="Your age"
 
-
-                                {...form.getInputProps('age')}
-                            />
 
                             <TextInput
 
@@ -732,8 +765,8 @@ const UserManagement = () => {
                             <DateInput
                                 value={date}
                                 onChange={setDate}
-                                label="Date"
-                                placeholder=" Enter Date"
+                                label="Date of joining"
+                                placeholder=" Enter Date of joining"
                             />
 
                             <TextInput
@@ -901,6 +934,7 @@ const UserManagement = () => {
 
                             form.reset()
                             setDate(null);
+                            setdobdate(null)
                             setUserModal(true)
                             setEditStatus(false)
 
@@ -921,6 +955,7 @@ const UserManagement = () => {
                                     <th> Category </th>
                                     <th> Name </th>
                                     <th> Age </th>
+                                    <th> Date of birth </th>
                                     <th> Gender </th>
                                     <th> Contact no. </th>
                                     <th> Email </th>
@@ -941,6 +976,7 @@ const UserManagement = () => {
                                         <th> Category </th>
                                         <th> Name </th>
                                         <th> Age </th>
+                                        <th> Date of birth </th>
                                         <th> Gender </th>
                                         <th> Contact no. </th>
                                         <th> Email </th>
