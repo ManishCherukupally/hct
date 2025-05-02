@@ -395,7 +395,7 @@ const Broadcast = () => {
         <div>
             <Container mt={mediumScreen ? "5rem" : "2rem"} size={"xxl"}>
 
-                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={broadcastModal} onClose={() => setbroadcastModal(false)} title="Add Broadcast">
+                <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={broadcastModal} onClose={() => setbroadcastModal(false)} title="Add Broadcast">
                     <Select
                         data={templatedropDownData}
                         placeholder="Select a template"
@@ -479,7 +479,7 @@ const Broadcast = () => {
 
                 {/* Edit Broadcast */}
 
-                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={editModal} onClose={() => setEditModal(false)} title="Edit Broadcast">
+                <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={editModal} onClose={() => setEditModal(false)} title="Edit Broadcast">
                     <Select
                         data={templatedropDownData}
                         placeholder="Select a template"
@@ -560,7 +560,7 @@ const Broadcast = () => {
                 </Modal>
 
 
-                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={openModal} onClose={() => setOpenModal(false)} title="Are you sure?!">
+                <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={openModal} onClose={() => setOpenModal(false)} title="Are you sure?!">
                     <Text>Do you really want to delete this broadcast?</Text>
                     <Space h={15} />
                     <Flex justify={"end"} gap={"2%"}>
@@ -570,7 +570,7 @@ const Broadcast = () => {
                     </Flex>
                 </Modal>
 
-                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={sendModal} onClose={() => setsendModal(false)} title="Are you sure?!">
+                <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={sendModal} onClose={() => setsendModal(false)} title="Are you sure?!">
                     <Text>Do you really want to send this broadcast?</Text>
                     <Space h={15} />
                     <Flex justify={"end"} gap={"2%"}>

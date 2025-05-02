@@ -10,7 +10,7 @@ const Usertrackchart = (props) => {
     const xAxisData = data.map(item => item.date_of_activity);
     const yAxisStepCount = data.map(item => item.step_count);
     const yAxisTotalDuration = data.map(item => {
-        const [hours, minutes, seconds] = item.hours_of_sleep.split(":").map(Number)
+        const [hours, minutes, seconds] = item.workout_duration.split(":").map(Number)
         return hours + minutes / 60 + seconds / 3600;
     });
 

@@ -167,7 +167,7 @@ const Mantine4 = () => {
       </Modal>
 
 
-      <Modal opened={opened} onClose={close} title="Registration" centered size={isMobile ? "xs" : "md"}>
+      <Modal closeOnClickOutside={false} opened={opened} onClose={close} title="Registration" centered size={isMobile ? "xs" : "md"}>
         <form >
           <SimpleGrid cols={1}>
             <TextInput

@@ -41,6 +41,7 @@ const UserTracker = () => {
     const [editModal, seteditModal] = useState(false)
     const [deleteModal, setdeleteModal] = useState(false)
     const [date, setDate] = useState(null);
+    const [newdate, setnewDate] = useState(null);
     const [nodata, setnoData] = useState(false)
     const sleepRef = useRef();
     const workoutRef = useRef();
@@ -67,6 +68,7 @@ const UserTracker = () => {
             user_id: "",
             category: "",
             date_of_activity: "",
+            new_date_of_activity: "",
             day_count: "",
             step_count: "",
             diet: {},
@@ -84,13 +86,14 @@ const UserTracker = () => {
             user_id: parseInt(userId),
             category: 1,
             date_of_activity: new Date(date).toLocaleDateString("en-CA"),
+            new_date_of_activity: newdate ? new Date(newdate).toLocaleDateString("en-CA") : new Date(date).toLocaleDateString("en-CA"),
             day_count: values.day_count,
-            step_count: values.step_count,
+            step_count: values.step_count ? values.step_count : 0,
             diet: {},
             Exercises: `${values.Exercises}`,
-            water_in_liters: parseFloat(values.water_in_liters),
-            hours_of_sleep: `${inputs.sleephours}:${inputs.sleepminutes}:00`,
-            workout_duration: `${inputs.workouthours}:${inputs.workoutminutes}:00`,
+            water_in_liters: parseFloat(values.water_in_liters ? values.water_in_liters : 0),
+            hours_of_sleep: `${inputs.sleephours ? inputs.sleephours : '00'}:${inputs.sleepminutes ? inputs.sleepminutes : '00'}:00`,
+            workout_duration: `${inputs.workouthours ? inputs.workouthours : '00'}:${inputs.workoutminutes ? inputs.workoutminutes : '00'}:00`,
             calories_initial: 0,
             calories_burn: 0,
             just_relief_activity: `${values.just_relief_activity}`
@@ -106,7 +109,15 @@ const UserTracker = () => {
             headers: {
                 Authorization: `Bearer ${window.localStorage.getItem("access")}`
             }
-        }).then((resp) => setgraphData(resp.data["user_daily_activity_records"])
+        }).then((resp) => {
+            setgraphData(resp.data["user_daily_activity_records"])
+            if (resp.data.status === 'no_records_found') {
+                setnoData(true)
+                // setTimeout(() => {
+                //     setnoData(false)
+                // }, 2500);
+            }
+        }
         ).catch((err) => {
             console.log(err)
             setgraphData([]);
@@ -128,7 +139,9 @@ const UserTracker = () => {
                 setRecordsPerPage(resp.data.number_of_pages)
                 if (resp.data.status === 'page_not_found') {
                     setnoData(true)
-
+                    // setTimeout(() => {
+                    //     setnoData(false)
+                    // }, 2500);
                 }
             })
             .catch((err) => {
@@ -138,20 +151,19 @@ const UserTracker = () => {
     }, [loaderVisible, currentPage])
 
 
-    const rows = nodata ? (
-        <Text mt={"lg"}> No data found!</Text>
-    ) : (
-        data.map((item) => (
-            <tr key={item.id} style={{ height: 50 }}>
-                <td> {item.date_of_activity} </td>
-                <td> {item.day_count} </td>
-                <td> {item.step_count} </td>
-                <td> {item.water_in_liters} </td>
-                <td> {item.hours_of_sleep} </td>
-                <td> {item.workout_duration}  </td>
-                {/* <td>{item.calories_initial} </td> */}
-                {/* <td>{item.calories_burn} </td> */}
-                {/* <td>
+    const rows =
+        nodata ? (<Text>No records found</Text>) : (
+            data.map((item) => (
+                <tr key={item.id} style={{ height: 50 }}>
+                    <td> {item.date_of_activity} </td>
+                    <td> {item.day_count} </td>
+                    <td> {item.step_count} </td>
+                    <td> {item.water_in_liters} </td>
+                    <td> {item.hours_of_sleep} </td>
+                    <td> {item.workout_duration}  </td>
+                    {/* <td>{item.calories_initial} </td> */}
+                    {/* <td>{item.calories_burn} </td> */}
+                    {/* <td>
                     {Object.entries(item.diet).map(([key, value]) => (
                         // <div key={key}>{value}</div>
                         <ul style={{ paddingLeft: 20 }}>
@@ -159,54 +171,57 @@ const UserTracker = () => {
                         </ul>
                     ))}
                 </td>     */}
-                <td> {item.Exercises} </td>
-                <td> {item.just_relief_activity} </td>
+                    <td> {item.Exercises} </td>
+                    <td> {item.just_relief_activity} </td>
 
-                <td>
-                    <Group>
-                        <Tooltip label="Edit"><ActionIcon variant='subtle' onClick={() => {
-                            const sleepdata = item.hours_of_sleep
-                            const workoutdata = item.workout_duration
-                            setInputs({
-                                sleephours: sleepdata.split(":")[0],
-                                sleepminutes: sleepdata.split(":")[1],
-                                workouthours: workoutdata.split(":")[0],
-                                workoutminutes: workoutdata.split(":")[1],
-                            })
-                            seteditModal(true)
-                            const dateObject = new Date(item.date_of_activity);
-                            setDate(dateObject);
-                            form.setValues({
+                    <td>
+                        <Group>
+                            <Tooltip label="Edit"><ActionIcon variant='subtle' onClick={() => {
+                                const sleepdata = item.hours_of_sleep
+                                const workoutdata = item.workout_duration
+                                setInputs({
+                                    sleephours: sleepdata.split(":")[0],
+                                    sleepminutes: sleepdata.split(":")[1],
+                                    workouthours: workoutdata.split(":")[0],
+                                    workoutminutes: workoutdata.split(":")[1],
+                                })
+                                seteditModal(true)
+                                const dateObject = new Date(item.date_of_activity);
+                                setDate(dateObject);
+                                form.setValues({
 
-                                user_id: userId,
-                                category: 1,
-                                date_of_activity: dateObject,
-                                day_count: item.day_count,
-                                step_count: item.step_count,
-                                diet: {},
-                                Exercises: item.Exercises,
-                                water_in_liters: item.water_in_liters,
-                                hours_of_sleep: item.hours_of_sleep,
-                                workout_duration: item.workout_duration,
-                                calories_initial: 0,
-                                calories_burn: 0,
-                                just_relief_activity: item.just_relief_activity
+                                    user_id: userId,
+                                    category: 1,
+                                    date_of_activity: dateObject,
+                                    day_count: item.day_count,
+                                    step_count: item.step_count,
+                                    diet: {},
+                                    Exercises: item.Exercises,
+                                    water_in_liters: item.water_in_liters,
+                                    hours_of_sleep: item.hours_of_sleep,
+                                    workout_duration: item.workout_duration,
+                                    calories_initial: 0,
+                                    calories_burn: 0,
+                                    just_relief_activity: item.just_relief_activity
 
-                            })
-                        }}>
-                            <MdEdit color="#233c79" /> </ActionIcon></Tooltip>
-                        <Tooltip label="Delete"><ActionIcon variant='subtle'
-                            onClick={() => {
-                                setDate(item.date_of_activity)
-                                setdeleteModal(true)
-                            }}
-                        >
-                            <MdDeleteForever color="#FF3C5F" /> </ActionIcon></Tooltip>
-                    </Group>
-                </td>
-            </tr>
+                                })
+                            }}>
+                                <MdEdit color="#233c79" /> </ActionIcon></Tooltip>
+                            <Tooltip label="Delete"><ActionIcon variant='subtle'
+                                onClick={() => {
+
+                                    setDate(item.date_of_activity)
+                                    setdeleteModal(true)
+                                }}
+                            >
+                                <MdDeleteForever color="#FF3C5F" /> </ActionIcon></Tooltip>
+                        </Group>
+                    </td>
+                </tr>
+            )
+            )
         )
-        ))
+
 
     const handleAddrecord = () => {
         setLoaderVisible(true)
@@ -251,6 +266,7 @@ const UserTracker = () => {
                     setTimeout(() => {
                         setLoaderVisible(false)
                         seteditModal(false)
+                        setnewDate(null)
                     }, 1000);
                 }
                 else {
@@ -294,18 +310,20 @@ const UserTracker = () => {
     return (
         <div>
             <Container mt={mediumScreen ? "6rem" : "2rem"} size={"xxl"} style={{ zIndex: 150 }}>
+                {/* <Modal closeOnClickOutside={false} centered opened={nodata} onClose={() => setnoData(false)} withCloseButton={false}>
+                    <Text>There are no records for this client!</Text>
+                </Modal> */}
 
-
-                <Modal centered opened={recordModal} onClose={() => setrecordModal(false)} title="Add Record">
+                <Modal centered opened={recordModal} onClose={() => setrecordModal(false)} title="Add Record" closeOnClickOutside={false}>
                     <Stack>
-                        <DateInput
+                        <DateInput required
                             value={date}
                             onChange={setDate}
                             label="Date"
                             placeholder=" Enter Date"
                         />
 
-                        <NumberInput
+                        <NumberInput required
                             label="Day Count"
                             placeholder='Enter Day Count'
                             {...form.getInputProps('day_count')}
@@ -431,16 +449,16 @@ const UserTracker = () => {
                 </Modal>
 
 
-                <Modal centered opened={editModal} onClose={() => seteditModal(false)} title="Edit Record">
+                <Modal centered opened={editModal} onClose={() => seteditModal(false)} title="Edit Record" closeOnClickOutside={false}>
                     <Stack>
-                        <DateInput
-                            value={date}  // Ensure it's using the state value
-                            onChange={(value) => setDate(value)}
+                        <DateInput required
+                            value={newdate ? newdate : date}  // Ensure it's using the state value
+                            onChange={(value) => setnewDate(value)}
                             label="Date"
                             placeholder=" Enter Date"
                         />
 
-                        <NumberInput
+                        <NumberInput required
                             label="Day Count"
                             placeholder='Enter Day Count'
                             {...form.getInputProps('day_count')}
@@ -682,6 +700,7 @@ const UserTracker = () => {
                                     </Table>
                                 </ScrollArea>
                             )}
+                            <Space h={"xl"} />
                             < Flex justify={"end"}>
                                 <Pagination value={currentPage} onChange={setCurrentPage} total={recordsPerPage} color="yellow" siblings={1} />
                             </Flex>

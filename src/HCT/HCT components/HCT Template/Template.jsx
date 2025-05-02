@@ -175,7 +175,7 @@ const Template = () => {
         <div>
             <Container mt={mediumScreen ? "5rem" : "2rem"} size={"xxl"}>
 
-                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={templateModal} onClose={() => settemplateModal(false)} title="Add Template">
+                <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={templateModal} onClose={() => settemplateModal(false)} title="Add Template">
                     <form>
                         <SimpleGrid cols={1}>
                             <Textarea
@@ -234,7 +234,7 @@ const Template = () => {
 
                 </Modal>
 
-                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={openModal} onClose={() => setOpenModal(false)} title="Are you sure?!">
+                <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={openModal} onClose={() => setOpenModal(false)} title="Are you sure?!">
                     <Text>Do you really want to delete this template?</Text>
                     <Space h={15} />
                     <Flex justify={"end"} gap={"2%"}>
@@ -244,7 +244,7 @@ const Template = () => {
                     </Flex>
                 </Modal>
 
-                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={EditModal} onClose={() => {
+                <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={EditModal} onClose={() => {
                     setEditModal(false)
                     // setEditStatus(false)
                 }} title="Edit Template">

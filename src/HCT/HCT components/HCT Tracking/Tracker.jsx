@@ -170,8 +170,8 @@ const Tracker = () => {
     return (
         <div>
             <Container mt={mediumScreen ? "5rem" : "2rem"} size={"xxl"}>
-                <Modal centered opened={noData} onClose={() => setnoData(false)} withCloseButton={false}>
-                    <Text>There are no records for this client!</Text>
+                <Modal closeOnClickOutside={false} centered opened={noData} onClose={() => setnoData(false)} withCloseButton={false}>
+                    <Text>There are no records!</Text>
                 </Modal>
                 {/* <Modal centered opened={memberModal} onClose={() => setmemberModal(false)} title="Add Member">
                     <form>
@@ -238,7 +238,7 @@ const Tracker = () => {
                         </Stack>                 </form>
                 </Modal> */}
 
-                <Modal centered opened={deleteModal} onClose={() => setdeleteModal(false)} withCloseButton={false} >
+                <Modal closeOnClickOutside={false} centered opened={deleteModal} onClose={() => setdeleteModal(false)} withCloseButton={false} >
                     <Stack >
                         <Group spacing={"xs"}>
                             <PiWarningOctagonFill size={30} color='orange' />

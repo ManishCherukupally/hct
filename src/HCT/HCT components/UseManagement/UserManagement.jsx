@@ -361,7 +361,7 @@ const UserManagement = () => {
 
             <Container mt={mediumScreen ? "5rem" : "2rem"} size={"xxl"}>
 
-                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={userModal} onClose={() => setUserModal(false)} title="Add user">
+                <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={userModal} onClose={() => setUserModal(false)} title="Add user">
                     <form>
                         <SimpleGrid cols={1}>
                             <TextInput
@@ -612,7 +612,7 @@ const UserManagement = () => {
 
                 </Modal>
 
-                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={EditModal} onClose={() => {
+                <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={EditModal} onClose={() => {
                     setEditModal(false)
                     setEditStatus(false)
                     setselectedCategory('')
@@ -865,7 +865,7 @@ const UserManagement = () => {
 
                 </Modal>
 
-                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={opened} onClose={close} title="Are you sure?">
+                <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={opened} onClose={close} title="Are you sure?">
                     <Text>Do you really want to change the status?</Text>
                     <Space h={15} />
                     <Flex justify={"end"} gap={"2%"}>
@@ -877,7 +877,7 @@ const UserManagement = () => {
                     </Flex>
                 </Modal>
 
-                <Modal centered style={{ display: "flex", justifyContent: "center" }} opened={openModal} onClose={() => setOpenModal(false)} title="Are you sure?!">
+                <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={openModal} onClose={() => setOpenModal(false)} title="Are you sure?!">
                     <Text>Do you really want to delete this user?</Text>
                     <Space h={15} />
                     <Flex justify={"end"} gap={"2%"}>
@@ -887,7 +887,7 @@ const UserManagement = () => {
                     </Flex>
                 </Modal>
 
-                <Modal centered opened={fulldetails} onClose={() => setfulldetails(false)} title={`${name} (${userDetails.category})`}>
+                <Modal closeOnClickOutside={false} centered opened={fulldetails} onClose={() => setfulldetails(false)} title={`${name} (${userDetails.category})`}>
                     <Stack>
                         <Text>Status : {userDetails.user_status}</Text>
                         <Text>Date of Joining : {handleDate(userDetails.date_joined)}</Text>
