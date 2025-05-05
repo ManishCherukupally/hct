@@ -145,8 +145,7 @@ const Tracker = () => {
             <td onClick={() => {
                 localStorage.setItem("userId", item.user_id)
                 navigate(`/tracker/${item.name}`)
-            }}>{item.Total_workout_duration ? item.Total_workout_duration.split(' ').pop() : ''}
-            </td>
+            }}>{item.formatted_workout_duration}</td>
 
             {/* <td onClick={() => {
                 localStorage.setItem("userId", item.user_id)
