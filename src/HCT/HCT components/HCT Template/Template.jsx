@@ -328,7 +328,11 @@ const Template = () => {
                     {
                         mediumScreen ? (
                             <Table striped >
-                                <thead>
+                                <thead style={{
+                                    position: "sticky",
+                                    top: 0,
+                                    background: 'white', zIndex: 6,
+                                }}>
                                     <tr>
                                         <th> Template Name </th>
                                         <th> Template Heading </th>
@@ -344,7 +348,11 @@ const Template = () => {
                         ) : (
                             <ScrollArea offsetScrollbars h={400} >
                                 <Table striped >
-                                    <thead>
+                                    <thead style={{
+                                        position: "sticky",
+                                        top: 0,
+                                        background: 'white', zIndex: 6,
+                                    }}>
                                         <tr>
                                             <th> Template Name </th>
                                             <th> Template Heading </th>

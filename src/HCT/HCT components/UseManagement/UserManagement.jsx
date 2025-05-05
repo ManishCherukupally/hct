@@ -949,7 +949,11 @@ const UserManagement = () => {
                     {mediumScreen ? (
 
                         <Table striped>
-                            <thead>
+                            <thead style={{
+                                position: "sticky",
+                                top: 0,
+                                background: 'white', zIndex: 6,
+                            }}>
                                 <tr>
                                     <th> Status </th>
                                     <th> Category </th>
@@ -970,7 +974,11 @@ const UserManagement = () => {
                     ) : (
                         <ScrollArea offsetScrollbars h={400} >
                             <Table striped>
-                                <thead>
+                                <thead style={{
+                                    position: "sticky",
+                                    top: 0,
+                                    background: 'white', zIndex: 6,
+                                }}>
                                     <tr>
                                         <th> Status </th>
                                         <th> Category </th>

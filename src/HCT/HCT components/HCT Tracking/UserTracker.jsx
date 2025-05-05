@@ -82,6 +82,12 @@ const UserTracker = () => {
 
 
         },
+
+        validate: {
+            date_of_activity: (value) => (value === '' ? 'Please enter a date. This field is required.' : null),
+            day_count: (value) => (value === null || '' ? 'Please enter day count. This field is required.' : null),
+        },
+
         transformValues: (values) => ({
             user_id: parseInt(userId),
             category: 1,
@@ -242,7 +248,7 @@ const UserTracker = () => {
                 else {
                     setTimeout(() => {
                         setLoaderVisible(false)
-                        setrecordModal(false)
+                        // setrecordModal(false)
                     }, 1000);
                 }
 
@@ -315,105 +321,106 @@ const UserTracker = () => {
                 </Modal> */}
 
                 <Modal centered opened={recordModal} onClose={() => setrecordModal(false)} title="Add Record" closeOnClickOutside={false}>
-                    <Stack>
-                        <DateInput required
-                            value={date}
-                            onChange={setDate}
-                            label="Date"
-                            placeholder=" Enter Date"
-                        />
+                    <form onSubmit={handleAddrecord}>
+                        <Stack>
+                            <DateInput required
+                                value={date}
+                                onChange={setDate}
+                                label="Date"
+                                placeholder=" Enter Date"
+                            />
 
-                        <NumberInput required
-                            label="Day Count"
-                            placeholder='Enter Day Count'
-                            {...form.getInputProps('day_count')}
-                        />
+                            <NumberInput required
+                                label="Day Count"
+                                placeholder='Enter Day Count'
+                                {...form.getInputProps('day_count')}
+                            />
 
-                        <NumberInput
-                            label="Step Count"
-                            placeholder='Enter Step Count'
-                            {...form.getInputProps('step_count')}
-                        />
+                            <NumberInput
+                                label="Step Count"
+                                placeholder='Enter Step Count'
+                                {...form.getInputProps('step_count')}
+                            />
 
-                        <Textarea
-                            label="Exercises"
-                            placeholder='Enter Exercises'
-                            {...form.getInputProps('Exercises')}
-                        />
+                            <Textarea
+                                label="Exercises"
+                                placeholder='Enter Exercises'
+                                {...form.getInputProps('Exercises')}
+                            />
 
-                        <TextInput
-                            label="Water in Liters"
-                            placeholder='Enter Water in Liters'
-                            {...form.getInputProps('water_in_liters')}
-                        />
+                            <TextInput
+                                label="Water in Liters"
+                                placeholder='Enter Water in Liters'
+                                {...form.getInputProps('water_in_liters')}
+                            />
 
-                        {/* <TextInput
+                            {/* <TextInput
                             label="Hours of Sleep"
                             placeholder='Enter Hours of Sleep'
                             {...form.getInputProps('hours_of_sleep')}
                         /> */}
-                        <div>
-                            <Text style={{ fontWeight: 500, fontSize: '0.875rem', paddingBottom: 5 }}>Hours of Sleep</Text>
-                            <Group align="center" >
-                                <Group spacing={'xs'} style={{ flex: 1 }} noWrap>
-                                    <TextInput
-                                        type='number'
-                                        max={12}
-                                        min={0}
-                                        w="100%"
-                                        value={inputs.sleephours}
-                                        onChange={(e) => setInputs(prev => ({ ...prev, sleephours: e.target.value }))}
-                                    // placeholder="Hours"
-                                    />
-                                    <Text fz="xs" fw={500}>Hrs</Text>
+                            <div>
+                                <Text style={{ fontWeight: 500, fontSize: '0.875rem', paddingBottom: 5 }}>Hours of Sleep</Text>
+                                <Group align="center" >
+                                    <Group spacing={'xs'} style={{ flex: 1 }} noWrap>
+                                        <TextInput
+                                            type='number'
+                                            max={12}
+                                            min={0}
+                                            w="100%"
+                                            value={inputs.sleephours}
+                                            onChange={(e) => setInputs(prev => ({ ...prev, sleephours: e.target.value }))}
+                                        // placeholder="Hours"
+                                        />
+                                        <Text fz="xs" fw={500}>Hrs</Text>
+                                    </Group>
+                                    <Text fz="xl" fw={700}>:</Text>
+                                    <Group spacing={'xs'} style={{ flex: 1 }} noWrap>
+                                        <TextInput
+                                            type='number'
+                                            max={59}
+                                            min={0}
+                                            w="100%"
+                                            value={inputs.sleepminutes}
+                                            onChange={(e) => setInputs(prev => ({ ...prev, sleepminutes: e.target.value }))}
+                                        // placeholder="Minutes"
+                                        />
+                                        <Text fz="xs" fw={500}>Min</Text>
+                                    </Group>
                                 </Group>
-                                <Text fz="xl" fw={700}>:</Text>
-                                <Group spacing={'xs'} style={{ flex: 1 }} noWrap>
-                                    <TextInput
-                                        type='number'
-                                        max={59}
-                                        min={0}
-                                        w="100%"
-                                        value={inputs.sleepminutes}
-                                        onChange={(e) => setInputs(prev => ({ ...prev, sleepminutes: e.target.value }))}
-                                    // placeholder="Minutes"
-                                    />
-                                    <Text fz="xs" fw={500}>Min</Text>
-                                </Group>
-                            </Group>
-                        </div>
+                            </div>
 
-                        <div>
-                            <Text style={{ fontWeight: 500, fontSize: '0.875rem', paddingBottom: 5 }}>Workout Duration</Text>
-                            <Group align="center">
-                                <Group spacing={'xs'} style={{ flex: 1 }} noWrap>
-                                    <TextInput
-                                        type='number'
-                                        max={12}
-                                        min={0}
-                                        w="100%"
-                                        value={inputs.workouthours}
-                                        onChange={(e) => setInputs(prev => ({ ...prev, workouthours: e.target.value }))}
-                                    // placeholder="Hours"
-                                    />
-                                    <Text fz="xs" fw={500}>Hrs</Text>
+                            <div>
+                                <Text style={{ fontWeight: 500, fontSize: '0.875rem', paddingBottom: 5 }}>Workout Duration</Text>
+                                <Group align="center">
+                                    <Group spacing={'xs'} style={{ flex: 1 }} noWrap>
+                                        <TextInput
+                                            type='number'
+                                            max={12}
+                                            min={0}
+                                            w="100%"
+                                            value={inputs.workouthours}
+                                            onChange={(e) => setInputs(prev => ({ ...prev, workouthours: e.target.value }))}
+                                        // placeholder="Hours"
+                                        />
+                                        <Text fz="xs" fw={500}>Hrs</Text>
+                                    </Group>
+                                    <Text fz="xl" fw={700}>:</Text>
+                                    <Group spacing={'xs'} style={{ flex: 1 }} noWrap>
+                                        <TextInput
+                                            type='number'
+                                            max={59}
+                                            min={0}
+                                            w="100%"
+                                            value={inputs.workoutminutes}
+                                            onChange={(e) => setInputs(prev => ({ ...prev, workoutminutes: e.target.value }))}
+                                        // placeholder="Minutes"
+                                        />
+                                        <Text fz="xs" fw={500}>Min</Text>
+                                    </Group>
                                 </Group>
-                                <Text fz="xl" fw={700}>:</Text>
-                                <Group spacing={'xs'} style={{ flex: 1 }} noWrap>
-                                    <TextInput
-                                        type='number'
-                                        max={59}
-                                        min={0}
-                                        w="100%"
-                                        value={inputs.workoutminutes}
-                                        onChange={(e) => setInputs(prev => ({ ...prev, workoutminutes: e.target.value }))}
-                                    // placeholder="Minutes"
-                                    />
-                                    <Text fz="xs" fw={500}>Min</Text>
-                                </Group>
-                            </Group>
-                        </div>
-                        {/* 
+                            </div>
+                            {/* 
                         <TimeInput
                             ref={sleepRef}
                             label="Hours of Sleep"
@@ -425,7 +432,7 @@ const UserTracker = () => {
                         /> */}
 
 
-                        {/* 
+                            {/* 
                         <TimeInput onClick={() => workoutRef.current.showPicker()}
                             ref={workoutRef}
                             
@@ -437,118 +444,120 @@ const UserTracker = () => {
                             {...form.getInputProps('workout_duration')}
                         /> */}
 
-                        <Textarea
-                            label="Just Relief Activity"
-                            placeholder='Enter Relief Activity'
-                            {...form.getInputProps('just_relief_activity')}
-                        />
+                            <Textarea
+                                label="Just Relief Activity"
+                                placeholder='Enter Relief Activity'
+                                {...form.getInputProps('just_relief_activity')}
+                            />
 
-                        <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
-                            variant='filled' onClick={handleAddrecord}>Done</Button>
-                    </Stack>
+                            <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
+                                variant='filled' type='submit'>Done</Button>
+                        </Stack>
+                    </form>
                 </Modal>
 
 
                 <Modal centered opened={editModal} onClose={() => seteditModal(false)} title="Edit Record" closeOnClickOutside={false}>
-                    <Stack>
-                        <DateInput required
-                            value={newdate ? newdate : date}  // Ensure it's using the state value
-                            onChange={(value) => setnewDate(value)}
-                            label="Date"
-                            placeholder=" Enter Date"
-                        />
+                    <form onSubmit={handleEditrecord}>
+                        <Stack>
+                            <DateInput required
+                                value={newdate ? newdate : date}  // Ensure it's using the state value
+                                onChange={(value) => setnewDate(value)}
+                                label="Date"
+                                placeholder=" Enter Date"
+                            />
 
-                        <NumberInput required
-                            label="Day Count"
-                            placeholder='Enter Day Count'
-                            {...form.getInputProps('day_count')}
-                        />
+                            <NumberInput required
+                                label="Day Count"
+                                placeholder='Enter Day Count'
+                                {...form.getInputProps('day_count')}
+                            />
 
-                        <NumberInput
-                            label="Step Count"
-                            placeholder='Enter Step Count'
-                            {...form.getInputProps('step_count')}
-                        />
+                            <NumberInput
+                                label="Step Count"
+                                placeholder='Enter Step Count'
+                                {...form.getInputProps('step_count')}
+                            />
 
-                        <Textarea
-                            label="Exercises"
-                            placeholder='Enter Exercises'
-                            {...form.getInputProps('Exercises')}
-                        />
+                            <Textarea
+                                label="Exercises"
+                                placeholder='Enter Exercises'
+                                {...form.getInputProps('Exercises')}
+                            />
 
-                        <TextInput
-                            label="Water in Liters"
-                            placeholder='Enter Water in Liters'
-                            {...form.getInputProps('water_in_liters')}
-                        />
+                            <TextInput
+                                label="Water in Liters"
+                                placeholder='Enter Water in Liters'
+                                {...form.getInputProps('water_in_liters')}
+                            />
 
-                        {/* <TextInput
+                            {/* <TextInput
                             label="Hours of Sleep"
                             placeholder='Enter Hours of Sleep'
                             {...form.getInputProps('hours_of_sleep')}
                         /> */}
 
-                        <div>
-                            <Text style={{ fontWeight: 500, fontSize: '0.875rem', paddingBottom: 5 }}>Hours of Sleep</Text>
-                            <Group align="center">
-                                <Group spacing={'xs'}>
-                                    <TextInput
-                                        type='number'
-                                        max={12}
-                                        min={0}
-                                        w={'auto'}
-                                        value={inputs.sleephours}
-                                        onChange={(e) => setInputs(prev => ({ ...prev, sleephours: e.target.value }))}
-                                    // placeholder="Hours"
-                                    />
-                                    <Text fz="xs" fw={500}>Hrs</Text>
+                            <div>
+                                <Text style={{ fontWeight: 500, fontSize: '0.875rem', paddingBottom: 5 }}>Hours of Sleep</Text>
+                                <Group align="center">
+                                    <Group spacing={'xs'}>
+                                        <TextInput
+                                            type='number'
+                                            max={12}
+                                            min={0}
+                                            w={'auto'}
+                                            value={inputs.sleephours}
+                                            onChange={(e) => setInputs(prev => ({ ...prev, sleephours: e.target.value }))}
+                                        // placeholder="Hours"
+                                        />
+                                        <Text fz="xs" fw={500}>Hrs</Text>
+                                    </Group>
+                                    <Text fz="xl" fw={700}>:</Text>
+                                    <Group spacing={'xs'}>
+                                        <TextInput
+                                            type='number'
+                                            max={59}
+                                            min={0}
+                                            w={'auto'}
+                                            value={inputs.sleepminutes}
+                                            onChange={(e) => setInputs(prev => ({ ...prev, sleepminutes: e.target.value }))}
+                                        // placeholder="Minutes"
+                                        />  <Text fz="xs" fw={500}>Min</Text>
+                                    </Group>
                                 </Group>
-                                <Text fz="xl" fw={700}>:</Text>
-                                <Group spacing={'xs'}>
-                                    <TextInput
-                                        type='number'
-                                        max={59}
-                                        min={0}
-                                        w={'auto'}
-                                        value={inputs.sleepminutes}
-                                        onChange={(e) => setInputs(prev => ({ ...prev, sleepminutes: e.target.value }))}
-                                    // placeholder="Minutes"
-                                    />  <Text fz="xs" fw={500}>Min</Text>
-                                </Group>
-                            </Group>
-                        </div>
+                            </div>
 
-                        <div>
-                            <Text style={{ fontWeight: 500, fontSize: '0.875rem', paddingBottom: 5 }}>Workout Duration</Text>
-                            <Group align="center">
-                                <Group spacing={'xs'}>
-                                    <TextInput
-                                        type='number'
-                                        max={12}
-                                        min={0}
-                                        w={'auto'}
-                                        value={inputs.workouthours}
-                                        onChange={(e) => setInputs(prev => ({ ...prev, workouthours: e.target.value }))}
-                                    // placeholder="Hours"
-                                    />
-                                    <Text fz="xs" fw={500}>Hrs</Text>
+                            <div>
+                                <Text style={{ fontWeight: 500, fontSize: '0.875rem', paddingBottom: 5 }}>Workout Duration</Text>
+                                <Group align="center">
+                                    <Group spacing={'xs'}>
+                                        <TextInput
+                                            type='number'
+                                            max={12}
+                                            min={0}
+                                            w={'auto'}
+                                            value={inputs.workouthours}
+                                            onChange={(e) => setInputs(prev => ({ ...prev, workouthours: e.target.value }))}
+                                        // placeholder="Hours"
+                                        />
+                                        <Text fz="xs" fw={500}>Hrs</Text>
+                                    </Group>
+                                    <Text fz="xl" fw={700}>:</Text>
+                                    <Group spacing={'xs'}>
+                                        <TextInput
+                                            type='number'
+                                            max={59}
+                                            min={0}
+                                            w={'auto'}
+                                            value={inputs.workoutminutes}
+                                            onChange={(e) => setInputs(prev => ({ ...prev, workoutminutes: e.target.value }))}
+                                        // placeholder="Minutes"
+                                        />  <Text fz="xs" fw={500}>Min</Text>
+                                    </Group>
                                 </Group>
-                                <Text fz="xl" fw={700}>:</Text>
-                                <Group spacing={'xs'}>
-                                    <TextInput
-                                        type='number'
-                                        max={59}
-                                        min={0}
-                                        w={'auto'}
-                                        value={inputs.workoutminutes}
-                                        onChange={(e) => setInputs(prev => ({ ...prev, workoutminutes: e.target.value }))}
-                                    // placeholder="Minutes"
-                                    />  <Text fz="xs" fw={500}>Min</Text>
-                                </Group>
-                            </Group>
-                        </div>
+                            </div>
 
-                        {/* <TimeInput onClick={() => sleepRef.current.showPicker()}
+                            {/* <TimeInput onClick={() => sleepRef.current.showPicker()}
                             ref={sleepRef}
                             withSeconds
                             label="Hours of Sleep"
@@ -567,15 +576,16 @@ const UserTracker = () => {
                             {...form.getInputProps('workout_duration')}
                         /> */}
 
-                        <Textarea
-                            label="Just Relief Activity"
-                            placeholder='Enter Relief Activity'
-                            {...form.getInputProps('just_relief_activity')}
-                        />
+                            <Textarea
+                                label="Just Relief Activity"
+                                placeholder='Enter Relief Activity'
+                                {...form.getInputProps('just_relief_activity')}
+                            />
 
-                        <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
-                            variant='filled' onClick={handleEditrecord}>Edit</Button>
-                    </Stack>
+                            <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
+                                variant='filled' type='submit' >Edit</Button>
+                        </Stack>
+                    </form>
                 </Modal>
 
                 <Modal centered opened={deleteModal} onClose={() => setdeleteModal(false)} title='Are you sure?'>
@@ -628,8 +638,12 @@ const UserTracker = () => {
                     value === 'table' ? (
                         <Card withBorder radius={10} shadow='md'>
                             {mediumScreen ? (
-                                <Table striped>
-                                    <thead>
+                                <Table striped >
+                                    <thead style={{
+                                        position: "sticky",
+                                        top: 0,
+                                        background: 'white', zIndex: 6,
+                                    }}>
                                         <tr>
                                             <th> Date </th>
                                             <th> Day Count </th>
@@ -665,7 +679,11 @@ const UserTracker = () => {
                             ) : (
                                 <ScrollArea offsetScrollbars h={400} >
                                     <Table striped >
-                                        <thead>
+                                        <thead style={{
+                                            position: "sticky",
+                                            top: 0,
+                                            background: 'white', zIndex: 6,
+                                        }}>
                                             <tr>
                                                 <th> Date </th>
                                                 <th> Day Count </th>

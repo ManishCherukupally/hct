@@ -618,7 +618,11 @@ const Broadcast = () => {
                     {
                         mediumScreen ? (
                             <Table striped withColumnBorders={mediumScreen ? false : true}>
-                                <thead >
+                                <thead style={{
+                                    position: "sticky",
+                                    top: 0,
+                                    background: 'white', zIndex: 6,
+                                }} >
                                     <tr >
                                         <th> Template name </th>
                                         <th> Users </th>
@@ -633,8 +637,12 @@ const Broadcast = () => {
                             </Table>
                         ) : (
                             <ScrollArea offsetScrollbars h={400} >
-                                <Table striped withColumnBorders={mediumScreen ? false : true}>
-                                    <thead >
+                                <Table striped>
+                                    <thead style={{
+                                        position: "sticky",
+                                        top: 0,
+                                        background: 'white', zIndex: 6,
+                                    }}>
                                         <tr >
                                             <th> Template name </th>
                                             <th> Users </th>

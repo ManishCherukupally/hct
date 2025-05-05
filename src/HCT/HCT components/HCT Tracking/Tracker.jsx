@@ -266,7 +266,11 @@ const Tracker = () => {
                 <Card withBorder radius={10} shadow='md'>
                     {mediumScreen ? (
                         <Table striped>
-                            <thead>
+                            <thead style={{
+                                position: "sticky",
+                                top: 0,
+                                background: 'white', zIndex: 6,
+                            }}>
                                 <tr>
                                     {/* <th> User ID </th> */}
                                     <th> Name </th>
@@ -290,7 +294,11 @@ const Tracker = () => {
                     ) : (
                         <ScrollArea offsetScrollbars h={400} >
                             <Table striped>
-                                <thead>
+                                <thead style={{
+                                    position: "sticky",
+                                    top: 0,
+                                    background: 'white', zIndex: 6,
+                                }}>
                                     <tr>
                                         {/* <th> User ID </th> */}
                                         <th> Name </th>
