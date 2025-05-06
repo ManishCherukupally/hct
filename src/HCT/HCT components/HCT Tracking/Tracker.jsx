@@ -277,9 +277,9 @@ const Tracker = () => {
                                     <th> Goal </th>
                                     <th> Date of Joining </th>
                                     <th> Total Attendance </th>
-                                    <th> Total Water Intake </th>
-                                    <th> Total Step Count </th>
-                                    <th> Total Workout Duration </th>
+                                    <th> Average Water Intake </th>
+                                    <th> Average Step Count </th>
+                                    <th> Average Workout Duration </th>
                                     {/* <th> Body Type </th> */}
                                     <th> Action </th>
                                 </tr>
@@ -305,9 +305,9 @@ const Tracker = () => {
                                         <th> Goal </th>
                                         <th> Date of Joining </th>
                                         <th> Total Attendance </th>
-                                        <th> Total Water Intake </th>
-                                        <th> Total Step Count </th>
-                                        <th> Total Workout Duration </th>
+                                        <th> Average Water Intake </th>
+                                        <th> Average Step Count </th>
+                                        <th> Average Workout Duration </th>
                                         {/* <th> Body Type </th> */}
                                         <th> Action </th>
                                     </tr>
