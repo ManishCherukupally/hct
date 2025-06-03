@@ -3,15 +3,19 @@ import { useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import client from '../../../API/api';
-import { MdDeleteForever, MdEdit } from 'react-icons/md';
+import { MdDeleteForever, MdEdit, MdSearch } from 'react-icons/md';
 import { useForm } from '@mantine/form';
 import { DateInput, DatePicker, TimeInput } from '@mantine/dates';
 import { PiWarningOctagonFill } from 'react-icons/pi';
+import { BiSort } from 'react-icons/bi';
+import { RxCross2 } from 'react-icons/rx';
 
 const Tracker = () => {
     const mediumScreen = useMediaQuery("(min-width: 1200px)");
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
+    const phone = useMediaQuery("(max-width: 424px)");
+
     const [memberModal, setmemberModal] = useState(false)
     const navigate = useNavigate()
     // const data = {
@@ -26,8 +30,92 @@ const Tracker = () => {
     const [deleteModal, setdeleteModal] = useState(false)
     const [noData, setnoData] = useState(false)
     const [userId, setuserId] = useState(null)
+    const [inputValue, setInputValue] = useState('');
 
     const categoryparam = useParams()
+
+    const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
+
+    const sortedData = React.useMemo(() => {
+        // Apply filtering first
+        const filtered = userData.filter((item) =>
+
+            (item.name && item.name.toLowerCase().includes(inputValue.toLowerCase())) ||
+            (item.goal && item.goal.toLowerCase().includes(inputValue.toLowerCase())) ||
+            (item.date_of_joining && String(item.date_of_joining).toLowerCase().includes(inputValue.toLowerCase())) ||
+            (item.Total_attendance && String(item.Total_attendance).toLowerCase().includes(inputValue.toLowerCase())) ||
+            (item.Total_water_intake && String(item.Total_water_intake).toLowerCase().includes(inputValue.toLowerCase())) ||
+            (item.Total_step_count && String(item.Total_step_count).toLowerCase().includes(inputValue.toLowerCase())) ||
+            (item.formatted_workout_duration && String(item.formatted_workout_duration).toLowerCase().includes(inputValue.toLowerCase()))
+
+        );
+
+        // Then apply sorting
+        if (!sortConfig.key || sortConfig.direction === '') {
+            return filtered.sort((a, b) => b.id - a.id); // Default sorting by ID desc
+        }
+
+        return [...filtered].sort((a, b) => {
+            const aVal = a[sortConfig.key];
+            const bVal = b[sortConfig.key];
+
+            if (typeof aVal === 'string' && typeof bVal === 'string') {
+                return sortConfig.direction === 'asc'
+                    ? aVal.localeCompare(bVal)
+                    : bVal.localeCompare(aVal);
+            }
+
+            if (typeof aVal === 'number' && typeof bVal === 'number') {
+                return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
+            }
+
+            if (aVal instanceof Date && bVal instanceof Date) {
+                return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
+            }
+
+            return 0;
+        });
+    }, [userData, inputValue, sortConfig]);
+
+    // const sortedData = React.useMemo(() => {
+    //     if (!sortConfig.key || sortConfig.direction === '') {
+    //         return userData;
+    //     }
+
+    //     let sortableData = [...userData];
+    //     if (sortConfig.key) {
+    //         sortableData.sort((a, b) => {
+    //             const aVal = a[sortConfig.key];
+    //             const bVal = b[sortConfig.key];
+
+    //             if (typeof aVal === 'string' && typeof bVal === 'string') {
+    //                 return sortConfig.direction === 'asc'
+    //                     ? aVal.localeCompare(bVal)
+    //                     : bVal.localeCompare(aVal);
+    //             }
+
+    //             if (typeof aVal === 'number' && typeof bVal === 'number') {
+    //                 return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
+    //             }
+
+    //             if (aVal instanceof Date && bVal instanceof Date) {
+    //                 return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
+    //             }
+
+    //             return 0;
+    //         });
+    //     }
+    //     return sortableData;
+    // }, [userData, sortConfig]);
+
+    const handleSort = (key) => {
+        setSortConfig((prev) => {
+            if (prev.key === key && prev.direction === 'asc') {
+                return { key: '', direction: '' }; // reset
+            }
+            return { key, direction: 'asc' };
+        });
+    };
     // const form = useForm({
     //     initialValues: {
     //         user_id: '',
@@ -109,7 +197,7 @@ const Tracker = () => {
 
     }
 
-    const rows = userData.map((item) => (
+    const rows = sortedData.map((item) => (
         <tr key={item.user_id} style={{ height: 50 }}>
             {/* <td onClick={() => navigate(`/tracker/${item.name}`)}>{item.user_id}</td> */}
             <td onClick={() => {
@@ -167,76 +255,15 @@ const Tracker = () => {
 
         </tr>
     ))
+
+
     return (
         <div>
             <Container mt={mediumScreen ? "5rem" : "2rem"} size={"xxl"}>
                 <Modal closeOnClickOutside={false} centered opened={noData} onClose={() => setnoData(false)} withCloseButton={false}>
                     <Text>There are no records!</Text>
                 </Modal>
-                {/* <Modal centered opened={memberModal} onClose={() => setmemberModal(false)} title="Add Member">
-                    <form>
-                        <Stack>
-                            <TextInput
-                                label="Name"
-                                name='name'
-                                placeholder="Enter name"
-                                //  size={mediumScreen ? "md" : "lg"}
-                                {...form.getInputProps('name')}
-                            />
 
-                            <Textarea
-                                label="Goal"
-                                placeholder='Enter goal'
-                                name='goal'
-                                {...form.getInputProps('goal')}
-
-                            />
-                            <DateInput
-                                value={date}
-                                onChange={setDate}
-                                label="Date of Joining"
-                                placeholder=" Enter Date of Joining"
-                            />
-
-                            <NumberInput
-                                placeholder="Enter Total Attendance"
-                                label="Total Attendance"
-                                // value={form.values.Total_attendance || ""}  // Prevents null values
-                                // onChange={(val) => form.setFieldValue("Total_attendance", val || "")}
-                                {...form.getInputProps('Total_attendance')}
-                            />
-
-                            <NumberInput
-                                placeholder="Enter Total Water Intake"
-                                label="Total Water Intake"
-                                // value={form.values.Total_water_intake || ""}
-                                // onChange={(val) => form.setFieldValue("Total_water_intake", val || "")}
-                                {...form.getInputProps('Total_water_intake')}
-                            />
-
-                            <NumberInput
-                                placeholder="Enter Total Steps"
-                                label="Total Steps"
-                                // value={form.values.Total_step_count || ""}
-                                // onChange={(val) => form.setFieldValue("Total_step_count", val || "")}
-                                {...form.getInputProps('Total_step_count')}
-                            />
-
-
-
-                            <TimeInput
-                                withSeconds
-                                label="Total Workout Duration"
-                                placeholder="Enter Time Duration"
-                                value={form.values.Total_workout_duration || ""}
-                                onChange={(val) => form.setFieldValue("Total_workout_duration", val || "")}
-                                {...form.getInputProps('Total_workout_duration')}
-                            />
-
-                            <Button style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
-                                variant='filled' onClick={handleAddmember}>Done</Button>
-                        </Stack>                 </form>
-                </Modal> */}
 
                 <Modal closeOnClickOutside={false} centered opened={deleteModal} onClose={() => setdeleteModal(false)} withCloseButton={false} >
                     <Stack >
@@ -261,6 +288,16 @@ const Tracker = () => {
                         setmemberModal(true)
                         form.reset()
                     }} radius={10} style={{ backgroundColor: "#233c79" }}> Add Member  </Button> */}
+                    <TextInput w={"8rem"}
+                        radius={10}
+                        rightSection={inputValue ? (<ActionIcon onClick={() => setInputValue('')}><RxCross2 /></ActionIcon>) : (null)}
+                        icon={<MdSearch />} placeholder='Search here'
+                        value={inputValue} onChange={(event) => {
+                            const value = event.currentTarget.value;
+                            setInputValue(value);
+                            // setisSearching(value.trim() !== '');
+
+                        }} />
                 </Flex>
                 <Space h={15} />
                 <Card withBorder radius={10} shadow='md'>
@@ -273,13 +310,63 @@ const Tracker = () => {
                             }}>
                                 <tr>
                                     {/* <th> User ID </th> */}
-                                    <th> Name </th>
+
+                                    <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Name</Text>
+                                            <ActionIcon onClick={() => handleSort('name')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th>
+
+                                    <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Goal</Text>
+                                            <ActionIcon onClick={() => handleSort('goal')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th>
+
+                                    <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}> Date of Joining</Text>
+                                            <ActionIcon onClick={() => handleSort('date_of_joining')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th>
+
+                                    <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Total Attendance</Text>
+                                            <ActionIcon onClick={() => handleSort('Total_attendance')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th>
+
+                                    <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Average Water Intake</Text>
+                                            <ActionIcon onClick={() => handleSort('Total_water_intake')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th>
+
+                                    <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Average Step Count</Text>
+                                            <ActionIcon onClick={() => handleSort('Total_step_count')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th>
+
+                                    <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Average Workout Duration</Text>
+                                            <ActionIcon onClick={() => handleSort('formatted_workout_duration')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th>
+
+                                    {/* <th> Name </th>
                                     <th> Goal </th>
                                     <th> Date of Joining </th>
                                     <th> Total Attendance </th>
                                     <th> Average Water Intake </th>
                                     <th> Average Step Count </th>
-                                    <th> Average Workout Duration </th>
+                                    <th> Average Workout Duration </th> */}
                                     {/* <th> Body Type </th> */}
                                     <th> Action </th>
                                 </tr>
@@ -301,13 +388,54 @@ const Tracker = () => {
                                 }}>
                                     <tr>
                                         {/* <th> User ID </th> */}
-                                        <th> Name </th>
-                                        <th> Goal </th>
-                                        <th> Date of Joining </th>
-                                        <th> Total Attendance </th>
-                                        <th> Average Water Intake </th>
-                                        <th> Average Step Count </th>
-                                        <th> Average Workout Duration </th>
+                                        <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Name</Text>
+                                                <ActionIcon onClick={() => handleSort('name')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th>
+
+                                        <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Goal</Text>
+                                                <ActionIcon onClick={() => handleSort('goal')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th>
+
+                                        <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}> Date of Joining</Text>
+                                                <ActionIcon onClick={() => handleSort('date_of_joining')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th>
+
+                                        <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Total Attendance</Text>
+                                                <ActionIcon onClick={() => handleSort('Total_attendance')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th>
+
+                                        <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Average Water Intake</Text>
+                                                <ActionIcon onClick={() => handleSort('Total_water_intake')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th>
+
+                                        <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Average Step Count</Text>
+                                                <ActionIcon onClick={() => handleSort('Total_step_count')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th>
+
+                                        <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Average Workout Duration</Text>
+                                                <ActionIcon onClick={() => handleSort('formatted_workout_duration')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th>
                                         {/* <th> Body Type </th> */}
                                         <th> Action </th>
                                     </tr>

@@ -1,19 +1,23 @@
 import { ActionIcon, Button, Card, Center, Container, Flex, Group, Loader, Modal, NumberInput, Overlay, Pagination, Radio, ScrollArea, Select, SimpleGrid, Space, Stack, Table, Text, Textarea, TextInput, Tooltip } from '@mantine/core'
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
-import { BiSearch } from 'react-icons/bi';
+import { BiSearch, BiSort } from 'react-icons/bi';
 import MantineTable from '../MantineTable.jsx/MantineTable';
 import axios from 'axios';
-import { MdCircle, MdEdit, MdDeleteForever } from "react-icons/md";
+import { MdCircle, MdEdit, MdDeleteForever, MdSearch } from "react-icons/md";
 import { useForm } from '@mantine/form';
 import client from '../../../API/api';
 import { DateInput } from '@mantine/dates';
+import { RxCross2 } from "react-icons/rx";
 
 
 const UserManagement = () => {
     const mediumScreen = useMediaQuery("(min-width: 1100px)");
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
+    const phone = useMediaQuery("(max-width: 424px)");
+
+
     const [value, setValue] = useState('active');
     const [gender, setgender] = useState('male')
 
@@ -47,6 +51,63 @@ const UserManagement = () => {
     const [userDetails, setuserDetails] = useState({})
     const [date, setDate] = useState(null);
     const [dobdate, setdobdate] = useState(null)
+    const [inputValue, setInputValue] = useState('');
+    // const [isSearching, setisSearching] = useState(false);
+
+    const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
+
+    const sortedData = React.useMemo(() => {
+        // Apply filtering first
+        const filtered = userData.filter((item) =>
+            (item.category && item.category.toLowerCase().includes(inputValue.toLowerCase())) ||
+            (item.name && item.name.toLowerCase().includes(inputValue.toLowerCase())) ||
+            (item.age && String(item.age).toLowerCase().includes(inputValue.toLowerCase())) ||
+            (item.date_of_birth && item.date_of_birth.toLowerCase().includes(inputValue.toLowerCase())) ||
+            (item.gender && item.gender.toLowerCase().includes(inputValue.toLowerCase())) ||
+            (item.contact_no && String(item.contact_no).toLowerCase().includes(inputValue.toLowerCase())) ||
+            (item.business_email && item.business_email.toLowerCase().includes(inputValue.toLowerCase())) ||
+            (item.date_joined && item.date_joined.toLowerCase().includes(inputValue.toLowerCase()))
+        );
+
+        // Then apply sorting
+        if (!sortConfig.key || sortConfig.direction === '') {
+            return filtered.sort((a, b) => b.id - a.id); // Default sorting by ID desc
+        }
+
+        return [...filtered].sort((a, b) => {
+            const aVal = a[sortConfig.key];
+            const bVal = b[sortConfig.key];
+
+            if (typeof aVal === 'string' && typeof bVal === 'string') {
+                return sortConfig.direction === 'asc'
+                    ? aVal.localeCompare(bVal)
+                    : bVal.localeCompare(aVal);
+            }
+
+            if (typeof aVal === 'number' && typeof bVal === 'number') {
+                return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
+            }
+
+            if (aVal instanceof Date && bVal instanceof Date) {
+                return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
+            }
+
+            return 0;
+        });
+    }, [userData, inputValue, sortConfig]);
+
+
+
+    const handleSort = (key) => {
+        setSortConfig((prev) => {
+            if (prev.key === key && prev.direction === 'asc') {
+                return { key: '', direction: '' }; // reset
+            }
+            return { key, direction: 'asc' };
+        });
+    };
+
+
     // console.log(date);
 
 
@@ -175,8 +236,19 @@ const UserManagement = () => {
 
     // const nPages = Math.ceil(userData.length / recordsPerPage)
     // const numbers = [...Array(nPages + 1).keys()].slice(1)
+    // const filteredData = userData.filter((item) =>
+    //     (item.category && item.category.toLowerCase().includes(inputValue.toLowerCase())) ||
+    //     (item.name && item.name.toLowerCase().includes(inputValue.toLowerCase())) ||
+    //     (item.age && String(item.age).toLowerCase().includes(inputValue.toLowerCase())) ||
+    //     (item.date_of_birth && item.date_of_birth.toLowerCase().includes(inputValue.toLowerCase())) ||
+    //     (item.gender && item.gender.toLowerCase().includes(inputValue.toLowerCase())) ||
+    //     (item.contact_no && String(item.contact_no).toLowerCase().includes(inputValue.toLowerCase())) ||
+    //     (item.business_email && item.business_email.toLowerCase().includes(inputValue.toLowerCase())) ||
+    //     (item.date_joined && item.date_joined.toLowerCase().includes(inputValue.toLowerCase()))
+    // ).sort((a, b) => b.id - a.id);
 
-    const rows = userData.map((item) => (
+
+    const rows = sortedData.map((item) => (
         <tr key={item.id} style={{ height: 50 }}>
             <td >{item.user_status ?
                 (<Tooltip label={item.user_status === 'inactive' ? "Inactive" : "Active"}>
@@ -355,6 +427,12 @@ const UserManagement = () => {
     console.log(value);
 
 
+    // const handleChange = (event) => {
+    //     const value = event.currentTarget.value;
+    //     setInputValue(value);
+    //     setHasText(value.trim() !== '');
+    // };
+
 
     return (
         <div>
@@ -362,10 +440,10 @@ const UserManagement = () => {
             <Container mt={mediumScreen ? "5rem" : "2rem"} size={"xxl"}>
 
                 <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={userModal} onClose={() => setUserModal(false)} title="Add user">
-                    <form>
+                    <form onSubmit={handleAddUser}>
                         <SimpleGrid cols={1}>
                             <TextInput
-
+                                required
                                 label="Name"
                                 name='name'
                                 placeholder="Enter name"
@@ -378,12 +456,12 @@ const UserManagement = () => {
                                 placeholder="Your age"
                                 label="Your age"
 
-
+                                required
                                 {...form.getInputProps('age')}
                             />
 
                             <DateInput
-
+                                required
                                 value={dobdate}
                                 onChange={setdobdate}
                                 label="Date of birth"
@@ -392,7 +470,7 @@ const UserManagement = () => {
 
 
                             <TextInput
-
+                                required
                                 label="Email"
                                 name='business_email'
                                 placeholder="user@email.com"
@@ -424,6 +502,7 @@ const UserManagement = () => {
                             />
 
                             <Select
+                                required
                                 data={categoryList}
                                 placeholder='Select category'
                                 label="Category"
@@ -445,7 +524,7 @@ const UserManagement = () => {
 
                                 /> */}
                             <TextInput
-
+                                required
                                 label="Contact No."
                                 name='contact_no'
                                 placeholder="Enter Contact No."
@@ -604,8 +683,8 @@ const UserManagement = () => {
                         </SimpleGrid>
                         <Space h={15} />
                         <Flex justify={"end"} gap={"2%"}>
-                            <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
-                                variant='filled' onClick={handleAddUser}>Done</Button>
+                            <Button type="submit" loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
+                                variant='filled' >Done</Button>
                             <Button variant='outline' color='dark' onClick={() => setUserModal(false)}>No</Button>
                         </Flex>
                     </form>
@@ -918,7 +997,11 @@ const UserManagement = () => {
                     </Stack>
                 </Modal>
                 <Flex justify={"space-between"}>
+
                     <Text fz={22} fw={600}>Users</Text>
+
+
+                    {/* <Text mt="sm">Has text: {hasText ? 'True' : 'False'}</Text> */}
                     <Group>
                         {/* <Select searchable nothingFound="No related courses" fz={18} w={400} radius={"md"} variant='filled'
                             placeholder='Search user'
@@ -930,6 +1013,18 @@ const UserManagement = () => {
                         //   };
                         // })} 
                         /> */}
+                        {/* <div style={{ flexGrow: "1" }}> */}
+                        <TextInput w={"8rem"}
+                            radius={10}
+                            rightSection={inputValue ? (<ActionIcon onClick={() => setInputValue('')}><RxCross2 /></ActionIcon>) : (null)}
+                            icon={<MdSearch />} placeholder='Search here'
+                            value={inputValue} onChange={(event) => {
+                                const value = event.currentTarget.value;
+                                setInputValue(value);
+                                // setisSearching(value.trim() !== '');
+
+                            }} />
+                        {/* </div> */}
                         <Button onClick={() => {
 
                             form.reset()
@@ -945,7 +1040,7 @@ const UserManagement = () => {
 
                 <Space h={15} />
 
-                <Card withBorder radius={10} shadow='md'>
+                <Card withBorder radius={10} shadow='md' h={"auto"}>
                     {mediumScreen ? (
 
                         <Table striped>
@@ -955,8 +1050,56 @@ const UserManagement = () => {
                                 background: 'white', zIndex: 6,
                             }}>
                                 <tr>
+
                                     <th> Status </th>
-                                    <th> Category </th>
+                                    <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Category</Text>
+                                            <ActionIcon onClick={() => handleSort('category')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th>
+                                    <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Name</Text>
+                                            <ActionIcon onClick={() => handleSort('name')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th> <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Age</Text>
+                                            <ActionIcon onClick={() => handleSort('age')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th> <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Date of birth </Text>
+                                            <ActionIcon onClick={() => handleSort('date_of_birth')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th> <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Gender</Text>
+                                            <ActionIcon onClick={() => handleSort('gender')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th> <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Contact no.</Text>
+                                            <ActionIcon onClick={() => handleSort('contact_no')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th> <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Email</Text>
+                                            <ActionIcon onClick={() => handleSort('business_email')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th> <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Date of joining</Text>
+                                            <ActionIcon onClick={() => handleSort('date_joined')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th> <th style={{ width: 'auto' }}>
+                                        <Flex gap={10} align={'center'}>
+                                            <Text c={'dark'} fz={14} fw={500}>Location</Text>
+                                            <ActionIcon onClick={() => handleSort('location')}><BiSort /></ActionIcon>
+                                        </Flex>
+                                    </th>
+                                    {/* <th> Category </th>
                                     <th> Name </th>
                                     <th> Age </th>
                                     <th> Date of birth </th>
@@ -964,7 +1107,7 @@ const UserManagement = () => {
                                     <th> Contact no. </th>
                                     <th> Email </th>
                                     <th> Date of joining </th>
-                                    <th> Location </th>
+                                    <th> Location </th> */}
                                     <th> Action </th>
                                 </tr>
                             </thead>
@@ -981,15 +1124,53 @@ const UserManagement = () => {
                                 }}>
                                     <tr>
                                         <th> Status </th>
-                                        <th> Category </th>
-                                        <th> Name </th>
-                                        <th> Age </th>
-                                        <th> Date of birth </th>
-                                        <th> Gender </th>
-                                        <th> Contact no. </th>
-                                        <th> Email </th>
-                                        <th> Date of joining </th>
-                                        <th> Location </th>
+                                        <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Category</Text>
+                                                <ActionIcon onClick={() => handleSort('category')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th>
+                                        <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Name</Text>
+                                                <ActionIcon onClick={() => handleSort('name')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th> <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Age</Text>
+                                                <ActionIcon onClick={() => handleSort('age')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th> <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Date of birth </Text>
+                                                <ActionIcon onClick={() => handleSort('date_of_birth')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th> <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Gender</Text>
+                                                <ActionIcon onClick={() => handleSort('gender')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th> <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Contact no.</Text>
+                                                <ActionIcon onClick={() => handleSort('contact_no')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th> <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Email</Text>
+                                                <ActionIcon onClick={() => handleSort('business_email')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th> <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Date of joining</Text>
+                                                <ActionIcon onClick={() => handleSort('date_joined')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th> <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Location</Text>
+                                                <ActionIcon onClick={() => handleSort('location')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th>
                                         <th> Action </th>
                                     </tr>
                                 </thead>

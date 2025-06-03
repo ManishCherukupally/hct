@@ -70,43 +70,55 @@ const Usertrackchart = (props) => {
             }
         ],
         series: [
-            // color: ['#233c79', '#fbc313'],
-            // {
-            //     name: 'Evaporation',
-            //     type: 'bar',
-            //     color: "#233c79",
-            //     tooltip: {
-            //         valueFormatter: function (value) {
-            //             return value + ' ml';
-            //         }
-            //     },
-            //     data: [
-            //         2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3
-            //     ]
-            // },
             {
                 name: 'Workout Duration',
                 type: 'bar',
                 color: "#fbc313",
                 tooltip: {
                     valueFormatter: function (value) {
-                        return value + ' Hrs';
+                        return value.toFixed(2) + ' Hrs';
                     }
                 },
-                data: yAxisTotalDuration.reverse()
+                data: yAxisTotalDuration.reverse(),
+
+                markLine: {
+                    data: [{ type: 'average', name: 'Avg Duration' }],
+                    label: {
+                        position: 'middle',
+                        formatter: (params) => `Avg: ${params.value.toFixed(2)} Hrs`
+                    },
+                    lineStyle: {
+                        type: 'dashed',
+                        color: '#fbc313'
+                    }
+                }
             },
             {
                 name: 'Step Count',
                 type: 'line',
                 yAxisIndex: 1,
-                // tooltip: {
-                //     valueFormatter: function (value) {
-                //         return value ;
-                //     }
-                // },
-                data: yAxisStepCount.reverse()
+                // color: "#233c79",
+                tooltip: {
+                    valueFormatter: function (value) {
+                        return value + ' steps';
+                    }
+                },
+                data: yAxisStepCount.reverse(),
+
+                markLine: {
+                    data: [{ type: 'average', name: 'Avg Steps' }],
+                    label: {
+                        position: 'middle',
+                        formatter: (params) => `Avg: ${params.value.toFixed(0)} steps`
+                    },
+                    lineStyle: {
+                        type: 'dashed',
+
+                    }
+                }
             }
         ]
+
     };
     return (
         <div>

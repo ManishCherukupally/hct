@@ -14,7 +14,7 @@ const DashboardHCTPage = () => {
         if (!access) {
             setAuth(false)
             window.localStorage.clear()
-            navigate("/")
+            navigate("/login")
             return
         }
 
@@ -32,7 +32,7 @@ const DashboardHCTPage = () => {
                 console.error(err)
                 setAuth(false)
                 window.localStorage.clear()
-                navigate("/")
+                navigate("/login")
             }
         })
     }, [])
@@ -50,11 +50,11 @@ const DashboardHCTPage = () => {
                 .catch((err) => {
                     console.error("Refresh token invalid:", err)
                     setAuth(false)
-                    navigate("/")
+                    navigate("/login")
                 })
         } else {
             setAuth(false)
-            navigate("/")
+            navigate("/login")
         }
     }
 

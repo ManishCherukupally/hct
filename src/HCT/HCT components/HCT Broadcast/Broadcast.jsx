@@ -1,17 +1,20 @@
 import { useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
 import client from '../../../API/api';
-import { ActionIcon, Button, Card, Container, Flex, Modal, MultiSelect, Pagination, ScrollArea, Select, Space, Spoiler, Table, Text, Tooltip } from '@mantine/core';
-import { MdDeleteForever, MdEdit } from 'react-icons/md';
+import { ActionIcon, Button, Card, Container, Flex, Group, Modal, MultiSelect, Pagination, ScrollArea, Select, Space, Spoiler, Table, Text, TextInput, Tooltip } from '@mantine/core';
+import { MdDeleteForever, MdEdit, MdSearch } from 'react-icons/md';
 import { useForm } from '@mantine/form';
 import { TimeInput } from '@mantine/dates';
 import { setSelectionRange } from '@testing-library/user-event/dist/utils';
 import { FaTelegramPlane } from 'react-icons/fa';
+import { BiSort } from 'react-icons/bi';
+import { RxCross2 } from 'react-icons/rx';
 
 const Broadcast = () => {
     const mediumScreen = useMediaQuery("(min-width: 1200px)");
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
+    const phone = useMediaQuery("(max-width: 424px)");
 
     const [broadcastData, setbroadcastData] = useState([])
 
@@ -64,6 +67,154 @@ const Broadcast = () => {
     // console.log(editValue);
     const [nodata, setnoData] = useState(false)
 
+    const [sortColumn, setSortColumn] = useState(null); // e.g. "template", "usersOrCategory"
+    const [sortDirection, setSortDirection] = useState("asc"); // or "desc"
+    const [originalData, setOriginalData] = useState([]);
+
+    const [inputValue, setInputValue] = useState('');
+    console.log(inputValue);
+
+    // const handleSort = (columnKey) => {
+    //     const isSameColumn = sortColumn === columnKey;
+
+    //     const filtered = inputValue
+    //         ? originalData.filter((item) =>
+    //             item.users &&
+    //             item.users.some(user =>
+    //                 user.username.toLowerCase().includes(inputValue.toLowerCase())
+    //             )
+    //         )
+    //         : originalData;
+
+    //     // If already sorted on this column, reset to original
+    //     if (isSameColumn && sortDirection === "asc") {
+    //         setSortColumn(null);
+    //         setSortDirection(null);
+    //         setbroadcastData(originalData);
+    //         return;
+    //     }
+
+    //     setSortColumn(columnKey);
+    //     setSortDirection("asc");
+
+    //     const sorted = [...filtered].sort((a, b) => {
+    //         let aVal = "";
+    //         let bVal = "";
+
+    //         switch (columnKey) {
+    //             case "template":
+    //                 aVal = a.template || "";
+    //                 bVal = b.template || "";
+    //                 break;
+
+    //             case "frequency":
+    //                 aVal = a.frequency || "";
+    //                 bVal = b.frequency || "";
+    //                 break;
+
+    //             case "source":
+    //                 aVal = a.follow_up || "";
+    //                 bVal = b.follow_up || "";
+    //                 break;
+
+    //             case "time":
+    //                 aVal = a.time || "";
+    //                 bVal = b.time || "";
+    //                 break;
+
+    //             case "usersOrCategory":
+    //                 aVal = a.users.length
+    //                     ? a.users.map(u => u.username).join(", ")
+    //                     : a.category.map(c => c.category).join(", ");
+    //                 bVal = b.users.length
+    //                     ? b.users.map(u => u.username).join(", ")
+    //                     : b.category.map(c => c.category).join(", ");
+    //                 break;
+
+    //             default:
+    //                 break;
+    //         }
+
+    //         return aVal.localeCompare(bVal);
+    //     });
+
+    //     setbroadcastData(sorted);
+    // };
+    useEffect(() => {
+        let filtered = originalData;
+
+        // Filter by search input
+        if (inputValue) {
+            filtered = originalData.filter(item =>
+                item.users.some(user =>
+                    user.username.toLowerCase().includes(inputValue.toLowerCase())
+                ) ||
+                item.category.some(category =>
+                    category.category.toLowerCase().includes(inputValue.toLowerCase())
+                ) ||
+                (item.template && item.template.toLowerCase().includes(inputValue.toLowerCase())) ||
+                (item.frequency && item.frequency.toLowerCase().includes(inputValue.toLowerCase())) ||
+                (item.follow_up && item.follow_up.toLowerCase().includes(inputValue.toLowerCase())) ||
+                (item.time && String(item.time).toLowerCase().includes(inputValue.toLowerCase()))
+            );
+        }
+
+        // Sort only if sortColumn is set
+        if (sortColumn && sortDirection === "asc") {
+            filtered = [...filtered].sort((a, b) => {
+                let aVal = "", bVal = "";
+
+                switch (sortColumn) {
+                    case "template":
+                        aVal = a.template || "";
+                        bVal = b.template || "";
+                        break;
+                    case "frequency":
+                        aVal = a.frequency || "";
+                        bVal = b.frequency || "";
+                        break;
+                    case "source":
+                        aVal = a.follow_up || "";
+                        bVal = b.follow_up || "";
+                        break;
+                    case "time":
+                        aVal = a.time || "";
+                        bVal = b.time || "";
+                        break;
+                    case "usersOrCategory":
+                        aVal = a.users.length
+                            ? a.users.map(u => u.username).join(", ")
+                            : a.category.map(c => c.category).join(", ");
+                        bVal = b.users.length
+                            ? b.users.map(u => u.username).join(", ")
+                            : b.category.map(c => c.category).join(", ");
+                        break;
+                    default:
+                        break;
+                }
+
+                return aVal.localeCompare(bVal);
+            });
+        }
+
+        setbroadcastData(filtered);
+    }, [inputValue, sortColumn, sortDirection, originalData]);
+
+
+    const handleSort = (columnKey) => {
+        // If clicking the same column again, reset to original data
+        if (sortColumn === columnKey && sortDirection === "asc") {
+            setSortColumn(null);
+            setSortDirection(null);
+            setbroadcastData(originalData); // reset to original
+        } else {
+            setSortColumn(columnKey);
+            setSortDirection("asc");
+        }
+    };
+
+
+
     useEffect(() => {
         client.get("broadcast_pagination/", {
             params: {
@@ -76,6 +227,7 @@ const Broadcast = () => {
             .then((resp) => {
                 // console.log(resp.data['templates']);
                 setbroadcastData(resp.data['templates'])
+                setOriginalData(resp.data['templates']);
                 console.log(resp.data['templates'])
 
                 // resp.data['templates'].map(item => item.users.map(item => ({
@@ -593,24 +745,38 @@ const Broadcast = () => {
                         //   };
                         // })} 
                         /> */}
-                    <Button onClick={() => {
-                        setbroadcastModal(true)
-                        handleAddData()
-                        form.setValues({
-                            broadcast_id: null,
-                            template_id: null,
-                            users: [],
-                            categories: [],
-                            frequency: "",
-                            follow_up: "",
-                            time: null,
-                            new_template_id: null
-                        })
-                        setSelectedValue('')
-                        // setUserModal(true)
-                        // setEditStatus(false)
-                        //
-                    }} radius={10} style={{ backgroundColor: "#233c79" }}> Add Broadcast </Button>
+                    <Group>
+                        <TextInput w={"8rem"}
+                            radius={10}
+                            rightSection={inputValue ? (<ActionIcon onClick={() => setInputValue('')}><RxCross2 /></ActionIcon>) : (null)}
+                            icon={<MdSearch />} placeholder='Search here'
+                            value={inputValue} onChange={(event) => {
+                                const value = event.currentTarget.value;
+                                setInputValue(value);
+                                // setisSearching(value.trim() !== '');
+
+                            }} />
+
+                        <Button onClick={() => {
+                            setbroadcastModal(true)
+                            handleAddData()
+                            form.setValues({
+                                broadcast_id: null,
+                                template_id: null,
+                                users: [],
+                                categories: [],
+                                frequency: "",
+                                follow_up: "",
+                                time: null,
+                                new_template_id: null
+                            })
+                            setSelectedValue('')
+                            // setUserModal(true)
+                            // setEditStatus(false)
+                            //
+                        }} radius={10} style={{ backgroundColor: "#233c79" }}> Add Broadcast </Button>
+
+                    </Group>
 
                 </Flex>
                 <Space h={15} />
@@ -624,11 +790,38 @@ const Broadcast = () => {
                                     background: 'white', zIndex: 6,
                                 }} >
                                     <tr >
-                                        <th> Template name </th>
-                                        <th> Users </th>
+
+                                        <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Template name</Text>
+                                                <ActionIcon onClick={() => handleSort('template')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th> <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Users / Category</Text>
+                                                <ActionIcon onClick={() => handleSort('usersOrCategory')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th> <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Frequency</Text>
+                                                <ActionIcon onClick={() => handleSort('frequency')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th> <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Source</Text>
+                                                <ActionIcon onClick={() => handleSort('source')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th> <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Time</Text>
+                                                <ActionIcon onClick={() => handleSort('time')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th>
+                                        {/* <th> Template name </th>
+                                        <th> Users / Category</th>
                                         <th> Frequency </th>
                                         <th> Source </th>
-                                        <th> Time </th>
+                                        <th> Time </th> */}
                                         {/* <th> Location </th> */}
                                         <th> Action </th>
                                     </tr>
@@ -644,11 +837,32 @@ const Broadcast = () => {
                                         background: 'white', zIndex: 6,
                                     }}>
                                         <tr >
-                                            <th> Template name </th>
-                                            <th> Users </th>
-                                            <th> Frequency </th>
-                                            <th> Source </th>
-                                            <th> Time </th>
+                                            <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Template name</Text>
+                                                    <ActionIcon onClick={() => handleSort('template')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th> <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Users / Category</Text>
+                                                    <ActionIcon onClick={() => handleSort('usersOrCategory')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th> <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Frequency</Text>
+                                                    <ActionIcon onClick={() => handleSort('frequency')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th> <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Source</Text>
+                                                    <ActionIcon onClick={() => handleSort('source')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th> <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Time</Text>
+                                                    <ActionIcon onClick={() => handleSort('time')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th>
                                             {/* <th> Location </th> */}
                                             <th> Action </th>
                                         </tr>

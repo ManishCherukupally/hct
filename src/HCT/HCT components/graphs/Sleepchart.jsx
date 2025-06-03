@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ReactECharts from 'echarts-for-react';
 const Sleepchart = (props) => {
 
@@ -9,6 +9,8 @@ const Sleepchart = (props) => {
         const [hours, minutes, seconds] = item.hours_of_sleep.split(":").map(Number)
         return hours + minutes / 60 + seconds / 3600;
     });
+
+    const [ave, setave] = useState(null)
     const option = {
         toolbox: {
             feature: {
@@ -20,6 +22,7 @@ const Sleepchart = (props) => {
         },
         legend: {
             data: ["Hours of Sleep"]
+
         },
         tooltip: {
             trigger: 'axis',
@@ -58,6 +61,24 @@ const Sleepchart = (props) => {
                         return value + ' Hrs';
                     }
                 },
+                markLine: {
+                    data: [
+                        { type: 'average', name: 'Avg' }
+                    ],
+                    label: {
+                        position: 'middle',
+                        formatter: function (params) {
+                            setave(params.value.toFixed(1))
+                            return `Average: ${params.value.toFixed(1)}Hrs`;
+
+                        }
+                    },
+                    lineStyle: {
+                        type: 'dashed', // optional, makes the line dashed
+                        color: '#fbc313'   // optional, customize line color
+                    }
+
+                }
             }
         ]
     };

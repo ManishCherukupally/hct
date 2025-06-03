@@ -59,8 +59,25 @@ const WaterIntakechart = (props) => {
                         return value + ' L';
                     }
                 },
+                markLine: {
+                    data: [
+                        { type: 'average', name: 'Avg' }
+                    ],
+                    label: {
+                        position: 'middle',
+                        formatter: function (params) {
+                            return `Average: ${params.value.toFixed(1)}L`;
+                        }
+                    },
+                    lineStyle: {
+                        type: 'dashed', // optional, makes the line dashed
+                        color: '#233c79'   // optional, customize line color
+                    }
+
+                }
             }
         ]
+
     };
     return (
         <div>

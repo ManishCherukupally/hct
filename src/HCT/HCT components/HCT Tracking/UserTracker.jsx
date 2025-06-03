@@ -11,8 +11,11 @@ import Sleepchart from '../graphs/Sleepchart';
 import { FaArrowLeft, FaArrowLeftLong } from "react-icons/fa6";
 import client from '../../../API/api';
 import { useForm } from '@mantine/form';
-import { MdDeleteForever, MdEdit } from 'react-icons/md';
+import { MdDeleteForever, MdEdit, MdSearch } from 'react-icons/md';
 import { DateInput, TimeInput } from '@mantine/dates';
+import { BiSort } from 'react-icons/bi';
+import { RxCross2 } from 'react-icons/rx';
+
 // import TimePicker from 'react-time-picker';
 
 
@@ -21,6 +24,7 @@ const UserTracker = () => {
     const mediumScreen = useMediaQuery("(min-width: 1200px)");
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
+    const phone = useMediaQuery("(max-width: 424px)");
 
 
     const username = useParams()
@@ -45,6 +49,7 @@ const UserTracker = () => {
     const [nodata, setnoData] = useState(false)
     const sleepRef = useRef();
     const workoutRef = useRef();
+    const [inputValue, setInputValue] = useState('');
 
     const [inputs, setInputs] = useState({
         sleephours: '',
@@ -54,6 +59,65 @@ const UserTracker = () => {
     })
     console.log(inputs.workouthours);
     console.log(inputs.workoutminutes);
+
+    const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
+
+
+    const sortedData = React.useMemo(() => {
+        // Apply filtering first
+        if (data) {
+            const filtered = data.filter((item) =>
+
+                (item.date_of_activity && String(item.date_of_activity).toLowerCase().includes(inputValue.toLowerCase())) ||
+                (item.day_count && String(item.day_count).toLowerCase().includes(inputValue.toLowerCase())) ||
+                (item.step_count && String(item.step_count).toLowerCase().includes(inputValue.toLowerCase())) ||
+                (item.water_in_liters && String(item.water_in_liters).toLowerCase().includes(inputValue.toLowerCase())) ||
+                (item.hours_of_sleep && String(item.hours_of_sleep).toLowerCase().includes(inputValue.toLowerCase())) ||
+                (item.workout_duration && String(item.workout_duration).toLowerCase().includes(inputValue.toLowerCase())) ||
+                (item.Exercises && item.Exercises.toLowerCase().includes(inputValue.toLowerCase())) ||
+                (item.just_relief_activity && item.just_relief_activity.toLowerCase().includes(inputValue.toLowerCase()))
+
+
+            );
+
+            // Then apply sorting
+            if (!sortConfig.key || sortConfig.direction === '') {
+                return filtered.sort((a, b) => b.id - a.id); // Default sorting by ID desc
+            }
+
+            return [...filtered].sort((a, b) => {
+                const aVal = a[sortConfig.key];
+                const bVal = b[sortConfig.key];
+
+                if (typeof aVal === 'string' && typeof bVal === 'string') {
+                    return sortConfig.direction === 'asc'
+                        ? aVal.localeCompare(bVal)
+                        : bVal.localeCompare(aVal);
+                }
+
+                if (typeof aVal === 'number' && typeof bVal === 'number') {
+                    return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
+                }
+
+                if (aVal instanceof Date && bVal instanceof Date) {
+                    return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
+                }
+
+                return 0;
+            });
+        }
+        else setnoData(true)
+
+    }, [data, inputValue, sortConfig]);
+
+    const handleSort = (key) => {
+        setSortConfig((prev) => {
+            if (prev.key === key && prev.direction === 'asc') {
+                return { key: '', direction: '' }; // reset
+            }
+            return { key, direction: 'asc' };
+        });
+    };
 
 
     // console.log(new Date(date).toLocaleDateString("en-CA"));
@@ -159,7 +223,7 @@ const UserTracker = () => {
 
     const rows =
         nodata ? (<Text>No records found</Text>) : (
-            data.map((item) => (
+            sortedData.map((item) => (
                 <tr key={item.id} style={{ height: 50 }}>
                     <td> {item.date_of_activity} </td>
                     <td> {item.day_count} </td>
@@ -600,12 +664,22 @@ const UserTracker = () => {
                 <Flex justify={"space-between"}>
                     <Group align={"center"} gap={2}>
                         <Link to={-1}>
-                            <FaArrowLeftLong />
+                            <FaArrowLeftLong color='gray' />
                         </Link>
                         {/* <ActionIcon onClick={() => navigate()}></ActionIcon> */}
                         <Text fz={22} fw={600}>{mediumScreen ? username.username : username.username.split(" ")[0]}</Text>
                     </Group>
                     <Group>
+                        {value === 'table' && <TextInput w={"8rem"}
+                            radius={10}
+                            rightSection={inputValue ? (<ActionIcon onClick={() => setInputValue('')}><RxCross2 /></ActionIcon>) : (null)}
+                            icon={<MdSearch />} placeholder='Search here'
+                            value={inputValue} onChange={(event) => {
+                                const value = event.currentTarget.value;
+                                setInputValue(value);
+                                // setisSearching(value.trim() !== '');
+
+                            }} />}
                         <Button radius={10} style={{ backgroundColor: "#233c79" }}
                             onClick={() => {
                                 setrecordModal(true)
@@ -645,17 +719,75 @@ const UserTracker = () => {
                                         background: 'white', zIndex: 6,
                                     }}>
                                         <tr>
-                                            <th> Date </th>
+                                            <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Date</Text>
+                                                    <ActionIcon onClick={() => handleSort('date_of_activity')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th>
+
+                                            <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Day Count</Text>
+                                                    <ActionIcon onClick={() => handleSort('day_count')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th>
+
+                                            <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Step Count</Text>
+                                                    <ActionIcon onClick={() => handleSort('step_count')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th>
+
+                                            <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Water in Liters</Text>
+                                                    <ActionIcon onClick={() => handleSort('water_in_liters')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th>
+
+                                            <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Hours of Sleep</Text>
+                                                    <ActionIcon onClick={() => handleSort('hours_of_sleep')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th>
+
+                                            <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Workout Duration</Text>
+                                                    <ActionIcon onClick={() => handleSort('workout_duration')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th>
+
+                                            <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Exercises</Text>
+                                                    <ActionIcon onClick={() => handleSort('Exercises')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th>
+
+                                            <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Just Relief Activity</Text>
+                                                    <ActionIcon onClick={() => handleSort('just_relief_activity')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th>
+
+
+
+                                            {/* <th> Date </th>
                                             <th> Day Count </th>
                                             <th> Step Count </th>
                                             <th> Water in Liters </th>
                                             <th> Hours of Sleep </th>
-                                            <th> Workout Duration  </th>
+                                            <th> Workout Duration  </th> */}
                                             {/* <th> Calories Initial </th> */}
                                             {/* <th>Calories Burn </th> */}
                                             {/* <th> Diet </th> */}
-                                            <th> Exercises </th>
-                                            <th> Just Relief Activity </th>
+                                            {/* <th> Exercises </th>
+                                            <th> Just Relief Activity </th> */}
                                             <th> Action </th>
 
                                         </tr>
@@ -685,17 +817,61 @@ const UserTracker = () => {
                                             background: 'white', zIndex: 6,
                                         }}>
                                             <tr>
-                                                <th> Date </th>
-                                                <th> Day Count </th>
-                                                <th> Step Count </th>
-                                                <th> Water in Liters </th>
-                                                <th> Hours of Sleep </th>
-                                                <th> Workout Duration  </th>
-                                                {/* <th> Calories Initial </th> */}
-                                                {/* <th>Calories Burn </th> */}
-                                                {/* <th> Diet </th> */}
-                                                <th> Exercises </th>
-                                                <th> Just Relief Activity </th>
+                                                <th style={{ width: 'auto' }}>
+                                                    <Flex gap={10} align={'center'}>
+                                                        <Text c={'dark'} fz={14} fw={500}>Date</Text>
+                                                        <ActionIcon onClick={() => handleSort('date_of_activity')}><BiSort /></ActionIcon>
+                                                    </Flex>
+                                                </th>
+
+                                                <th style={{ width: 'auto' }}>
+                                                    <Flex gap={10} align={'center'}>
+                                                        <Text c={'dark'} fz={14} fw={500}>Day Count</Text>
+                                                        <ActionIcon onClick={() => handleSort('day_count')}><BiSort /></ActionIcon>
+                                                    </Flex>
+                                                </th>
+
+                                                <th style={{ width: 'auto' }}>
+                                                    <Flex gap={10} align={'center'}>
+                                                        <Text c={'dark'} fz={14} fw={500}>Step Count</Text>
+                                                        <ActionIcon onClick={() => handleSort('step_count')}><BiSort /></ActionIcon>
+                                                    </Flex>
+                                                </th>
+
+                                                <th style={{ width: 'auto' }}>
+                                                    <Flex gap={10} align={'center'}>
+                                                        <Text c={'dark'} fz={14} fw={500}>Water in Liters</Text>
+                                                        <ActionIcon onClick={() => handleSort('water_in_liters')}><BiSort /></ActionIcon>
+                                                    </Flex>
+                                                </th>
+
+                                                <th style={{ width: 'auto' }}>
+                                                    <Flex gap={10} align={'center'}>
+                                                        <Text c={'dark'} fz={14} fw={500}>Hours of Sleep</Text>
+                                                        <ActionIcon onClick={() => handleSort('hours_of_sleep')}><BiSort /></ActionIcon>
+                                                    </Flex>
+                                                </th>
+
+                                                <th style={{ width: 'auto' }}>
+                                                    <Flex gap={10} align={'center'}>
+                                                        <Text c={'dark'} fz={14} fw={500}>Workout Duration</Text>
+                                                        <ActionIcon onClick={() => handleSort('workout_duration')}><BiSort /></ActionIcon>
+                                                    </Flex>
+                                                </th>
+
+                                                <th style={{ width: 'auto' }}>
+                                                    <Flex gap={10} align={'center'}>
+                                                        <Text c={'dark'} fz={14} fw={500}>Exercises</Text>
+                                                        <ActionIcon onClick={() => handleSort('Exercises')}><BiSort /></ActionIcon>
+                                                    </Flex>
+                                                </th>
+
+                                                <th style={{ width: 'auto' }}>
+                                                    <Flex gap={10} align={'center'}>
+                                                        <Text c={'dark'} fz={14} fw={500}>Just Relief Activity</Text>
+                                                        <ActionIcon onClick={() => handleSort('just_relief_activity')}><BiSort /></ActionIcon>
+                                                    </Flex>
+                                                </th>
                                                 <th> Action </th>
 
                                             </tr>

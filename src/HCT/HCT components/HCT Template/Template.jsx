@@ -2,13 +2,16 @@ import { ActionIcon, Button, Card, Container, Flex, Group, Modal, Pagination, Sc
 import { useMediaQuery } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react'
 import client from '../../../API/api';
-import { MdDeleteForever, MdEdit } from 'react-icons/md';
+import { MdDeleteForever, MdEdit, MdSearch } from 'react-icons/md';
 import { useForm } from '@mantine/form';
+import { BiSort } from 'react-icons/bi';
+import { RxCross2 } from 'react-icons/rx';
 
 const Template = () => {
     const mediumScreen = useMediaQuery("(min-width: 1200px)");
     const largeScreen = useMediaQuery("(min-width: 1440px)");
     const extraLargeScreen = useMediaQuery("(min-width: 1770px)");
+    const phone = useMediaQuery("(max-width: 424px)");
 
     const [templateData, settemplateData] = useState([])
 
@@ -23,11 +26,67 @@ const Template = () => {
 
     const [templateId, settemplateId] = useState(null)
     const [nodata, setnoData] = useState(false)
+    const [inputValue, setInputValue] = useState('');
 
     // const [templateName, settemplateName] = useState('')
     // const [templateBody, settemplateBody] = useState('')
     // const [templateHeading, settemplateHeading] = useState('')
+    const [sortConfig, setSortConfig] = useState({ key: '', direction: '' });
 
+
+    const sortedData = React.useMemo(() => {
+        // Apply filtering first
+        if (templateData) {
+            const filtered = templateData.filter((item) =>
+
+
+                (item.template_name && item.template_name.toLowerCase().includes(inputValue.toLowerCase())) ||
+                (item.template_heading && item.template_heading.toLowerCase().includes(inputValue.toLowerCase())) ||
+
+                (item.template_body && item.template_body.toLowerCase().includes(inputValue.toLowerCase()))
+
+
+
+            );
+
+            // Then apply sorting
+            if (!sortConfig.key || sortConfig.direction === '') {
+                return filtered.sort((a, b) => b.id - a.id); // Default sorting by ID desc
+            }
+
+            return [...filtered].sort((a, b) => {
+                const aVal = a[sortConfig.key];
+                const bVal = b[sortConfig.key];
+
+                if (typeof aVal === 'string' && typeof bVal === 'string') {
+                    return sortConfig.direction === 'asc'
+                        ? aVal.localeCompare(bVal)
+                        : bVal.localeCompare(aVal);
+                }
+
+                if (typeof aVal === 'number' && typeof bVal === 'number') {
+                    return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
+                }
+
+                if (aVal instanceof Date && bVal instanceof Date) {
+                    return sortConfig.direction === 'asc' ? aVal - bVal : bVal - aVal;
+                }
+
+                return 0;
+            });
+        }
+        else setnoData(true)
+
+    }, [templateData, inputValue, sortConfig]);
+
+    const handleSort = (key) => {
+        setSortConfig((prev) => {
+            if (prev.key === key && prev.direction === 'asc') {
+                return { key: '', direction: '' }; // reset
+            }
+            return { key, direction: 'asc' };
+        });
+    };
 
     useEffect(() => {
         client.get("template_pagination/", {
@@ -64,7 +123,7 @@ const Template = () => {
     const rows = nodata ? (
         <Text mt={"lg"}> No templates found!</Text>
     ) : (
-        templateData.map((item, index) => (
+        sortedData.map((item, index) => (
             <tr key={index} style={{ height: 50 }}>
                 <td style={{ width: '346px' }}>{item.template_name}</td>
                 <td style={{ width: '346px' }}>{item.template_heading}</td>
@@ -309,16 +368,30 @@ const Template = () => {
                         //   };
                         // })} 
                         /> */}
-                    <Button onClick={() => {
-                        settemplateModal(true)
-                        form.setValues({
-                            template_id: null,
-                            template_name: "",
-                            template_heading: "",
-                            template_body: ""
-                        });
-                        // setEditStatus(false)
-                    }} radius={10} style={{ backgroundColor: "#233c79" }}>Add Template  </Button>
+                    <Group>
+                        <TextInput w={"8rem"}
+                            radius={10}
+                            rightSection={inputValue ? (<ActionIcon onClick={() => setInputValue('')}><RxCross2 /></ActionIcon>) : (null)}
+                            icon={<MdSearch />} placeholder='Search here'
+                            value={inputValue} onChange={(event) => {
+                                const value = event.currentTarget.value;
+                                setInputValue(value);
+                                // setisSearching(value.trim() !== '');
+
+                            }} />
+
+                        <Button onClick={() => {
+                            settemplateModal(true)
+                            form.setValues({
+                                template_id: null,
+                                template_name: "",
+                                template_heading: "",
+                                template_body: ""
+                            });
+                            // setEditStatus(false)
+                        }} radius={10} style={{ backgroundColor: "#233c79" }}>Add Template  </Button>
+
+                    </Group>
 
                 </Flex>
 
@@ -334,9 +407,24 @@ const Template = () => {
                                     background: 'white', zIndex: 6,
                                 }}>
                                     <tr>
-                                        <th> Template Name </th>
-                                        <th> Template Heading </th>
-                                        <th>Template Body </th>
+                                        <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Template Name</Text>
+                                                <ActionIcon onClick={() => handleSort('template_name')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th>
+                                        <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Template Heading</Text>
+                                                <ActionIcon onClick={() => handleSort('template_heading')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th>
+                                        <th style={{ width: 'auto' }}>
+                                            <Flex gap={10} align={'center'}>
+                                                <Text c={'dark'} fz={14} fw={500}>Template Body</Text>
+                                                <ActionIcon onClick={() => handleSort('template_body')}><BiSort /></ActionIcon>
+                                            </Flex>
+                                        </th>
                                         {/* <th> Email </th>
                                 <th> Date of joining </th>
                                 <th> Location </th> */}
@@ -354,9 +442,27 @@ const Template = () => {
                                         background: 'white', zIndex: 6,
                                     }}>
                                         <tr>
-                                            <th> Template Name </th>
+                                            <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Template Name</Text>
+                                                    <ActionIcon onClick={() => handleSort('template_name')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th>
+                                            <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Template Heading</Text>
+                                                    <ActionIcon onClick={() => handleSort('template_heading')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th>
+                                            <th style={{ width: 'auto' }}>
+                                                <Flex gap={10} align={'center'}>
+                                                    <Text c={'dark'} fz={14} fw={500}>Template Body</Text>
+                                                    <ActionIcon onClick={() => handleSort('template_body')}><BiSort /></ActionIcon>
+                                                </Flex>
+                                            </th>
+                                            {/* <th> Template Name </th>
                                             <th> Template Heading </th>
-                                            <th>Template Body </th>
+                                            <th>Template Body </th> */}
                                             {/* <th> Email </th>
                                 <th> Date of joining </th>
                                 <th> Location </th> */}
