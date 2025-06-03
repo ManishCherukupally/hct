@@ -235,12 +235,12 @@ const Template = () => {
             <Container mt={mediumScreen ? "5rem" : "2rem"} size={"xxl"}>
 
                 <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={templateModal} onClose={() => settemplateModal(false)} title="Add Template">
-                    <form>
+                    <form onSubmit={handleAddTemplate}>
                         <SimpleGrid cols={1}>
                             <Textarea
                                 autosize
                                 minRows={1}
-
+                                required
                                 label="Template Name"
                                 name='template_name'
                                 placeholder="Enter Template name"
@@ -251,7 +251,7 @@ const Template = () => {
                             <Textarea
                                 autosize
                                 minRows={1}
-
+                                required
                                 label="Template Heading"
                                 name='template_heading'
                                 placeholder="Enter Template heading"
@@ -273,7 +273,7 @@ const Template = () => {
                             <Textarea
                                 autosize
                                 minRows={1}
-
+                                required
                                 label="Template Body"
                                 name='template_body'
                                 placeholder="Enter Template Body"
@@ -285,8 +285,8 @@ const Template = () => {
                         </SimpleGrid>
                         <Space h={15} />
                         <Flex justify={"end"} gap={"2%"}>
-                            <Button loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
-                                variant='filled' onClick={handleAddTemplate} >Add</Button>
+                            <Button type='submit' loading={loaderVisible} style={{ color: "rgba(255, 255, 255, 1)", backgroundColor: "#233c79" }}
+                                variant='filled'  >Add</Button>
                             {/* <Button variant='outline' color='dark' onClick={() => settemplateModal(false)}>No</Button> */}
                         </Flex>
                     </form>

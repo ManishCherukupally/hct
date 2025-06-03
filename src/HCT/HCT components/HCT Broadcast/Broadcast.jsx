@@ -549,6 +549,7 @@ const Broadcast = () => {
 
                 <Modal closeOnClickOutside={false} centered style={{ display: "flex", justifyContent: "center" }} opened={broadcastModal} onClose={() => setbroadcastModal(false)} title="Add Broadcast">
                     <Select
+                        required
                         data={templatedropDownData}
                         placeholder="Select a template"
                         label="Templates"
@@ -569,6 +570,7 @@ const Broadcast = () => {
 
                     {
                         selectedValue === "User" && (<MultiSelect
+                            required
                             data={userData}
                             placeholder="Select User"
                             label="User"
@@ -579,6 +581,7 @@ const Broadcast = () => {
 
                     {
                         selectedValue === "Category" && (<MultiSelect
+                            required
                             data={categoryList}
                             placeholder="Select Category"
                             label="Category"
@@ -589,6 +592,7 @@ const Broadcast = () => {
 
 
                     <Select
+                        required
                         data={[
                             { value: 'once', label: 'Once' },
                             { value: 'periodic', label: 'Periodic' }]
@@ -610,6 +614,7 @@ const Broadcast = () => {
                     }
 
                     <Select
+                        required
                         data={[
                             { value: 'mail', label: 'Mail' },
                             { value: 'whatsapp', label: 'Whatsapp' },
