@@ -53,8 +53,7 @@ const Mantine1 = () => {
 
     validate: {
       business_email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
-      contact_no: (value) =>
-        value && /^[6-9]\d{9}$/.test(value) ? null : 'Phone number must be a valid 10-digit number starting with 6-9',
+      contact_no: (value) => value && /^[6-9]\d{9}$/.test(value) ? null : 'Phone number must be a valid 10-digit number starting with 6-9',
     },
 
     transformValues: (values) => ({
@@ -245,7 +244,7 @@ const Mantine1 = () => {
 
 
       <Modal closeOnClickOutside={false} opened={opened} onClose={close} title="Registration" centered size={isMobile ? "xs" : "md"}>
-        <form >
+        <form onSubmit={handleRegistration}>
           <SimpleGrid cols={1}>
             <TextInput
 
@@ -274,15 +273,7 @@ const Mantine1 = () => {
 
 
 
-            {/* <TextInput
 
-    label="Password"
-    name='password'
-    placeholder=" password"
-   
-    {...form.getInputProps('password')}
-
-/> */}
             <TextInput
 
               label="Contact No."
@@ -352,7 +343,7 @@ const Mantine1 = () => {
 
           </SimpleGrid>
           <Group position="right" mt="md">
-            <Button onClick={handleRegistration} loading={loader} bg={'#1F3469'} fullWidth radius='md'>Submit</Button>
+            <Button type='submit' loading={loader} bg={'#1F3469'} fullWidth radius='md'>Submit</Button>
           </Group>
         </form>
       </Modal>

@@ -168,7 +168,7 @@ const Mantine4 = () => {
 
 
       <Modal closeOnClickOutside={false} opened={opened} onClose={close} title="Registration" centered size={isMobile ? "xs" : "md"}>
-        <form >
+        <form onSubmit={handleRegistration}>
           <SimpleGrid cols={1}>
             <TextInput
               required
@@ -278,7 +278,7 @@ const Mantine4 = () => {
           </SimpleGrid>
 
           <Group position="right" mt="md">
-            <Button onClick={handleRegistration} fullWidth radius='md' loading={loader} bg={'#1F3469'}>Submit</Button>
+            <Button type='submit' fullWidth radius='md' loading={loader} bg={'#1F3469'}>Submit</Button>
           </Group>
         </form>
       </Modal>
